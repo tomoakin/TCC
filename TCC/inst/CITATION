@@ -1,0 +1,29 @@
+citHeader("When you use package 'TCC' in publications please cite:")
+
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+citEntry(entry="Article",
+         title = "A normalization strategy for comparing tag count data",
+         author = personList(as.person("Koji Kadota"),
+                             as.person("Tomoaki Nishiyama"),
+                             as.person("Kentaro Shimizu")),
+         year = 2012,
+         journal = "Algorithms for Molecular Biology",
+         volume = 7,
+         pages = 5,
+         textVersion = paste("Koji Kadota, Tomoaki Nishiyama, Kentaro Shimizu ",
+               "(2012). A normalization strategy for comparing tag count data. ",
+               "Algorithms for Molecular Biology 7:5",
+                sep=""))
+citEntry(entry="Manual",
+         title = "DES:Differential expression genes Eliminating Strategy for calculating normalization factors with tag count data",
+         author = personList(as.person("Sun Jianqiang"),
+                             as.person("Tomoaki Nishiyama"),
+                             as.person("Kentaro Shimizu"),
+                             as.person("Koji Kadota")),
+         year = year,
+         note = vers,
+         textVersion =
+         paste("Sun Jianqiang, Tomoaki Nishiyama, Kentaro Shimizu, Koji Kadota ",
+               "(", year, "). DES::Differential expression genes Eliminating Strategy for calculating normalization factors with tag count data. ",
+               vers, ".", sep=""))

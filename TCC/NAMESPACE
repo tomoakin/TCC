@@ -1,0 +1,26 @@
+import(ROC)
+import(DESeq)
+import(baySeq)
+import(edgeR)
+
+# Export TCC class.
+exportClasses(
+    "TCC" 
+)
+
+# Export the public methods in TCC package.
+export(
+  calcAUCValue,
+  calcNormFactors,
+  do_TbT,
+  estimateDE,
+  exactTestafterTbT,
+  filterLowCountGenes,
+  generateSimulationData,
+  getNormalizedData,
+  getResult,
+  MAplot,
+  NBsample,
+  plotFCPseudocolor,
+  plot.TCC
+)
