@@ -51,10 +51,10 @@ TCC <- setRefClass(
         # Fill count data.
         if(!is.matrix(count)){
           count <<- as.matrix(count)
-        }
-
+        }else{
+          count <<- count
+	}
 	# count is a matrix with or without colnames, rownames 
-        count <<- count
         if (is.null(rownames(count))){
           names <<- paste("gene_", c(1:nrow(count)), sep="")
           rownames(count) <<- names
