@@ -1,29 +1,94 @@
-citHeader("When you use package 'TCC' in publications please cite:")
+citHeader("Please cite the following papers when you use package 'TCC' in publications:")
 
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
-vers <- paste("R package version", meta$Version)
-citEntry(entry="Article",
-         title = "A normalization strategy for comparing tag count data",
-         author = personList(as.person("Koji Kadota"),
-                             as.person("Tomoaki Nishiyama"),
-                             as.person("Kentaro Shimizu")),
-         year = 2012,
-         journal = "Algorithms for Molecular Biology",
-         volume = 7,
-         pages = 5,
-         textVersion = paste("Koji Kadota, Tomoaki Nishiyama, Kentaro Shimizu ",
-               "(2012). A normalization strategy for comparing tag count data. ",
-               "Algorithms for Molecular Biology 7:5",
-                sep=""))
-citEntry(entry="Manual",
-         title = "DES:Differential expression genes Eliminating Strategy for calculating normalization factors with tag count data",
-         author = personList(as.person("Sun Jianqiang"),
-                             as.person("Tomoaki Nishiyama"),
-                             as.person("Kentaro Shimizu"),
-                             as.person("Koji Kadota")),
-         year = year,
-         note = vers,
-         textVersion =
-         paste("Sun Jianqiang, Tomoaki Nishiyama, Kentaro Shimizu, Koji Kadota ",
-               "(", year, "). DES::Differential expression genes Eliminating Strategy for calculating normalization factors with tag count data. ",
-               vers, ".", sep=""))
+citEntry(
+  entry = "article",
+  title = "TCC: R package for comparing tag count data with robust normalization strategies",
+  author = "Sun J, Nishiyama T, Shimizu K and Kadota K",
+  year = 2013,
+  textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. submitted"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "A normalization strategy for comparing tag count data",
+  author = "Kadota K, Nishiyama T and Shimizu K",
+  journal = "Algorithms for Molecular Biology",
+  volume = 7,
+  pages = 5,
+  year = 2012,
+  textVersion = "Kadota K, Nishiyama T, and Shimizu K. A normalization strategy for comparing tag count data. Algorithms Mol Biol. 7:5, 2012"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "baySeq: empirical Bayesian methods for identifying differential expression in sequence count data",
+  author = "Hardcastle TJ and Kelly KA",
+  journal = "BMC Bioinformatics",
+  volume = 11,
+  pages = 422,
+  year = 2010,
+  textVersion = "Hardcastle TJ and Kelly KA. baySeq: empirical Bayesian methods for identifying differential expression in sequence count data. BMC Bioinformatics 11: 422, 2010"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "Differential expression analysis for sequence count data",
+  author = "Anders S and Huber W",
+  journal = "Genome Biology",
+  volume = "11(10)",
+  pages = "R106",
+  year = 2010,
+  textVersion = "Anders S and Huber W. Differential expression analysis for sequence count data. Genome Biol. 11(10): R106, 2010"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "edgeR: a Bioconductor package for differential expression analysis of digital gene expression data",
+  author = "Robinson MD, McCarthy DJ and Smyth GK",
+  journal = "Bioinformatics",
+  volume = "26(1)",
+  pages = 139-140,
+  year = 2010,
+  textVersion = "Robinson MD, McCarthy DJ, and Smyth GK. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data. Bioinformatics 26(1): 139-140, 2010"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "The NBP negative binomial model for assessing differential gene expression from RNA-Seq",
+  author = "Di Y, Schafer DW, Cumbie JS and Chang JH",
+  journal = "Stat Appl Genet Mol Biol",
+  volume = "26(1)",
+  pages = 139-140,
+  year = 2010,
+  textVersion = "Di Y, Schafer DW, Cumbie JS, and Chang JH. The NBP negative binomial model for assessing differential gene expression from RNA-Seq. Stat Appl Genet Mol Biol. 10: art24, 2011"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "A scaling normalization method for differential expression analysis of RNA-seq data",
+  author = "Robinson MD and Oshlack A",
+  journal = "Genome Biology",
+  volume = 11,
+  pages = "R25",
+  year = 2010,
+  textVersion = "Robinson MD and Oshlack A. A scaling normalization method for differential expression analysis of RNA-seq data. Genome Biol. 11: R25, 2010"
+)
+
+
+citEntry(
+  entry = "article",
+  title = "Small-sample estimation of negative binomial dispersion, with applications to SAGE data",
+  author = "Robinson MD and Smyth GK",
+  journal = "Biostatistics",
+  volume = 9,
+  pages = 321-332,
+  year = 2008,
+  textVersion = "Robinson MD and Smyth GK. Small-sample estimation of negative binomial dispersion, with applications to SAGE data. Biostatistics 9: 321-332, 2008"
+)
+
