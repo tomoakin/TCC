@@ -70,28 +70,28 @@ TCC <- setRefClass(
       }
       private$estimated <<- FALSE
       private$simulation <<- FALSE
-    },
-    #/**
-    # * THE METHODS OF CALCULATE NORMALIZATION FACTORS.
-    # */
-    #  TMM normalization. (edgeR)
-    .normByTmm = function (count) {
-      #if (!("edgeR" %in% loadedNamespaces()))
-      #  library(edgeR)
-      suppressMessages(d <- edgeR::DGEList(counts = count, group = replicates))
-      suppressMessages(d <- edgeR::calcNormFactors(d))
-      normf <- d$samples$norm.factors
-      names(normf) <- colnames(.self$count)
-      normf
-    },
-    #  DESeq normalization. (DESeq) // Each cols is divided by the genomic means of the rows.
-    .normByDeseq = function(count) {
-      suppressMessages(d <- newCountDataSet(countData = count, conditions = replicates))
-      suppressMessages(d <- estimateSizeFactors(d))
-      return(sizeFactors(d) / colSums(count))
     }
   )
 )
+
+#/**
+# * THE METHODS OF CALCULATE NORMALIZATION FACTORS.
+# */
+TCC$methods(.normByTmm = function(count){
+  suppressMessages(d <- edgeR::DGEList(counts = count, group = replicates))
+  suppressMessages(d <- edgeR::calcNormFactors(d))
+  normf <- d$samples$norm.factors
+  names(normf) <- colnames(.self$count)
+  return(normf)
+})
+TCC$methods(.normByDeseq = function(count){
+  suppressMessages(d <- newCountDataSet(countData = count, conditions = replicates))
+  suppressMessages(d <- estimateSizeFactors(d))
+  return(sizeFactors(d) / colSums(count))
+})
+
+
+
 #/**
 # * THE METHODS OF INDENTIFY DE GENES.
 # */
