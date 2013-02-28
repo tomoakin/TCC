@@ -482,6 +482,6 @@ TCC$methods(plotMA = function (FDR = NULL,
     close.screen(all.screens = TRUE)
   } 
   if (length(group) == 2) {
-    invisible(data.frame(m.value = m.values[1, 2, ], a.value = a.values[1, 2, ]))
+    invisible(data.frame(a.value = a.values[1, 2, ], m.value = m.values[1, 2, ]))
   }
 })
