@@ -77,14 +77,14 @@ TCC <- setRefClass(
 # * THE METHODS OF CALCULATE NORMALIZATION FACTORS.
 # */
 TCC$methods(.normByTmm = function(count){
-  suppressMessages(d <- edgeR::DGEList(counts = count, group = replicates))
+  suppressMessages(d <- edgeR::DGEList(counts = round(count), group = replicates))
   suppressMessages(d <- edgeR::calcNormFactors(d))
   normf <- d$samples$norm.factors
   names(normf) <- colnames(.self$count)
   return(normf)
 })
 TCC$methods(.normByDeseq = function(count){
-  suppressMessages(d <- newCountDataSet(countData = count, conditions = replicates))
+  suppressMessages(d <- newCountDataSet(countData = round(count), conditions = replicates))
   suppressMessages(d <- estimateSizeFactors(d))
   return(sizeFactors(d) / colSums(count))
 })
@@ -96,7 +96,7 @@ TCC$methods(.normByDeseq = function(count){
 # */
 #  Parametric exact test by edgeR.
 TCC$methods(.testByEdger = function(){
-  suppressMessages(d <- edgeR::DGEList(counts = count, group = replicates))
+  suppressMessages(d <- edgeR::DGEList(counts = round(count), group = replicates))
   suppressMessages(d <- edgeR::calcNormFactors(d))
   d$samples$norm.factors <- norm.factors
   suppressMessages(d <- edgeR::estimateCommonDisp(d))
@@ -112,7 +112,7 @@ TCC$methods(.testByEdger = function(){
 })
 #  Parametric exact test by DESeq.
 TCC$methods(.testByDeseq = function(){
-  suppressMessages(d <- newCountDataSet(countData = count, conditions = replicates))
+  suppressMessages(d <- newCountDataSet(countData = round(count), conditions = replicates))
   sizeFactors(d) <- norm.factors * colSums(count)
   if (ncol(count) > 2) {
     e <- try(suppressMessages(d <- estimateDispersions(d)), silent = TRUE)
@@ -148,7 +148,7 @@ TCC$methods(.testByBayseq = function(samplesize, processors){
       cl <- processors
     }
   }
-  suppressMessages(d <- new("countData", data = as.matrix(count), 
+  suppressMessages(d <- new("countData", data = round(count), 
       replicates = replicates, 
       groups = list(NDE = rep(1, length = length(replicates)), DE = replicates), 
       libsizes = colSums(count) * norm.factors))
