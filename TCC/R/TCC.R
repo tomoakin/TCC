@@ -35,24 +35,23 @@ TCC <- setRefClass(
         }
         # Fill count data.
         if (!is.matrix(count)) {
-          count <<- as.matrix(count)
+          .self$count <<- as.matrix(count)
         } else {
-          count <<- count
+          .self$count <<- count
         }
         # count is a matrix with or without colnames, rownames 
-        if (is.null(rownames(count))) {
-          names <<- paste("gene_", c(1:nrow(count)), sep="")
-          rownames(count) <<- names
-          names <<- names
+        if (is.null(rownames(.self$count))) {
+          .self$names <<- paste("gene_", c(1:nrow(count)), sep = "")
+          rownames(.self$count) <<- paste("gene_", c(1:nrow(count)), sep = "")
         } else {
-          names <<- rownames(count)
+          .self$names <<- rownames(count)
         }
-        if (is.null(colnames(count))) {
-          colnames(count) <<- paste("G", rep(1:length(group), times = group), "_rep", sequence(group), sep = "")
+        colnm <- colnames(count)
+        if (is.null(colnames(.self$count))) {
+          colnames(.self$count) <<- paste("G", rep(1:length(group), times = group), "_rep", sequence(group), sep = "")
         } else {
           # if the column is not unique, it occurs error on edgeR.
-          colns <- colnames(count)
-          if (sum(match(colns, colns)) != sum(1:length(colns))) {
+          if (sum(match(colnm, colnm)) != sum(1:length(colnm))) {
             message("TCC::INFO: Changed the column names of count data to unique.")
             colnames(count) <<- paste(colns, 1:length(colns), sep = "_")
           }
