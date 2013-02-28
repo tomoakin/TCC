@@ -14,7 +14,8 @@
      main = NULL,
      xlab = expression(A == (log[2] * G2 + log[2] * G1) / 2),
      ylab = expression(M == log[2] * G2 - log[2] * G1),
-     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, col = NULL, ...)
+     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, 
+     col = NULL, col.tag = NULL, ...)
 }
 \arguments{
 	\item{x}{\link{TCC-class} object.}
@@ -37,6 +38,7 @@
 	 to be used as the default in plotting points.}
 	\item{col}{vector specifying plotting color. The default is col 
 	 = c(1, 4, 2, 5, 6, 7, ...) of color index.}
+	\item{col.tag}{vector specifying the color of genes.}
 	\item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}
 }
 \details{

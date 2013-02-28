@@ -214,9 +214,9 @@ estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, proces
 plot.TCC <- function(x, FDR=NULL, median.lines = FALSE, floor=0, main=NULL, 
                     xlab = expression(A == (log[2] * G2 + log[2] * G1 ) / 2),
                     ylab = expression(M == log[2] * G2 - log[2] * G1),
-                    xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, col = NULL, ...) {
+                    xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, col = NULL, col.tag = NULL,...) {
       invisible(x$plotMA(FDR=FDR, median.lines=median.lines, floor=floor, main=main, xlab=xlab, ylab=ylab,
-               xlim=xlim, ylim=ylim, cex=cex, pch=pch, col=col, ...))
+               xlim=xlim, ylim=ylim, cex=cex, pch=pch, col=col, col.tag=col.tag,...))
 }
 
 # getResult

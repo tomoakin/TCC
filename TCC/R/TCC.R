@@ -374,7 +374,8 @@ TCC$methods(plotMA = function (FDR = NULL,
                        ylim = NULL,
                        cex = 0.3,
                        pch = 19,
-                       col = NULL, ...) {
+                       col = NULL, 
+                       col.tag = NULL, ...) {
   # set up default arguments.
   if (is.null(col)) {
     if (private$estimated == TRUE) {
@@ -443,20 +444,24 @@ TCC$methods(plotMA = function (FDR = NULL,
         plot(0, 0, xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, type = "n", ...)
         title(main = list(gftitle))
         grid(col = "gray", lty = "dotted")
-
-        col.tag <- rep(0, length = nrow(count))
-        if (private$estimated == FALSE) {
-          if (private$simulation == TRUE)
-            col.tag <- simulation$trueDEG
-        } else {
-          if ((!is.null(estimatedDEG)) && (length(estimatedDEG != 0))) {
-            col.tag <- as.numeric(estimatedDEG)
-          } 
-          if (!(is.null(FDR) && is.null(significance.level))) {
-            private$stat$q.value <<- stat$q.value
-            private$stat$p.value <<- stat$p.value
-            col.tag <- .self$.exactTest(FDR = FDR, significance.level = significance.level)
+        if (is.null(col.tag)) {
+          col.tag <- rep(0, length = nrow(count))
+          if (private$estimated == FALSE) {
+            if (private$simulation == TRUE)
+              col.tag <- simulation$trueDEG
+          } else {
+            if ((!is.null(estimatedDEG)) && (length(estimatedDEG != 0))) {
+              col.tag <- as.numeric(estimatedDEG)
+            } 
+            if (!(is.null(FDR) && is.null(significance.level))) {
+              private$stat$q.value <<- stat$q.value
+              private$stat$p.value <<- stat$p.value
+              col.tag <- .self$.exactTest(FDR = FDR, significance.level = significance.level)
+            }
           }
+        } else {
+          if (length(col.tag) != nrow(count))
+            stop("\nTCC::ERROR: The length of col.tag has to be equal to the number of genes.\n")
         }
         for (k in 0:max(col.tag)) {
           points(a[col.tag == k], m[col.tag == k], col = col[k + 1], pch = pch, cex = cex)
