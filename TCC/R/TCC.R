@@ -22,7 +22,7 @@ TCC <- setRefClass(
             stop("TCC::ERROR: The sum of group has to be equal to the columns of count data.\n")
           replicates <<- rep(1:length(group), times = group)
           group <<- group
-        }else if(!is.null(replicates)){
+        } else if(!is.null(replicates)) {
           if (length(replicates) != ncol(count))
             stop("TCC::ERROR: The length of replicates has to be equal to the columns of count data.\n")
           group <<- rep(0, length = max(replicates))
@@ -30,21 +30,21 @@ TCC <- setRefClass(
             group[i] <<- sum(replicates == i)
           }
           replicates <<- replicates
-        }else{
+        } else {
           stop("TCC::ERROR: group or replicate must be provided.\n")
         }
         # Fill count data.
-        if(!is.matrix(count)){
+        if (!is.matrix(count)) {
           count <<- as.matrix(count)
-        }else{
+        } else {
           count <<- count
-	}
-	# count is a matrix with or without colnames, rownames 
-        if (is.null(rownames(count))){
+        }
+        # count is a matrix with or without colnames, rownames 
+        if (is.null(rownames(count))) {
           names <<- paste("gene_", c(1:nrow(count)), sep="")
           rownames(count) <<- names
           names <<- names
-	} else {
+        } else {
           names <<- rownames(count)
         }
         if (is.null(colnames(count))) {
@@ -60,7 +60,7 @@ TCC <- setRefClass(
         # Fill normalization factors.
         if (is.null(norm.factors)) {
           normf <- rep(1, length = ncol(count))
-	  names(normf) <- colnames(count)
+          names(normf) <- colnames(count)
         } else {
           if (length(norm.factors) != ncol(count))
             stop("\nTCC::ERROR: The length of norm.factors has to be equal to the columns of cuont data.\n")
