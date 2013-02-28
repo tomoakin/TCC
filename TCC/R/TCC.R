@@ -232,10 +232,29 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         private$DEGES.threshold.type <<- 3 + FDR
       }
       # super threshold.
+      #if ((!is.null(floorPDEG)) && (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
+      #  deg.flg <- deg.flg.floorPDEG
+      #  private$DEGES.threshold.type <<- 1 + floorPDEG
+      #}
       if ((!is.null(floorPDEG)) && (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
-        deg.flg <- deg.flg.floorPDEG
         private$DEGES.threshold.type <<- 1 + floorPDEG
+        deg.flg <- deg.flg.floorPDEG
+        count.normed <- .self$getNormalizedCount()
+        mean.exp <- matrix(0, ncol = length(group), nrow = nrow(count))
+        for (g in 1:length(group)) {
+          mean.exp[, g] <- log2(rowMeans(as.matrix(count.normed[, replicates == g])))
+        }
+        for (i in 1:length(group)) {
+          for (j in i:length(group)) {
+            if (i != j) {
+              log2ration <- mean.exp[, j] - mean.exp[, i]
+              deg.flg[(deg.flg > 0) & (log2ration < 0)] <- i
+              deg.flg[(deg.flg > 0) & (log2ration > 0)] <- j
+            }
+          }
+        }
       }
+
       count.ndeg <- count[(deg.flg == 0), ]
       if (nrow(count.ndeg) == 0) {
         message ("TCC::INFO: No non-DE genes after eliminate DE genes. stop DEGES strategy.")
