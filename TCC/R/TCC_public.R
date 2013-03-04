@@ -308,22 +308,36 @@ setMethod(
   f = "show",
   signature(object = "TCC"),
   definition = function(object) {
-    if (object$private$estimated) {
-      df <- getResult(object)
-      cat("Analyzed results:\n")
+    # Counts.
+    if (object$private$simulation) {
+      cat("Count (Simulation Data):\n")
+      df <- data.frame(
+        object$count,
+        object$simulation$trueDEG
+      )
+      colnames(df) <- c(colnames(object$count), "trueDEG")
       print(head(df))
       cat("\n")
     } else {
       cat("Count:\n")
       print(head(object$count))
       cat("\n")
-      df <- data.frame(
-        replicates = object$replicates,
-        norm.factors = object$norm.factors
-      )
-      rownames(df) <- colnames(object$count)
-      cat("Condition and normalization factors:\n")
-      print(df)
+    }
+    # Annotations.
+    df <- data.frame(
+      replicates = object$replicates,
+      norm.factors = object$norm.factors,
+      lib.sizes = object$norm.factors * colSums(object$count)
+    )
+    rownames(df) <- colnames(object$count)
+    cat("Annotations:\n")
+    print(df)
+    cat("\n")
+    # Esimated results.
+    if (object$private$estimated) {
+      df <- getResult(object)
+      cat("Analyzed results:\n")
+      print(head(df))
       cat("\n")
     }
   }
