@@ -290,6 +290,19 @@ getNormalizedData <- function(tcc) {
 }
 
 
+setMethod(
+  f = "names",
+  signature(x = "TCC"),
+  definition = function(x) {
+    nm <- c("count", "names", "group", "replicates", "norm.factors")
+    if (!is.null(x$stat))
+      nm <- c(nm, "stat")
+    if (!is.null(x$estimatedDEG))
+      nm <- c(nm, "estimateDEG")
+    if (!is.null(x$simulation))
+      nm <- c(nm, "simulation")
+  }
+)
 
 setMethod(
   f = "show",
