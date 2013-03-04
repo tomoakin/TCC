@@ -288,3 +288,30 @@ calcAUCValue <- function(tcc) {
 getNormalizedData <- function(tcc) {
   return (tcc$getNormalizedCount())
 }
+
+
+
+setMethod(
+  f = "show",
+  signature(object = "TCC"),
+  definition = function(object) {
+    if (object$private$estimated) {
+      df <- getResult(object)
+      cat("Analyzed results:\n")
+      print(head(df))
+      cat("\n")
+    } else {
+      cat("Count:\n")
+      print(head(object$count))
+      cat("\n")
+      df <- data.frame(
+        replicates = object$replicates,
+        norm.factors = object$norm.factors
+      )
+      rownames(df) <- colnames(object$count)
+      cat("Condition and normalization factors:\n")
+      print(df)
+      cat("\n")
+    }
+  }
+)
