@@ -306,13 +306,39 @@ setMethod(
   f = "names",
   signature(x = "TCC"),
   definition = function(x) {
-    nm <- c("count", "names", "group", "replicates", "norm.factors")
-    if (!is.null(x$stat))
-      nm <- c(nm, "stat")
-    if (!is.null(x$estimatedDEG))
-      nm <- c(nm, "estimateDEG")
-    if (!is.null(x$simulation))
-      nm <- c(nm, "simulation")
+    return (c("count", "names", "group", "replicates", "norm.factors",
+              "stat", "estimatedDEG", "simulation"))
+  }
+)
+setMethod(
+  f = "length",
+  signature(x = "TCC"),
+  definition = function(x) {
+    return (8)
+  }
+)
+setMethod(
+  f = "[",
+  signature(x = "TCC"),
+  definition = function(x, i) {
+    if (i == 1)
+      return (x$count)
+    else if (i == 2)
+      return (x$names)
+    else if (i == 3)
+      return (x$group)
+    else if (i == 4)
+      return (x$replicates)
+    else if (i == 5)
+      return (x$norm.factors)
+    else if (i == 6)
+      return (x$stat)
+    else if (i == 7)
+      return (x$estimatedDEG)
+    else if (i == 8)
+      return (x$simulation)
+    else
+      return (NULL)
   }
 )
 
