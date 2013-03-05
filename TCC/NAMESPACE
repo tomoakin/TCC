@@ -1,5 +1,6 @@
 import(ROC)
 import(DESeq)
+import(snow)
 import(baySeq)
 import(edgeR)
 
@@ -10,6 +11,9 @@ exportClasses(
 
 # Export the public methods in TCC package.
 export(
+  show,
+  names,
+  TCC,
   calcAUCValue,
   calcNormFactors,
   do_TbT,

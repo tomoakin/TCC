@@ -1,3 +1,11 @@
+TCC <- function(count = NULL, group = NULL, replicates = NULL,
+                norm.factors = NULL, names = NULL) {
+  tcc <- new("TCC", count = count, group = group, replicates = replicates,
+             norm.factors = norm.factors, names = names)
+  return (tcc)
+}
+
+
 # getSimulationData
 # sample the simulation data under NB model.
 generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
