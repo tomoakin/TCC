@@ -4,6 +4,7 @@ citEntry(
   entry = "article",
   title = "TCC: R package for comparing tag count data with robust normalization strategies",
   author = "Sun J, Nishiyama T, Shimizu K and Kadota K",
+  journal = "Submitted",
   year = 2013,
   textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. submitted"
 )
