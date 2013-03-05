@@ -191,11 +191,13 @@ setMethod(
   f = "calcNormFactors",
   signature(tcc = "TCC"),
   definition = function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
-                        FDR=NULL, floorPDEG=NULL, samplesize=10000, processors=NULL) {
+                        FDR=NULL, floorPDEG=NULL, dispersion=NULL,
+                        samplesize=10000, processors=NULL) {
       ex.time <- proc.time()
       obj <- tcc$copy()
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
-                      FDR=FDR, floorPDEG=floorPDEG, samplesize=samplesize, processors=processors)
+                      FDR=FDR, floorPDEG=floorPDEG, dispersion=dispersion,
+                      samplesize=samplesize, processors=processors)
       obj$stat$execution.time <- proc.time() - ex.time
       return(obj)
     }
@@ -203,9 +205,11 @@ setMethod(
 
 # estimateDE
 # the method is for estimating DEGs.
-estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, processors=NULL) {
+estimateDE <- function(tcc, test.method=NULL, FDR=NULL, dispersion=NULL,
+                       samplesize=10000, processors=NULL) {
   obj <- tcc$copy()
-  obj$estimateDE(test.method=test.method, FDR=FDR, samplesize=samplesize, processors=processors)
+  obj$estimateDE(test.method=test.method, FDR=FDR, dispersion=dispersion,
+                 samplesize=samplesize, processors=processors)
   return(obj)
 }
 

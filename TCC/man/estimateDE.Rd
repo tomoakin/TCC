@@ -3,11 +3,11 @@
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \synopsis{
 estimateDE(tcc, test.method = NULL, FDR = NULL, 
-           samplesize = 10000, processors = NULL)
+           dispersion = NULL, samplesize = 10000, processors = NULL)
 }
 \usage{
 estimateDE(tcc, test.method = c("edger", "deseq", "bayseq"), FDR = 0.1, 
-           samplesize = 10000, processors = NULL)
+           dispersion = NULL, samplesize = 10000, processors = NULL)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -27,6 +27,8 @@ implemented in other R packages.
 	 count data without any replicates (i.e., \code{min(tcc$group) == 1)}).}
 	\item{FDR}{numeric value (between 0 and 1) specifying the threshold
 	 for determining DEGs.}
+	\item{dispersion}{either a numeric vector of dispersions indicating that
+	dispersions. See the \code{\link[edgeR]{exactTest}} function for details.}
 	\item{samplesize}{numeric value specifying the sample size for
 	 estimating the prior parameters if \code{test.method = "bayseq"}.
 	 See the \code{\link[baySeq]{getPriors.NB}} function for details.}

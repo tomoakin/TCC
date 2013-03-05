@@ -95,13 +95,19 @@ TCC$methods(.normByDeseq = function(count){
 # * THE METHODS OF INDENTIFY DE GENES.
 # */
 #  Parametric exact test by edgeR.
-TCC$methods(.testByEdger = function(){
+TCC$methods(.testByEdger = function(dispersion = NULL){
   suppressMessages(d <- edgeR::DGEList(counts = round(count), group = replicates))
   suppressMessages(d <- edgeR::calcNormFactors(d))
   d$samples$norm.factors <- norm.factors
-  suppressMessages(d <- edgeR::estimateCommonDisp(d))
-  suppressMessages(d <- edgeR::estimateTagwiseDisp(d))
-  suppressMessages(d <- edgeR::exactTest(d))
+  if (min(group) != 1) {
+    suppressMessages(d <- edgeR::estimateCommonDisp(d))
+    suppressMessages(d <- edgeR::estimateTagwiseDisp(d))
+  }
+  if (is.null(dispersion)) {
+    suppressMessages(d <- edgeR::exactTest(d))
+  } else {
+    suppressMessages(d <- edgeR::exactTest(d, dispersion = dispersion))
+  }
   if (!is.null(d$table$PValue)) {
     private$stat$p.value <<- d$table$PValue
   } else {
@@ -170,6 +176,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 iteration = 1,
                                 FDR = NULL,
                                 floorPDEG = NULL,
+                                dispersion = NULL,
                                 samplesize = 10000,
                                 processors = NULL){
   if (is.null(norm.method)) {
@@ -216,7 +223,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
       # DEGES strategy  STEP 2. (exact test and remove differential expression genes.)
       private$stat <<- list()
       switch(test.method,
-        "edger" = .self$.testByEdger(),
+        "edger" = .self$.testByEdger(dispersion = dispersion),
         "deseq" = .self$.testByDeseq(),
         "bayseq" = .self$.testByBayseq(samplesize, processors),
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
@@ -310,6 +317,7 @@ TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL) {
 TCC$methods(estimateDE = function (test.method = NULL,
                            FDR = NULL,
                            significance.level = NULL,
+                           dispersion = NULL,
                            samplesize = 10000,
                            processors = NULL) {
   if (is.null(test.method)) {
@@ -326,7 +334,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
   # calculate statistics values related DE gene.
   private$stat <<- list()
   switch(test.method,
-    "edger" = .self$.testByEdger(),
+    "edger" = .self$.testByEdger(dispersion = dispersion),
     "deseq" = .self$.testByDeseq(),
     "bayseq" = .self$.testByBayseq(samplesize, processors),
     stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))

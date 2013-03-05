@@ -16,6 +16,7 @@ calcNormFactors(tcc, ...)
 calcNormFactors(tcc, norm.method = c("tmm", "deseq"), 
                 test.method = c("edger", "deseq", "bayseq"),
                 iteration = 1, FDR = 0.1, floorPDEG = 0.05, 
+                dispersion =NULL, 
                 samplesize = 10000, processors = NULL)
 }
 \arguments{
@@ -47,6 +48,8 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
 	 threshold for determining DEGs after STEP2.}
 	\item{floorPDEG}{numeric value (between 0 and 1) specifying the minimum value 
 	 to be eliminated as potential DEGs before performing STEP3.}
+	\item{dispersion}{either a numeric vector of dispersions indicating that
+	dispersions. See the \code{\link[edgeR]{exactTest}} function for details.}
 	\item{samplesize}{numeric value specifying the sample size for estimating
 	 the prior parameters if \code{test.method = "bayseq"}. See 
 	 the \code{\link[baySeq]{getPriors.NB}} function for details.}
