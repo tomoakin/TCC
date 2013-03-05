@@ -321,24 +321,45 @@ setMethod(
   f = "[",
   signature(x = "TCC"),
   definition = function(x, i) {
-    if (i == 1)
-      return (x$count)
-    else if (i == 2)
-      return (x$names)
-    else if (i == 3)
-      return (x$group)
-    else if (i == 4)
-      return (x$replicates)
-    else if (i == 5)
-      return (x$norm.factors)
-    else if (i == 6)
-      return (x$stat)
-    else if (i == 7)
-      return (x$estimatedDEG)
-    else if (i == 8)
-      return (x$simulation)
-    else
-      return (NULL)
+    if (is.numeric(i)) {
+      if (i == 1)
+        return (x$count)
+      else if (i == 2)
+         return (x$names)
+      else if (i == 3)
+        return (x$group)
+      else if (i == 4)
+        return (x$replicates)
+      else if (i == 5)
+        return (x$norm.factors)
+      else if (i == 6)
+        return (x$stat)
+      else if (i == 7)
+        return (x$estimatedDEG)
+      else if (i == 8)
+        return (x$simulation)
+      else
+        return (NULL)
+    } else  {
+      if (i == "count")
+        return (x$count)
+      else if (i == "names")
+         return (x$names)
+      else if (i == "group")
+        return (x$group)
+      else if (i == "replicates")
+        return (x$replicates)
+      else if (i == "norm.factors")
+        return (x$norm.factors)
+      else if (i == "stat")
+        return (x$stat)
+      else if (i == "estimatedDEG")
+        return (x$estimatedDEG)
+      else if (i == "simulation")
+        return (x$simulation)
+      else
+        return (NULL)
+    }
   }
 )
 
