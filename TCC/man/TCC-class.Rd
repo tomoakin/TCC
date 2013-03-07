@@ -1,6 +1,14 @@
 \name{TCC-class}
 \docType{class}
 \alias{TCC-class}
+\alias{show}
+\alias{show,TCC-method}
+\alias{names}
+\alias{names,TCC-method}
+\alias{length}
+\alias{length,TCC-method}
+\alias{[}
+\alias{[,TCC-method}
 \title{A container for storing information used in TCC}
 \description{
 This is the container class for TCC. This class initially contains 
