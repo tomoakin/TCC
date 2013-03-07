@@ -68,12 +68,15 @@ This class contains the following fields:
 \dontrun{
 tcc <- generateSimulationData()
 
-# Check the counts.
-tcc$count
+# Check the TCC class object.
+tcc
 
-# Check the group and replicates annotation of counts.
-tcc$group
-tcc$replicates
+# Check the fields of TCC class object.
+names(tcc)
+head(tcc["count"])
+
+length(tcc)
+head(tcc[1])
 
 # Check the normalization factors.
 tcc <- calcNormFactors(tcc)
@@ -81,8 +84,7 @@ tcc$norm.factors
 
 # Check the p-values and q-values.
 tcc <- estimateDE(tcc)
-head(tcc$stat$p.value)
-head(tcc$stat$q.value)
+tcc
 
 # Compare the breakdowns of estimated DEGs with the truth.
 head(tcc$estimatedDEG)
