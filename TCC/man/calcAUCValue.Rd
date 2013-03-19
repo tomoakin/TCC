@@ -31,15 +31,13 @@ numeric scalar.
 # the first 2000 genes are DEGs, where 1800 are up in G1.
 # The DE analysis is performed by an exact test in edgeR coupled
 # with the DEGES/edgeR normalization factors.
-\dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(4, 4), group = c(3, 3))
+                         DEG.foldchange = list(4, 4), replicates = c(3, 3))
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc)
 calcAUCValue(tcc)
-}
 
 
 # Analyzing a simulation data for comparing two groups
@@ -47,14 +45,12 @@ calcAUCValue(tcc)
 # the levels of DE are 3-fold in G1 and 7-fold in G2
 # The DE analysis is performed by an negative binomial test in
 # DESeq coupled with the DEGES/DESeq normalization factors.
-\dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(3, 7), group = c(1, 1))
+                         DEG.foldchange = list(3, 7), replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc)
 calcAUCValue(tcc)
-}
 }
 \keyword{methods}

@@ -16,7 +16,9 @@ calcNormFactors(tcc, ...)
 calcNormFactors(tcc, norm.method = c("tmm", "deseq"), 
                 test.method = c("edger", "deseq", "bayseq"),
                 iteration = 1, FDR = 0.1, floorPDEG = 0.05, 
-                dispersion =NULL, 
+                dispersion = NULL, 
+                design = NULL, contrast = NULL, coef = NULL,
+                fit0 = NULL, fit1 = NULL, comparison = NULL,
                 samplesize = 10000, processors = NULL)
 }
 \arguments{
@@ -50,6 +52,25 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
 	 to be eliminated as potential DEGs before performing STEP3.}
 	\item{dispersion}{either a numeric vector of dispersions indicating that
 	dispersions. See the \code{\link[edgeR]{exactTest}} function for details.}
+	\item{design}{numeric design matrix, as for \code{\link[edgeR]{glmFit}} 
+	function in edgeR.}
+	\item{contrast}{numeric vector specifying a contrast of the linear
+	model coefficients to be tested equal to zero. See the 
+	\code{\link[edgeR]{glmLRT}} function for details.}
+	\item{coef}{integer or character vector indicating which coefficients
+	of the linear model are to be tested equal to zero. See the
+	\code{\link[edgeR]{glmLRT}} function for details.}
+	\item{fit0}{A formula for creating reduced model described in DESeq. 
+	The left hand side must be 'count', the right hand side can involve 
+	any column of \code{tcc$group} is used as the mdoel frame. 
+	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
+	\item{fit1}{A formula for creating full model described in DESeq.
+	The left hand side must be 'count', the right hand side can involve 
+	any column of \code{tcc$group} is used as the mdoel frame. 
+	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
+	\item{comparison}{numeric or character string identifying an column 
+	in the \code{tcc$group}. See the \code{group} argument in 
+	\code{\link[baySeq]{topCounts}} for details.}
 	\item{samplesize}{numeric value specifying the sample size for estimating
 	 the prior parameters if \code{test.method = "bayseq"}. See 
 	 the \code{\link[baySeq]{getPriors.NB}} function for details.}
@@ -92,13 +113,16 @@ and \code{\link[baySeq]{getLikelihoods.NB}}) in baySeq.
 \link{TCC-class} object containing the normalization factors in the 
 \code{norm.factors} field (numerical vector). 
 In other words, the normalization factors in the \code{norm.factors} field are populated.
+The information about normalization, such as execution time, potential DEGs of DEGES
+or DEGES protocol, are storing in \code{DEGES} field.
 }
 \examples{
+data(hypoData)
+group <- c(1, 1, 1, 2, 2, 2)
+
 # calculating normalization factors for a hypothetical count data 
 # using the TbT method (the TMM-baySeq-TMM pipeline; Kadota et al., 2012)
 \dontrun{
-data(hypoData)
-group <- c(3, 3)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq")
 tcc$norm.factors
@@ -106,35 +130,27 @@ tcc$norm.factors
 
 # calculating normalization factors using the DEGES/edgeR method 
 # (the TMM-edgeR-TMM pipeline)
-\dontrun{
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors using the iterative DEGES/edgeR method 
 # (iDEGES/edgeR) with n = 3
-\dontrun{
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, iteration = 3)
 tcc$norm.factors
-}
 
 # calculating normalization factors for count data without replicates
-\dontrun{
-group <- c(1, 1)
+group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors for another simulation data without 
 # replicates
-\dontrun{
-tcc <- generateSimulationData(group = c(1, 1))
+tcc <- generateSimulationData(replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors for a simulation data using the 
 # TbT method with four processors

@@ -2,12 +2,15 @@
 \alias{estimateDE}
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \synopsis{
-estimateDE(tcc, test.method = NULL, FDR = NULL, 
-           dispersion = NULL, samplesize = 10000, processors = NULL)
+estimateDE(tcc, test.method = NULL, FDR = NULL, dispersion = NULL,
+           fit0 = NULL, fit1 = NULL, design = NULL, contrast = NULL, coef = NULL,
+           comparison = NULL, samplesize = 10000, processors = NULL)
 }
 \usage{
 estimateDE(tcc, test.method = c("edger", "deseq", "bayseq"), FDR = 0.1, 
-           dispersion = NULL, samplesize = 10000, processors = NULL)
+           dispersion = NULL, fit0 = NULL, fit1 = NULL, design = NULL,
+           contrast = NULL, coef = NULL, comparison = NULL,
+           samplesize = 10000, processors = NULL)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -29,6 +32,25 @@ implemented in other R packages.
 	 for determining DEGs.}
 	\item{dispersion}{either a numeric vector of dispersions indicating that
 	dispersions. See the \code{\link[edgeR]{exactTest}} function for details.}
+	\item{design}{numeric design matrix, as for \code{\link[edgeR]{glmFit}} 
+	function in edgeR.}
+	\item{contrast}{numeric vector specifying a contrast of the linear
+	model coefficients to be tested equal to zero. See the 
+	\code{\link[edgeR]{glmLRT}} function for details.}
+	\item{coef}{integer or character vector indicating which coefficients
+	of the linear model are to be tested equal to zero. See the
+	\code{\link[edgeR]{glmLRT}} function for details.}
+	\item{fit0}{A formula for creating reduced model described in DESeq. 
+	The left hand side must be 'count', the right hand side can involve 
+	any column of \code{tcc$group} is used as the mdoel frame. 
+	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
+	\item{fit1}{A formula for creating full model described in DESeq.
+	The left hand side must be 'count', the right hand side can involve 
+	any column of \code{tcc$group} is used as the mdoel frame. 
+	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
+	\item{comparison}{numeric or character string identifying an column 
+	in the \code{tcc$group}. See the \code{group} argument in 
+	\code{\link[baySeq]{topCounts}} for details.}
 	\item{samplesize}{numeric value specifying the sample size for
 	 estimating the prior parameters if \code{test.method = "bayseq"}.
 	 See the \code{\link[baySeq]{getPriors.NB}} function for details.}
@@ -48,12 +70,12 @@ If the \code{test.method = "edger"} is specified,
 a series of functions for differential expression analysis 
 (\code{\link[edgeR]{estimateCommonDisp}},
  \code{\link[edgeR]{estimateTagwiseDisp}}, 
-and \code{\link[edgeR]{exactTest}}) 
+ \code{\link[edgeR]{exactTest}}, etc.) 
 in edgeR are internally called and \eqn{p}-values (and the derivative such
  as the \eqn{q}-values and the ranks) are calculated. 
 
 The \code{test.method = "deseq"} internally use two functions 
-(\code{\link[DESeq]{estimateDispersions}} and \code{\link[DESeq]{nbinomTest}})
+(\code{\link[DESeq]{estimateDispersions}}, \code{\link[DESeq]{nbinomTest}}, etc.)
  in DESeq. 
 
 The \code{test.method = "bayseq"} internally use two 
@@ -86,28 +108,24 @@ A \code{\link{TCC-class}} object containing following fields:
 # with the DEGES/edgeR normalization factors.
 # For retrieving the summaries of DE results, we recommend to use
 # the getResult function.
-\dontrun{
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 head(tcc$stat$p.value)
 head(tcc$stat$q.value)
 head(tcc$estimatedDEG)
-}
 
 
 # Analyzing a simulation data for comparing two groups
 # (G1 vs. G2) without any replicates
 # The DE analysis is performed by an negative binomial (NB) test
 # in DESeq coupled with the DEGES/DESeq normalization factors.
-\dontrun{
 data(hypoData)
-group <- c(1, 1)
+group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "deseq", FDR = 0.1)
-}
 }
 \keyword{methods}

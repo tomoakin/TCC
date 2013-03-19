@@ -1,16 +1,15 @@
-TCC <- function(count = NULL, group = NULL, replicates = NULL,
-                norm.factors = NULL, names = NULL) {
-  tcc <- new("TCC", count = count, group = group, replicates = replicates,
-             norm.factors = norm.factors, names = names)
-  return (tcc)
-}
+#TCC <- function(count = NULL, conditions = NULL, norm.factors = NULL, names = NULL) {
+#  tcc <- new("TCC", count = count, conditions = conditions,
+#             norm.factors = norm.factors, names = names)
+#  return (tcc)
+#}
 
 
 # getSimulationData
 # sample the simulation data under NB model.
 generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
                                    DEG.model="uniform", DEG.foldchange=NULL,
-                                   group=c(3, 3)) {
+                                   group=c(1, 1, 1, 2, 2, 2), replicates = NULL) {
 # The method is for generating simulation data.
 # 1) Make super dispersion from arab data for generating simulation data.
 # 2) Adjust disersion$mean for resampling.
@@ -23,11 +22,16 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
-  max.len <- max(length(DEG.assign), length(group), length(DEG.foldchange))
-  if (length(group) != max.len) {
-    g <- rep(group, length = max.len)
+  if (!is.null(group) && is.null(replicates)) {
+    replicates <- as.numeric(table(group))
   } else {
-    g <- group
+    group <- rep(1:length(replicates), times = replicates)
+  }
+  max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
+  if (length(replicates) != max.len) {
+    g <- rep(replicates, length = max.len)
+  } else {
+    g <- replicates
   }
   if (length(DEG.assign) != max.len) {
     def.num <- max.len - length(DEG.assign)
@@ -59,7 +63,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
     stop("TCC::ERROR: The total value of DEG.assign must less than one.\n") 
   message("TCC::INFO: Generating simulation data under NB distribution ...")
   message(paste("TCC::INFO: (genesizes   : ", paste(Ngene, collapse=", "), ")"))
-  message(paste("TCC::INFO: (groups      : ", paste(g, collapse=", "), ")"))
+  message(paste("TCC::INFO: (replicates  : ", paste(g, collapse=", "), ")"))
   message(paste("TCC::INFO: (foldhcange distribution : ", DEG.model, ")"))
   message(paste("TCC::INFO: (PDEG        : ", paste(PDEG * DEG.assign, collapse=", "), ")"))
 
@@ -134,16 +138,22 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
     DEG.index <- DEG.index[order(DEG.index)]
     DEG.index[(DEG.index == 100)] <- 0
   }
-
-  # save the annotations for generating simulation data to TCC object.
   colnames(count) <- paste("G", rep(1:length(g), times=g), "_rep", sequence(g), sep="")
   rownames(count) <- paste("gene", 1:nrow(count), sep="_") 
-  tcc <- new("TCC", count, group)
+  # Adjust column index.
+  count.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
+  fc.matrix.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
+  labels.old <- rep(unique(group), times = replicates)
+  labels <- table(group)
+  for (i in 1:length(labels)) {
+    count.adjust[, (group == names(labels)[[i]])] <- count[, (labels.old == names(labels)[[i]])]
+    fc.matrix.adjust[, (group == names(labels)[[i]])] <- fc.matrix[, (labels.old == names(labels)[[i]])]
+  }
+  tcc <- new("TCC", count.adjust, group)
   tcc$simulation$trueDEG <- DEG.index
-  tcc$simulation$DEG.foldchange <- fc.matrix
+  tcc$simulation$DEG.foldchange <- fc.matrix.adjust
   tcc$simulation$PDEG <- PDEG * DEG.assign
-  tcc$simulation$group <- g
-  tcc$replicates <- rep(1:length(g), times=g)
+  tcc$private$simulation.rep <- g
   tcc$private$simulation <- TRUE
   tcc$private$estimated <- FALSE
   return(tcc)
@@ -152,8 +162,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 
 # plotSimulationMap
 # plot heat map with simulation conditions.
-plotFCPseudocolor <- function(tcc, main="",
-  xlab="samples", ylab="genes") {
+plotFCPseudocolor <- function(tcc, main="", xlab="samples", ylab="genes") {
   if (is.null(tcc$simulation$trueDEG) || length(tcc$simulation$trueDEG) == 0)
     message("\nTCC::ERROR: There is no annotations about simulation data.\n")
   # make matrix data for plot heatmap of foldchange.
@@ -168,9 +177,9 @@ plotFCPseudocolor <- function(tcc, main="",
   image(1:ncol(d), 1:nrow(d), t(d[rev(1:nrow(d)), ]), col=colorRamp,
     ylab=ylab, xlab="", main=main, axes=FALSE, zlim=c(1, max(tcc$simulation$DEG.foldchange)))
   title(xlab=xlab, line=4)
-  axis(1, at=1:ncol(d), labels=paste("rep", sequence(tcc$simulation$group), sep=""), cex.axis=0.7, line=0)
-  axis(1, at=cumsum(tcc$simulation$group) - tcc$simulation$group + 1,
-    labels=paste("Group", c(1:length(tcc$simulation$group)), sep=" "), cex.axis=0.7, line=1, lty=0)
+  axis(1, at=1:ncol(d), labels=paste("rep", sequence(tcc$private$simulation.rep), sep=""), cex.axis=0.7, line=0)
+  axis(1, at=cumsum(tcc$private$simulation.rep) - tcc$private$simulation.rep + 1,
+    labels=paste("Group", c(1:length(tcc$private$simulation.rep)), sep=" "), cex.axis=0.7, line=1, lty=0)
   y.axis <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG), nrow(tcc$count) - 0.5)
   y.labels <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG), nrow(tcc$count))
   axis(2, at=nrow(tcc$count) - y.axis, labels=y.labels, cex.axis=0.7, las=1)
@@ -200,13 +209,14 @@ setMethod(
   signature(tcc = "TCC"),
   definition = function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
                         FDR=NULL, floorPDEG=NULL, dispersion=NULL,
+                        design=NULL,contrast=NULL, coef=NULL,
+                        fit0=NULL, fit1=NULL,  comparison = NULL,
                         samplesize=10000, processors=NULL) {
-      ex.time <- proc.time()
       obj <- tcc$copy()
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
                       FDR=FDR, floorPDEG=floorPDEG, dispersion=dispersion,
-                      samplesize=samplesize, processors=processors)
-      obj$stat$execution.time <- proc.time() - ex.time
+                      fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
+                      comparison=comparison,samplesize=samplesize, processors=processors)
       return(obj)
     }
 )
@@ -214,45 +224,51 @@ setMethod(
 # estimateDE
 # the method is for estimating DEGs.
 estimateDE <- function(tcc, test.method=NULL, FDR=NULL, dispersion=NULL,
-                       samplesize=10000, processors=NULL) {
+                       fit0=NULL, fit1=NULL, design = NULL, contrast=NULL, coef=NULL,
+                       comparison=NULL,samplesize=10000, processors=NULL) {
   obj <- tcc$copy()
   obj$estimateDE(test.method=test.method, FDR=FDR, dispersion=dispersion,
-                 samplesize=samplesize, processors=processors)
+                 fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
+                 comparison=comparison, samplesize=samplesize, processors=processors)
   return(obj)
 }
 
 # plot
 # plot MA-plot with TCC class tcc.
-plot.TCC <- function(x, FDR=NULL, median.lines = FALSE, floor=0, main=NULL, 
+plot.TCC <- function(x, FDR=NULL, median.lines = FALSE, floor=0, groups=NULL, main=NULL, 
                     xlab = expression(A == (log[2] * G2 + log[2] * G1 ) / 2),
                     ylab = expression(M == log[2] * G2 - log[2] * G1),
                     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, col = NULL, col.tag = NULL,...) {
-      invisible(x$plotMA(FDR=FDR, median.lines=median.lines, floor=floor, main=main, xlab=xlab, ylab=ylab,
+      invisible(x$plotMA(FDR=FDR, median.lines=median.lines, floor=floor, groups=groups, main=main, xlab=xlab, ylab=ylab,
                xlim=xlim, ylim=ylim, cex=cex, pch=pch, col=col, col.tag=col.tag,...))
 }
 
 # getResult
 # get p-value, FDR or the axes of MA-plot as data.frame.
 getResult <- function(tcc, sort = FALSE, floor = 0) {
-  if (length(tcc$group) != 2)
-    stop("\nTCC::EEROR: This version doesn't support when the group more than two.\n")
   if (length(tcc$stat) == 0)
     stop("\nTCC::ERROR: There are no statistics in stat fields of TCC class tcc. Execute TCC.estiamteDE for calculating them.\n")
-  count.normed <- tcc$getNormalizedCount()
-  mean.exp <- matrix(0, ncol=length(tcc$group), nrow=nrow(tcc$count))
-  for (g in 1:length(tcc$group)) {
-    mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$replicates == g]))
+  gru <- unique(tcc$group[, 1])
+  if ((length(gru) == 2) && (ncol(tcc$group) == 1)) {
+    count.normed <- tcc$getNormalizedCount()
+    mean.exp <- matrix(0, ncol=length(gru), nrow=nrow(tcc$count))
+    for (g in 1:length(gru))
+      mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == g]))
+    ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
+    result.df <- data.frame(
+      id = rownames(tcc$count),
+      a.value = ma.axes$a.value, m.value = ma.axes$m.value,
+      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+    )
+  } else {
+    result.df <- data.frame(
+      id = rownames(tcc$count),
+	  a.value = rep(NA, length = nrow(tcc$count)), m.value = rep(NA, length = nrow(tcc$count)),
+      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+    )
   }
-  ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
-  result.df <- data.frame(
-    id = rownames(tcc$count),
-    a.value = ma.axes$a.value,
-    m.value = ma.axes$m.value,
-    p.value = tcc$stat$p.value,
-    q.value = tcc$stat$q.value,
-    rank = tcc$stat$rank,
-    estimatedDEG = tcc$estimatedDEG
-  )
   if (sort)
     result.df <- result.df[order(result.df$rank), ]
   return (result.df)
@@ -262,15 +278,14 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
 # remove the low count data.
 filterLowCountGenes <- function(tcc, low.count = 0) {
   obj <- tcc$copy()
-  filters <- matrix(0, ncol=length(obj$group), nrow=nrow(obj$count)) 
-  for (i in 1:length(obj$group)) {
-    if (obj$group[i] == 1) {
-      filters[, i] <- as.numeric(obj$count[, (obj$replicates == i)] <= low.count)
-    } else {
-      filters[, i] <- as.numeric(rowSums(obj$count[, (obj$replicates == i)]) <= low.count)
-    }
+  gru <- unique(obj$group[, 1])
+  filters <- matrix(0, ncol=length(gru), nrow=nrow(obj$count)) 
+  for (i in 1:length(gru)) {
+    filters[, i] <- as.numeric(rowSums(
+                      as.matrix(obj$count[, (obj$group[, 1] == gru[i])])
+                    ) <= low.count)
   }
-  left.tag <- as.logical(rowSums(filters) != length(obj$group))
+  left.tag <- as.logical(rowSums(filters) != length(gru))
   obj$count <- obj$count[left.tag, ]
   if (!is.null(obj$simulation$trueDEG) && length(obj$simulation$trueDEG) != 0)
     obj$simulation$trueDEG <- obj$simulation$trueDEG[left.tag]
@@ -306,8 +321,8 @@ setMethod(
   f = "names",
   signature(x = "TCC"),
   definition = function(x) {
-    return (c("count", "names", "group", "replicates", "norm.factors",
-              "stat", "estimatedDEG", "simulation"))
+    return (c("count", "names", "group", "norm.factors", 
+              "DEGES", "stat", "estimatedDEG", "simulation"))
   }
 )
 setMethod(
@@ -329,9 +344,9 @@ setMethod(
       else if (i == 3)
         return (x$group)
       else if (i == 4)
-        return (x$replicates)
-      else if (i == 5)
         return (x$norm.factors)
+      else if (i == 5)
+        return (x$DEES)
       else if (i == 6)
         return (x$stat)
       else if (i == 7)
@@ -347,10 +362,10 @@ setMethod(
          return (x$names)
       else if (i == "group")
         return (x$group)
-      else if (i == "replicates")
-        return (x$replicates)
       else if (i == "norm.factors")
         return (x$norm.factors)
+      else if (i == "DEGES")
+        return (x$DEGES)
       else if (i == "stat")
         return (x$stat)
       else if (i == "estimatedDEG")
@@ -368,30 +383,29 @@ setMethod(
   signature(object = "TCC"),
   definition = function(object) {
     # Counts.
-    if (object$private$simulation) {
-      cat("Count (Simulation Data):\n")
-      df <- data.frame(
-        object$count,
-        object$simulation$trueDEG
-      )
-      colnames(df) <- c(colnames(object$count), "trueDEG")
-      print(head(df))
-      cat("\n")
-    } else {
-      cat("Count:\n")
-      print(head(object$count))
-      cat("\n")
-    }
-    # Annotations.
+    cat("Count:\n")
+    print(head(object$count))
+    cat("\n")
+    # Conditions and Annotations.
     df <- data.frame(
-      replicates = object$replicates,
       norm.factors = object$norm.factors,
       lib.sizes = object$norm.factors * colSums(object$count)
     )
     rownames(df) <- colnames(object$count)
-    cat("Annotations:\n")
+    df <- cbind(object$group, df)
+    cat("Group:\n")
     print(df)
     cat("\n")
+    # Normalized results.
+    if (object$private$normalized) {
+      cat("DEGES:\n")
+      cat(paste("   Protocol       : ", object$DEGES$protocol, "\n", sep = ""))
+      cat(paste("   Execution time : ", sprintf("%.1f", object$DEGES$execution.time[3]),
+                " sec\n", sep = ""))
+      cat(paste("   Threshold type : ", object$DEGES$threshold$type, 
+                " (Input:", sprintf("%.2f", object$DEGES$threshold$input),")\n",
+                "   Potential PDEG : ", sprintf("%.2f", object$DEGES$threshold$PDEG), "\n\n", sep = ""))
+    }
     # Esimated results.
     if (object$private$estimated) {
       df <- getResult(object)

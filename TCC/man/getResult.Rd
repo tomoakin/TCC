@@ -43,7 +43,7 @@ A data frame object containing following fields:
 # the DEGES/edgeR normalization factors
 # run on 100/hypoData genes for example to save time
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData[1:100*100,], group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
@@ -53,13 +53,11 @@ head(result)
 # Obtaining DE results by an negative binomial test in DESeq
 # coupled with the iterative DEGES/DESeq normalization method
 # with n = 3
-\dontrun{
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "deseq", 
                        test.method = "deseq", iteration = 3)
 tcc <- estimateDE(tcc, test.method = "deseq", FDR = 0.1)
 result <- getResult(tcc, sort = TRUE)
 head(result)
-}
 }
 \keyword{methods}
