@@ -393,13 +393,13 @@ setMethod(
     )
     rownames(df) <- colnames(object$count)
     df <- cbind(object$group, df)
-    cat("Group:\n")
+    cat("Sample:\n")
     print(df)
     cat("\n")
     # Normalized results.
     if (object$private$normalized) {
       cat("DEGES:\n")
-      cat(paste("   Protocol       : ", object$DEGES$protocol, "\n", sep = ""))
+      cat(paste("   Pipeline       : ", object$DEGES$protocol, "\n", sep = ""))
       cat(paste("   Execution time : ", sprintf("%.1f", object$DEGES$execution.time[3]),
                 " sec\n", sep = ""))
       cat(paste("   Threshold type : ", object$DEGES$threshold$type, 
@@ -409,7 +409,7 @@ setMethod(
     # Esimated results.
     if (object$private$estimated) {
       df <- getResult(object)
-      cat("Analyzed results:\n")
+      cat("Results:\n")
       print(head(df))
       cat("\n")
     }
