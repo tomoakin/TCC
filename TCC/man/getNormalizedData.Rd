@@ -21,7 +21,7 @@ A numeric matrix containing normalized count data.
 }
 \examples{
 # Note that the hypoData has non-DEGs at 2001-10000th rows
-nonDEG <- 2001:10000
+nonDEG <- 201:1000
 data(hypoData)
 summary(hypoData[nonDEG, ])
 group <- c(1, 1, 1, 2, 2, 2)

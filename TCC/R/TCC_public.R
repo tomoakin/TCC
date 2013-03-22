@@ -9,7 +9,7 @@
 # sample the simulation data under NB model.
 generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
                                    DEG.model="uniform", DEG.foldchange=NULL,
-                                   group=c(1, 1, 1, 2, 2, 2), replicates = NULL) {
+                                   group=c(1, 1, 1, 2, 2, 2)) {
 # The method is for generating simulation data.
 # 1) Make super dispersion from arab data for generating simulation data.
 # 2) Adjust disersion$mean for resampling.
@@ -22,11 +22,11 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
-  if (!is.null(group) && is.null(replicates)) {
+  #if (!is.null(group) && is.null(replicates)) {
     replicates <- as.numeric(table(group))
-  } else {
-    group <- rep(1:length(replicates), times = replicates)
-  }
+  #} else {
+  #  group <- rep(1:length(replicates), times = replicates)
+  #}
   max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
   if (length(replicates) != max.len) {
     g <- rep(replicates, length = max.len)

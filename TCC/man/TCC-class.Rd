@@ -22,10 +22,6 @@ object. Functions calling such methods copies the object prior to
 calling the method to keep the semantics of functional programming.
 This class can be created by the generic \code{new()} function with 
 the data for (i.e., \code{count} and \code{group}) fields. 
-Information of the (\code{replicates}) field can automatically be obtained 
-when creating this class object from the information of the \code{group} field. 
-Alternatively, if you supply the \code{replicates}, the group field can be
-filled automatically.
 
 The values (defaults to all 1) in the \code{norm.factors} field 
 will be changed after performing the \code{\link{calcNormFactors}} function.

@@ -14,17 +14,18 @@ TCC <- setRefClass(
 
   #  Class Methods.
   methods = list(
-    initialize = function(count = NULL, group = NULL, replicates = NULL,
+    initialize = function(count = NULL, group = NULL,
                           norm.factors = NULL, names = NULL) {
       if (!is.null(count)) {
-        if (is.null(group) && is.null(replicates))
-          stop("TCC::ERROR: The group or replicates must be provided.\n")
+        #if (is.null(group) && is.null(replicates))
+        #  stop("TCC::ERROR: The group or replicates must be provided.\n")
         # Set up group data.
         if (is.null(group)) {
-          .self$group <<- data.frame(replicates = rep(1:length(replicates), times = replicates))
+          stop("TCC::ERROR: The group or replicates must be provided.\n")
+          #.self$group <<- data.frame(group = rep(1:length(replicates), times = replicates))
         } else {
           if (!is.data.frame(group)) 
-            .self$group <<- data.frame(replicates = group)
+            .self$group <<- data.frame(group = group)
           else 
             .self$group <<- group
         }

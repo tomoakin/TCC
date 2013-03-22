@@ -34,7 +34,8 @@ numeric scalar.
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(4, 4), replicates = c(3, 3))
+                         DEG.foldchange = list(4, 4), 
+                         group = c(1, 1, 1, 2, 2, 2))
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc)
 calcAUCValue(tcc)
@@ -48,7 +49,8 @@ calcAUCValue(tcc)
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(3, 7), replicates = c(1, 1))
+                         DEG.foldchange = list(3, 7), 
+                         group = c(1, 2))
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc)
 calcAUCValue(tcc)

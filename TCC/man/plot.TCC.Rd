@@ -116,14 +116,15 @@ tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 plot(tcc)
 
+# Changing the FDR threshold
+plot(tcc, FDR = 0.7)
+
 
 # 4.
 # M-A plotting for multiple groups
 # Only plot Group 2 vs Group3.
-tcc <- generateSimulationData(replicates = c(3, 3, 3))
-plot(tcc, groups = c(2, 2))
+tcc <- generateSimulationData(group = c(1, 1, 2, 2, 3, 3))
+plot(tcc, groups = c(2, 3))
 
-# Changing the FDR threshold
-plot(tcc, FDR = 0.7)
 }
 \keyword{methods}
