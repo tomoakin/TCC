@@ -403,7 +403,7 @@ setMethod(
       cat(paste("   Execution time : ", sprintf("%.1f", object$DEGES$execution.time[3]),
                 " sec\n", sep = ""))
       cat(paste("   Threshold type : ", object$DEGES$threshold$type, 
-                " (Input:", sprintf("%.2f", object$DEGES$threshold$input),")\n",
+                " < ", sprintf("%.2f", object$DEGES$threshold$input),"\n",
                 "   Potential PDEG : ", sprintf("%.2f", object$DEGES$threshold$PDEG), "\n\n", sep = ""))
     }
     # Esimated results.
