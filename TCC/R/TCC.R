@@ -176,7 +176,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
     capture.output(fit1 <- fitNbinomGLMs(d, fit1))
     private$stat$p.value <<- nbinomGLMTest(fit1, fit0)
     private$stat$p.value[is.na(private$stat$p.value)] <<- 1
-    private$stat$q.value <<- p.adjust(private$stat$p.value)
+    private$stat$q.value <<- p.adjust(private$stat$p.value, method = "BH")
     private$stat$rank <<- rank(private$stat$p.value)
   }
 })
