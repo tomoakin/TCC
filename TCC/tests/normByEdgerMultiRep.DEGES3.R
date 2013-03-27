@@ -5,7 +5,7 @@ if (Sys.getenv("TCC_REAL_TEST") != ""){
   cat("tcc$norm.factors: ")
   cat(tcc$norm.factors)
   cat("\n")
-  cat("tcc$stat$execution.time: ")
-  cat(tcc$stat$execution.time)
+  cat("tcc$DEGES$execution.time: ")
+  cat(tcc$DEGES$execution.time)
   cat("\n")
 }
