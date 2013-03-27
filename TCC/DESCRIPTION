@@ -13,7 +13,9 @@ Description: This package provides functions for performing differential express
  The appropriate combination provided by TCC allows a more robust and accurate estimation 
  performed easily than directly using original packages.
  Functions to produce simulation data under various conditions and to plot the data are also provided. 
-Depends: R (>= 2.15), edgeR, baySeq, DESeq, ROC, snow, methods
+Depends: R (>= 2.15), methods, DESeq
+Imports: edgeR, baySeq, ROC
+Enhances: snow
 License: GPL-2
 Copyright: Authors listed above
 URL: http://www.iu.a.u-tokyo.ac.jp/~kadota/TCC

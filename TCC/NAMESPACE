@@ -1,8 +1,8 @@
 import(ROC)
 import(DESeq)
-import(snow)
 import(baySeq)
 import(edgeR)
+
 
 # Export TCC class.
 exportClasses(
