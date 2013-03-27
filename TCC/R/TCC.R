@@ -181,17 +181,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
   }
 })
 #  Non-parametric exact test by baySeq.
-TCC$methods(.testByBayseq = function(samplesize = NULL, processors = NULL, comparison = NULL){
-  cl <- NULL
-  if (!is.null(processors)) {
-    if(!("snow" %in% loadedNamespaces()))
-      library(snow)
-    if (is.numeric(processors)) {
-      cl <- makeSOCKcluster(rep("localhost", length = processors))
-    } else {
-      cl <- processors
-    }
-  }
+TCC$methods(.testByBayseq = function(samplesize = NULL, cl = NULL, comparison = NULL){
   if (is.null(comparison)) 
     comparison <- colnames(group)[1]
   suppressMessages(d <- new("countData",
@@ -227,7 +217,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 fit0 = NULL, fit1 = NULL,
                                 comparison = NULL,
                                 samplesize = 10000,
-                                processors = NULL){
+                                cl = NULL){
   ex.time <- proc.time()
   if (is.null(norm.method)) {
     if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
@@ -276,7 +266,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
       switch(test.method,
         "edger" = .self$.testByEdger(design = design, coef = coef, contrast = contrast, dispersion = dispersion),
         "deseq" = .self$.testByDeseq(fit1 = fit1, fit0 = fit0, comparison = comparison),
-        "bayseq" = .self$.testByBayseq(samplesize = samplesize, processors = processors, comparison = comparison),
+        "bayseq" = .self$.testByBayseq(samplesize = samplesize, cl = cl, comparison = comparison),
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
       )
       # Remove the DEG from original count data.
@@ -344,7 +334,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
                            contrast = NULL, coef = NULL,
                            comparison = NULL,
                            samplesize = 10000,
-                           processors = NULL) {
+                           cl = NULL) {
   if (is.null(test.method)) {
     if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
       test.method = "deseq"
@@ -359,7 +349,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
   switch(test.method,
     "edger" = .self$.testByEdger(design = design, coef = coef, contrast = contrast, dispersion = dispersion),
     "deseq" = .self$.testByDeseq(fit1 = fit1, fit0 = fit0, comparison = comparison),
-    "bayseq" = .self$.testByBayseq(samplesize = samplesize, processors = processors, comparison = comparison),
+    "bayseq" = .self$.testByBayseq(samplesize = samplesize, cl = cl, comparison = comparison),
     stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
   )
   # identify DE genes with the results of exact test.

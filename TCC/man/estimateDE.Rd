@@ -4,13 +4,13 @@
 \synopsis{
 estimateDE(tcc, test.method = NULL, FDR = NULL, dispersion = NULL,
            fit0 = NULL, fit1 = NULL, design = NULL, contrast = NULL, coef = NULL,
-           comparison = NULL, samplesize = 10000, processors = NULL)
+           comparison = NULL, samplesize = 10000, cl = NULL)
 }
 \usage{
 estimateDE(tcc, test.method = c("edger", "deseq", "bayseq"), FDR = 0.1, 
            dispersion = NULL, fit0 = NULL, fit1 = NULL, design = NULL,
            contrast = NULL, coef = NULL, comparison = NULL,
-           samplesize = 10000, processors = NULL)
+           samplesize = 10000, cl = NULL)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -54,7 +54,7 @@ implemented in other R packages.
 	\item{samplesize}{numeric value specifying the sample size for
 	 estimating the prior parameters if \code{test.method = "bayseq"}.
 	 See the \code{\link[baySeq]{getPriors.NB}} function for details.}
-	\item{processors}{numeric value or 'snow' object for using multi
+	\item{cl}{a 'snow' object for using multi
 	 processors if \code{test.method = "bayseq"}. See the
 	 \code{\link[baySeq]{getPriors.NB}} function for details.}
 }

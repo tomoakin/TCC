@@ -19,7 +19,7 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
                 dispersion = NULL, 
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
-                samplesize = 10000, processors = NULL)
+                samplesize = 10000, cl = NULL)
 }
 \arguments{
 	\item{tcc}{\link{TCC-class} object.}
@@ -74,7 +74,7 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
 	\item{samplesize}{numeric value specifying the sample size for estimating
 	 the prior parameters if \code{test.method = "bayseq"}. See 
 	 the \code{\link[baySeq]{getPriors.NB}} function for details.}
-	\item{processors}{numeric value or 'snow' object for using multi 
+	\item{cl}{a 'snow' object for using multi 
 	 processors if \code{test.method = "bayseq"}. See the 
 	\code{\link[baySeq]{getPriors.NB}} function for details.}
 }
@@ -155,9 +155,11 @@ tcc$norm.factors
 # calculating normalization factors for a simulation data using the 
 # TbT method with four processors
 \dontrun{
+library(snow)
+cl <- makeCluster(4, "SOCK")
 tcc <- generateSimulationData()
 tcc <- calcNormFactors(tcc, norm.method = "tmm", 
-                       test.method = "bayseq", processors = 4)
+                       test.method = "bayseq", cl = cl)
 tcc$norm.factors
 }
 

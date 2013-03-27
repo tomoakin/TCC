@@ -211,12 +211,12 @@ setMethod(
                         FDR=NULL, floorPDEG=NULL, dispersion=NULL,
                         design=NULL,contrast=NULL, coef=NULL,
                         fit0=NULL, fit1=NULL,  comparison = NULL,
-                        samplesize=10000, processors=NULL) {
+                        samplesize=10000, cl=NULL) {
       obj <- tcc$copy()
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
                       FDR=FDR, floorPDEG=floorPDEG, dispersion=dispersion,
                       fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
-                      comparison=comparison,samplesize=samplesize, processors=processors)
+                      comparison=comparison,samplesize=samplesize, cl=cl)
       return(obj)
     }
 )
@@ -225,11 +225,11 @@ setMethod(
 # the method is for estimating DEGs.
 estimateDE <- function(tcc, test.method=NULL, FDR=NULL, dispersion=NULL,
                        fit0=NULL, fit1=NULL, design = NULL, contrast=NULL, coef=NULL,
-                       comparison=NULL,samplesize=10000, processors=NULL) {
+                       comparison=NULL,samplesize=10000, cl=NULL) {
   obj <- tcc$copy()
   obj$estimateDE(test.method=test.method, FDR=FDR, dispersion=dispersion,
                  fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
-                 comparison=comparison, samplesize=samplesize, processors=processors)
+                 comparison=comparison, samplesize=samplesize, cl=cl)
   return(obj)
 }
 
