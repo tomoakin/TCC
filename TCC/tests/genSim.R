@@ -4,7 +4,7 @@ library(TCC)
   tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3,
                          DEG.assign = c(0.6, 0.2, 0.2),
                          DEG.foldchange = list(3, 10, 6),
-                         group = c(1, 1, 2, 2, 2, 3, 3))
+                         replicates = c(3, 3, 3))
   cat("dim(tcc$count): ")
   cat(dim(tcc$count))
   cat("\n")

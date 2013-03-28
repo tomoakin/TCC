@@ -148,7 +148,7 @@ tcc$norm.factors
 
 # calculating normalization factors for another simulation data without 
 # replicates
-tcc <- generateSimulationData(group = c(1, 2))
+tcc <- generateSimulationData(replicates = c(1, 2))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 

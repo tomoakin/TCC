@@ -32,7 +32,7 @@ tcc <- generateSimulationData(Ngene = 1000, PDEG = 0.2,
                               DEG.assign = c(0.9, 0.1),
                               DEG.model = "uniform",
                               DEG.foldchange = list(4, 4),
-                              group = c(1, 1, 1, 2, 2, 2))
+                              replicates = c(3, 3))
 hypoData <- tcc$count
 }
 }

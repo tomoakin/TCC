@@ -10,7 +10,7 @@ such as two or more groups and/or without replicates.
 \usage{
 generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
                   DEG.model = "uniform", DEG.foldchange = NULL,
-                  group = c(1, 1, 1, 2, 2, 2))
+                  replicates = c(3, 3))
 }
 \arguments{
 	\item{Ngene}{numeric scalar specifying the number of genes.}
@@ -36,8 +36,8 @@ generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
 	 scale (= \eqn{z}) parameters", indicating that the minimum and
 	 average FC values for DEGs correspond to \eqn{x} and
 	 (\eqn{x} + \eqn{y} * \eqn{z}).}
-	\item{group}{numeric vector indicating the 
-	 experimental group for each sample (or library).}
+	\item{replicates}{numeric vector indicating the numbers of (biological)
+	 replicates for individual groups compared.}
 }
 \details{
 The empirical distribution of read counts 
@@ -79,7 +79,7 @@ tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform", 
                          DEG.foldchange = list(4, 4), 
-                         group = c(1, 1, 1, 2, 2, 2))
+                         replicates = c(3, 3))
 dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)
@@ -95,7 +95,7 @@ tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform", 
                          DEG.foldchange = list(3, 7),
-                         group = c(1, 2))
+                         replicates = c(1, 1))
 dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)
@@ -112,7 +112,7 @@ tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                 DEG.assign = c(0.9, 0.1),
                 DEG.model = "gamma", 
                 DEG.foldchange = list(c(2, 5, 0.5), c(2, 5, 0.5)), 
-                group = c(1, 1, 2, 2))
+                replicates = c(2, 2))
 dim(tcc$count)
 str(tcc$simulation)
 }
@@ -129,7 +129,7 @@ tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3,
                          DEG.assign = c(0.7, 0.2, 0.1),
                          DEG.model = "uniform", 
                          DEG.foldchange = list(3, 10, 6), 
-                         group = c(1, 1, 2, 2, 2, 2, 3, 3, 3))
+                         replicates = c(2, 4, 3))
 dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)

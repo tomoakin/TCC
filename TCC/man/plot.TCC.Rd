@@ -123,7 +123,7 @@ plot(tcc, FDR = 0.7)
 # 4.
 # M-A plotting for multiple groups
 # Only plot Group 2 vs Group3.
-tcc <- generateSimulationData(group = c(1, 1, 2, 2, 3, 3))
+tcc <- generateSimulationData(replicates = c(2, 2, 2))
 plot(tcc, groups = c(2, 3))
 
 }
