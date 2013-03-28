@@ -144,18 +144,27 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
   else 
     suppressMessages(d <- newCountDataSet(countData = round(count), conditions = group))
   sizeFactors(d) <- norm.factors * colSums(count)
-  # try defalt
-  e <- try(suppressMessages(d <- estimateDispersions(d)), silent = TRUE)
-  # try blind method
-  if (class(e) == "try-error") {
-    message("TCC::WARN: 'estimateDispersions' with method=\"pooled\" in DESeq could not be performed.")
-    message("TCC::WARN: 'estiamteDispersions' with method=\"blind\" in DESeq was used instead.")
-    suppressMessages(e <- (d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only")))
-    # try local mode
+  if (ncol(group) == 1 && min(unique(group[, 1])) == 1) { # single group and single replicate
+    e <- try(suppressMessages(d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only")), silent = TRUE)
     if (class(e) == "try-error") {
       message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
       message("TCC::WARN: 'estiamteDispersions' with sharingMode=\"local\" in DESeq was used instead.")
       suppressMessages(d <- estimateDispersions(d, fitType = "local"))
+    }
+  } else { # otherwise conditions
+    # try default
+    e <- try(suppressMessages(d <- estimateDispersions(d)), silent = TRUE)
+    # try blind method
+    if (class(e) == "try-error") {
+      message("TCC::WARN: 'estimateDispersions' with method=\"pooled\" in DESeq could not be performed.")
+      message("TCC::WARN: 'estiamteDispersions' with method=\"blind\" in DESeq was used instead.")
+      suppressMessages(e <- (d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only")))
+      # try local mode
+      if (class(e) == "try-error") {
+        message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
+        message("TCC::WARN: 'estiamteDispersions' with sharingMode=\"local\" in DESeq was used instead.")
+        suppressMessages(d <- estimateDispersions(d, fitType = "local"))
+      }
     }
   }
   # classic or GLM
