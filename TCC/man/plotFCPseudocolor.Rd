@@ -30,7 +30,7 @@ tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
                          DEG.foldchange = list(4, 4), 
-                         group = c(3, 3))
+                         replicates = c(3, 3))
 plotFCPseudocolor(tcc)
 
 # Generating a simulation data for comparing three groups
@@ -38,13 +38,11 @@ plotFCPseudocolor(tcc)
 # the first 3000 genes are DEGs, where the 70%, 20%, and 10% are
 # up-regulated in G1, G2, G3, respectively. The levels of DE are
 # 3-, 10, and 6-fold in individual groups.
-\dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3,
                          DEG.assign = c(0.7, 0.2, 0.1),
                          DEG.model = "uniform",
                          DEG.foldchange = list(3, 10, 6),
-                         group = c(2, 4, 3))
+                         replicates = c(3, 3, 3))
 plotFCPseudocolor(tcc)
-}
 }
 \keyword{methods}

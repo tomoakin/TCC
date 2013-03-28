@@ -20,20 +20,21 @@ stored in the \code{norm.factors} field in the \link{TCC-class} object.
 A numeric matrix containing normalized count data.
 }
 \examples{
-\dontrun{
 # Note that the hypoData has non-DEGs at 2001-10000th rows
-nonDEG <- 2001:10000
+nonDEG <- 201:1000
 data(hypoData)
 summary(hypoData[nonDEG, ])
+group <- c(1, 1, 1, 2, 2, 2)
 
 # Obtaining normalized count data after performing the 
 # TbT normalization method (Kadota et al., 2012) from hypoData,
 # i.e., TbT-normalized data
-group <- c(3, 3)
+\dontrun{
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq")
 normalized.count <- getNormalizedData(tcc)
 summary(normalized.count[nonDEG, ])
+}
 
 # Obtaining normalized count data after performing the 
 # DEGES/edgeR normalization method, i.e., DEGES/edgeR-normalized data
@@ -49,6 +50,5 @@ tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "tmm", iteration = FALSE)
 normalized.count <- getNormalizedData(tcc)
 summary(normalized.count[nonDEG, ])
-}
 }
 \keyword{methods}

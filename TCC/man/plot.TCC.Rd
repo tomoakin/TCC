@@ -11,10 +11,11 @@
  log2(G2)) / 2} on the \eqn{x}-axis) using normalized count data.}
 \usage{
 \method{plot}{TCC}(x, FDR = NULL, median.lines = FALSE, floor = 0,
-     main = NULL,
+     groups = NULL, main = NULL,
      xlab = expression(A == (log[2] * G2 + log[2] * G1) / 2),
      ylab = expression(M == log[2] * G2 - log[2] * G1),
-     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, col = NULL, ...)
+     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, 
+     col = NULL, col.tag = NULL, ...)
 }
 \arguments{
 	\item{x}{\link{TCC-class} object.}
@@ -24,6 +25,9 @@
 	 specifying the median M values for non-DEGs (black), DEGs
 	 up-regulated in Group 1 (G1; blue), and G2 (red) are drawn.}
 	\item{floor}{numeric scalar specifying a threshold for adjusting low count data.}
+	\item{groups}{numeric or character vector consists two elements for 
+	specifying what two groups should be drawed when data contains three
+	or more groups.}
 	\item{main}{character string indicating the plotting title.}
 	\item{xlab}{character string indicating the \eqn{x}-label title.}
 	\item{ylab}{character string indicating the \eqn{y}-label title.}
@@ -37,6 +41,7 @@
 	 to be used as the default in plotting points.}
 	\item{col}{vector specifying plotting color. The default is col 
 	 = c(1, 4, 2, 5, 6, 7, ...) of color index.}
+	\item{col.tag}{vector specifying the color of genes.}
 	\item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}
 }
 \details{
@@ -75,7 +80,7 @@ A scatter plot to the current graphic device.
 # because the information about DEG or non-DEG for each gene is 
 # not indicated.
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 plot(tcc)
 
@@ -88,37 +93,38 @@ mean(colSums(hypoData))
 # M-A plotting of simulation data with default parameter settings.
 # non-DEGs are in black, DEGs up-regulated in G1 and G2 are in
 # blue and red.
-\dontrun{
 tcc <- generateSimulationData()
 plot(tcc, median.lines = TRUE)
-}
 
 
 # 2-2. 
 # M-A plotting of DEGES/edgeR-normalized simulation data.
 # It can be seen that the median M value for non-DEGs approaches
 # zero.
-\dontrun{
 tcc <- generateSimulationData()
 tcc <- calcNormFactors(tcc)
 plot(tcc, median.lines = TRUE)
-}
 
 
 # 3. 
 # M-A plotting of DEGES/edgeR-normalized hypoData after performing
 # DE analysis.
-\dontrun{
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 plot(tcc)
-}
-
 
 # Changing the FDR threshold
-\dontrun{plot(tcc, FDR = 0.7)}
+plot(tcc, FDR = 0.7)
+
+
+# 4.
+# M-A plotting for multiple groups
+# Only plot Group 2 vs Group3.
+tcc <- generateSimulationData(replicates = c(2, 2, 2))
+plot(tcc, groups = c(2, 3))
+
 }
 \keyword{methods}

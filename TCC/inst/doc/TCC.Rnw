@@ -1,0 +1,34 @@
+%\VignetteIndexEntry{TCC Vignette}
+%\VignetteKeyword{RNA-Seq}
+%\VignetteKeyword{differential expression}
+%\VignetteKeyword{DEGES}
+%\VignettePackage{TCC}
+\documentclass[12pt]{article}
+
+\textwidth=6.2in
+\textheight=8.5in
+\oddsidemargin=0.2in
+\evensidemargin=0.2in
+\headheight=0in
+\headsep=0in
+
+\begin{document}
+\title{TCC: Differential expression analysis for tag count data with robust normalization strategies}
+\author{Jianqiang Sun, Tomoaki Nishiyama, Kentaro Shimizu, and Koji Kadota}
+\date{2013-01-10}
+\maketitle
+
+    The R package, TCC provides users with a robust and accurate framework to perform differential expression analysis of tag count data. The strategy (called DEGES) is to remove data that are potential differentially expressed genes (DEGs) before performing the data normalization. DEGES in TCC is essential for accurate normalization of tag count data, especially when the up- and down-regulated DEGs in one of the samples are extremely biased in their number. TCC provides a simple unified interface which encapsulates functions to calculate normalization factors and estimate DEGs defined in edgeR, DESeq, and baySeq. The appropriate combination provided by TCC allows a more robust and accurate estimation performed easily than directly using original packages. Functions to produce simulation data under various conditions and to plot the data are also provided.
+   The detailed user's guide for TCC is available on the following website.
+
+   http://www.iu.a.u-tokyo.ac.jp/~kadota/TCC/
+
+   Note that this package calls significant functions implemented in the other packages. This is because our normalization procedures combine normalization methods and differential expression methods established by others. The citations can be checked with citation command.
+
+\begin{Schunk}
+\begin{Sinput}
+> citation("TCC")
+\end{Sinput}
+\end{Schunk}
+
+\end{document}
