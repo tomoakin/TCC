@@ -56,9 +56,9 @@ TCC <- setRefClass(
 	}
 	# count is a matrix with or without colnames, rownames 
         if (is.null(rownames(count))){
-          names <<- paste("gene_", c(1:nrow(count)), sep="")
-          rownames(count) <<- names
-          names <<- names
+          new_names <- paste("gene_", c(1:nrow(count)), sep="")
+          rownames(count) <<- new_names
+          names <<- new_names
 	} else {
           names <<- rownames(count)
         }
