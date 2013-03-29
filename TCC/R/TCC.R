@@ -71,8 +71,7 @@ TCC <- setRefClass(
           normf <- norm.factors
         }
         norm.factors <<- normf
-        private$estimated <<- FALSE
-        private$simulation <<- FALSE
+        private <<- list(estimated = FALSE, simulation = FALSE, normalized = FALSE)
       }
     },
     #/**

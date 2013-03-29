@@ -110,3 +110,42 @@ calcAUCValue <- function(tcc) {
 getNormalizedData <- function(tcc) {
   return (tcc$getNormalizedCount())
 }
+
+setMethod(
+  f = "show",
+  signature(object = "TCC"),
+  definition = function(object) {
+    # Counts.
+    cat("Count:\n")
+    print(head(object$count))
+    cat("\n")
+    # Conditions and Annotations.
+    df <- data.frame(
+      norm.factors = object$norm.factors,
+      lib.sizes = object$norm.factors * colSums(object$count)
+    )
+    rownames(df) <- colnames(object$count)
+    df <- cbind(object$group, df)
+    cat("Sample:\n")
+    print(df)
+    cat("\n")
+    # Normalized results.
+    if (object$private$normalized) {
+      cat("DEGES:\n")
+      cat(paste("   Pipeline       : ", object$DEGES$protocol, "\n", sep = ""))
+      cat(paste("   Execution time : ", sprintf("%.1f", object$DEGES$execution.time[3]),
+                " sec\n", sep = ""))
+      cat(paste("   Threshold type : ", object$DEGES$threshold$type, 
+                " < ", sprintf("%.2f", object$DEGES$threshold$input),"\n",
+                "   Potential PDEG : ", sprintf("%.2f", object$DEGES$threshold$PDEG), "\n\n", sep = ""))
+    }
+    # Esimated results.
+    if (object$private$estimated) {
+      df <- getResult(object)
+      cat("Results:\n")
+      print(head(df))
+      cat("\n")
+    }
+  }
+)
+

@@ -1,6 +1,8 @@
 \name{TCC-class}
 \docType{class}
 \alias{TCC-class}
+\alias{show}
+\alias{show,TCC-method}
 \title{A container for storing information used in TCC}
 \description{
 This is the container class for TCC. This class initially contains 
@@ -57,15 +59,16 @@ This class contains the following fields:
 	}
 }
 \examples{
-\dontrun{
 tcc <- generateSimulationData()
+
+# show
+tcc
 
 # Check the counts.
 tcc$count
 
-# Check the group and replicates annotation of counts.
+# Check the group of counts.
 tcc$group
-tcc$replicates
 
 # Check the normalization factors.
 tcc <- calcNormFactors(tcc)
@@ -82,6 +85,5 @@ head(tcc$simulation$trueDEG)
 
 # M-A plotting.
 plot(tcc)
-}
 }
 \keyword{classes}
