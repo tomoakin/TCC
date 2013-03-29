@@ -75,7 +75,7 @@ A scatter plot to the current graphic device.
 # because the information about DEG or non-DEG for each gene is 
 # not indicated.
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 plot(tcc)
 
@@ -110,7 +110,7 @@ plot(tcc, median.lines = TRUE)
 # DE analysis.
 \dontrun{
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)

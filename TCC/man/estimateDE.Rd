@@ -84,28 +84,24 @@ A \code{\link{TCC-class}} object containing following fields:
 # with the DEGES/edgeR normalization factors.
 # For retrieving the summaries of DE results, we recommend to use
 # the getResult function.
-\dontrun{
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 3, 3, 3)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 head(tcc$stat$p.value)
 head(tcc$stat$q.value)
 head(tcc$estimatedDEG)
-}
 
 
 # Analyzing a simulation data for comparing two groups
 # (G1 vs. G2) without any replicates
 # The DE analysis is performed by an negative binomial (NB) test
 # in DESeq coupled with the DEGES/DESeq normalization factors.
-\dontrun{
 data(hypoData)
-group <- c(1, 1)
+group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc, test.method = "deseq", FDR = 0.1)
-}
 }
 \keyword{methods}

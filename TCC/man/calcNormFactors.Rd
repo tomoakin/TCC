@@ -95,7 +95,7 @@ In other words, the normalization factors in the \code{norm.factors} field are p
 # using the TbT method (the TMM-baySeq-TMM pipeline; Kadota et al., 2012)
 \dontrun{
 data(hypoData)
-group <- c(3, 3)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq")
 tcc$norm.factors
@@ -103,35 +103,29 @@ tcc$norm.factors
 
 # calculating normalization factors using the DEGES/edgeR method 
 # (the TMM-edgeR-TMM pipeline)
-\dontrun{
+data(hypoData)
+group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors using the iterative DEGES/edgeR method 
 # (iDEGES/edgeR) with n = 3
-\dontrun{
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, iteration = 3)
 tcc$norm.factors
-}
 
 # calculating normalization factors for count data without replicates
-\dontrun{
-group <- c(1, 1)
+group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors for another simulation data without 
 # replicates
-\dontrun{
-tcc <- generateSimulationData(group = c(1, 1))
+tcc <- generateSimulationData(replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
-}
 
 # calculating normalization factors for a simulation data using the 
 # TbT method with four processors
