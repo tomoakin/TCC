@@ -29,7 +29,7 @@ in magenta and no-changes are in white.
 tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(4, 4), 
+                         DEG.foldchange = c(4, 4), 
                          replicates = c(3, 3))
 plotFCPseudocolor(tcc)
 
@@ -41,7 +41,7 @@ plotFCPseudocolor(tcc)
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3,
                          DEG.assign = c(0.7, 0.2, 0.1),
                          DEG.model = "uniform",
-                         DEG.foldchange = list(3, 10, 6),
+                         DEG.foldchange = c(3, 10, 6),
                          replicates = c(3, 3, 3))
 plotFCPseudocolor(tcc)
 }

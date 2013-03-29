@@ -15,12 +15,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
-  #if (!is.null(group) && is.null(replicates)) {
-  #replicates <- as.numeric(table(group))
   group <- rep(1:length(replicates), times = replicates)
-  #} else {
-  #  group <- rep(1:length(replicates), times = replicates)
-  #}
   max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
   if (length(replicates) != max.len) {
     g <- rep(replicates, length = max.len)
@@ -34,25 +29,13 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   }
   if (is.null(DEG.foldchange)) {
     if (DEG.model == "uniform")
-      DEG.foldchange <- list(c(4))
+      DEG.foldchange <- rep(4, length = max.len)
     if (DEG.model == "gamma")
-      DEG.foldchange <- list(c(1.2, 2.0, 0.5))
+      DEG.foldchange <- lapply(list(1.2, 2.0, 0.5), function(l){rep(l, length = max.len)})
   }
-  if (DEG.model == "uniform") {
-    for (i in 1:length(DEG.foldchange)) {
-      if (length(DEG.foldchange[[i]]) != 1)
-        message ("TCC::INFO: DEG.foldchange has three element in the vectors, only the first element is used for fixed foldchange.")
-    }
-  } else if (DEG.model == "gamma") {
-    for (i in 1:length(DEG.foldchange)) {
-      if (length(DEG.foldchange[[i]]) != 3)
-        stop ("\nTCC::ERROR: It need three elements in each vectors when the DEG.mode is specified to gamma.\n")
-    }
-  }
-  if (length(DEG.foldchange) != max.len) {
-    DEG.foldchange <- rep(DEG.foldchange, length=max.len)
-  }
-    DEG.foldchange <- rep(DEG.foldchange, length = max.len)
+  if (DEG.model == "gamma" && length(DEG.foldchange) != 3)
+    stop ("\nTCC::ERROR: It need a list object contained three vectors when the DEG.mode is specified to gamma.\n")
+
   if (sum(DEG.assign) > 1)
     stop("TCC::ERROR: The total value of DEG.assign must less than one.\n") 
   message("TCC::INFO: Generating simulation data under NB distribution ...")
@@ -86,7 +69,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
       rep(1:length(DEG.assign), times = round(Ngene * PDEG * DEG.assign))
     for (i in 1:length(reps)) {
       fc.matrix[, i] <- rep(1, length=Ngene)
-      fc.matrix[(DEG.index == reps[i]), i] <- DEG.foldchange[[reps[i]]][1]
+      fc.matrix[(DEG.index == reps[i]), i] <- DEG.foldchange[reps[i]]
     }
   }
 
@@ -119,7 +102,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
       DEG.index[(deg.candidate & cumsum(deg.candidate) <= deg.num)] <- i
       for (j in 1:g[i]) {
         fc.matrix[(DEG.index == i), col.idx] <- 
-          DEG.foldchange[[i]][1] + rgamma(sum(DEG.index == i), shape=DEG.foldchange[[i]][2], scale=DEG.foldchange[[i]][3])
+          DEG.foldchange[[1]][i] + rgamma(sum(DEG.index == i), shape=DEG.foldchange[[2]][i], scale=DEG.foldchange[[3]][i])
         count[(DEG.index == i), col.idx] <- 
           count[(DEG.index == i), col.idx] * fc.matrix[(DEG.index == i), col.idx]
         col.idx <- col.idx + 1
