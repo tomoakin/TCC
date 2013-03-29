@@ -144,7 +144,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
   else 
     suppressMessages(d <- newCountDataSet(countData = round(count), conditions = group))
   sizeFactors(d) <- norm.factors * colSums(count)
-  if (ncol(group) == 1 && min(unique(group[, 1])) == 1) { # single group and single replicate
+  if (ncol(group) == 1 && min(as.numeric(table(group[, 1]))) == 1) { # single group and single replicate
     e <- try(suppressMessages(d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only")), silent = TRUE)
     if (class(e) == "try-error") {
       message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
