@@ -1,12 +1,11 @@
-if (Sys.getenv("TCC_REAL_TEST") != ""){
   library(TCC)
   data(hypoData)
-  group <- c(3, 3)
-  tcc <- new("TCC", hypoData, c(3,3))
+  group <- c(1, 1, 1, 2, 2, 2)
+  tcc <- new("TCC", hypoData, group)
   cat("tcc$count: ")
   cat(dim(tcc$count))
   cat("\n")
-  tccf <- filterUnexpressedGenes(tcc)
+  tccf <- filterLowCountGenes(tcc)
   cat("dim(tcc$count): ")
   cat(dim(tccf$count))
   cat("\n")
@@ -16,4 +15,3 @@ if (Sys.getenv("TCC_REAL_TEST") != ""){
   cat("dim(hypoData[as.logical(rowSums(hypoData)>0),]): ")
   cat(dim(hypoData[as.logical(rowSums(hypoData) > 0),]))
   cat("\n")
-}
