@@ -67,14 +67,14 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
       mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == g]))
     ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
     result.df <- data.frame(
-      id = rownames(tcc$count),
+      gene_id = rownames(tcc$count),
       a.value = ma.axes$a.value, m.value = ma.axes$m.value,
       p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
       rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
     )
   } else {
     result.df <- data.frame(
-      id = rownames(tcc$count),
+      gene_id = rownames(tcc$count),
 	  a.value = rep(NA, length = nrow(tcc$count)), m.value = rep(NA, length = nrow(tcc$count)),
       p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
       rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
@@ -132,7 +132,7 @@ setMethod(
   f = "names",
   signature(x = "TCC"),
   definition = function(x) {
-    return (c("count", "names", "group", "norm.factors", 
+    return (c("count", "gene_id", "group", "norm.factors", 
               "DEGES", "stat", "estimatedDEG", "simulation"))
   }
 )
@@ -151,7 +151,7 @@ setMethod(
       if (i == 1)
         return (x$count)
       else if (i == 2)
-         return (x$names)
+         return (x$gene_id)
       else if (i == 3)
         return (x$group)
       else if (i == 4)
@@ -169,8 +169,8 @@ setMethod(
     } else  {
       if (i == "count")
         return (x$count)
-      else if (i == "names")
-         return (x$names)
+      else if (i == "gene_id")
+         return (x$gene_id)
       else if (i == "group")
         return (x$group)
       else if (i == "norm.factors")

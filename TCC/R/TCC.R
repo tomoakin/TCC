@@ -2,7 +2,7 @@ TCC <- setRefClass(
   "TCC",
   fields = list(
     count = "matrix",              # counts data of libraries.
-    names = "character",           # gene names
+    gene_id = "character",         # gene names
     group = "data.frame",          # groups, libraries, conditions.
     norm.factors = "numeric",      # normalization factors.
     stat = "list",                 # the result of identify DE genes.
@@ -15,7 +15,7 @@ TCC <- setRefClass(
   #  Class Methods.
   methods = list(
     initialize = function(count = NULL, group = NULL,
-                          norm.factors = NULL, names = NULL) {
+                          norm.factors = NULL, gene_id = NULL) {
       if (!is.null(count)) {
         #if (is.null(group) && is.null(replicates))
         #  stop("TCC::ERROR: The group or replicates must be provided.\n")
@@ -36,10 +36,10 @@ TCC <- setRefClass(
           .self$count <<- count
         # Set up names.
         if (is.null(rownames(.self$count))) {
-          .self$names <<- paste("gene_", c(1:nrow(count)), sep = "")
+          .self$gene_id <<- paste("gene_", c(1:nrow(count)), sep = "")
           rownames(.self$count) <<- paste("gene_", c(1:nrow(count)), sep = "")
         } else {
-          .self$names <<- rownames(count)
+          .self$gene_id <<- rownames(count)
         }
         if (is.null(colnames(.self$count))) {
           g <- as.numeric(table(group))
