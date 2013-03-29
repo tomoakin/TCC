@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(TCC)
+>   library(TCC)
 Loading required package: edgeR
 Loading required package: limma
 Loading required package: baySeq
@@ -72,15 +72,28 @@ The following object(s) are masked from 'package:edgeR':
 
     calcNormFactors
 
-> data(hypoData)
-> df<-data.frame(row.names = paste('a', rownames(hypoData), sep=""),
-+   A1 = hypoData[,1], A2 = hypoData[,2], A3 = hypoData[,3],
-+   B1 = hypoData[,4], B2 = hypoData[,5], B3 = hypoData[,6])
-> m<-cbind(df[[1]], df[[2]], df[[3]],df[[4]],df[[5]],df[[6]])
-> tccdata=new("TCC", m, c(1, 1, 1, 2, 2, 2))
-> head(tccdata$names)
-[1] "gene_1" "gene_2" "gene_3" "gene_4" "gene_5" "gene_6"
+>   tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+TCC::INFO: Generating simulation data under NB distribution ...
+TCC::INFO: (genesizes   :  100 )
+TCC::INFO: (group  :  1, 1, 1, 2, 2, 2 )
+TCC::INFO: (foldhcange distribution :  uniform )
+TCC::INFO: (PDEG        :  0.18, 0.02 )
+>   cat("simulation data generated \n")
+simulation data generated 
+>   tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger")
+TCC::INFO: Calculating normalization factors using DEGES
+TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
+TCC::INFO: .testByEdger
+TCC::INFO: Done.
+>   cat("tcc$norm.factors: ")
+tcc$norm.factors: >   cat(tcc$norm.factors)
+0.960779 0.9762051 0.7871008 1.20578 1.000352 1.069783>   cat("\n")
+
+>   cat("tcc$stat$execution.time: ")
+tcc$stat$execution.time: >   cat(tcc$stat$execution.time)
+0.182 0 0.182 0 0>   cat("\n")
+
 > 
 > proc.time()
    user  system elapsed 
-  3.900   0.070   3.971 
+  7.575   0.069   7.660 

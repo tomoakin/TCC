@@ -72,15 +72,49 @@ The following object(s) are masked from 'package:edgeR':
 
     calcNormFactors
 
-> data(hypoData)
-> df<-data.frame(row.names = paste('a', rownames(hypoData), sep=""),
-+   A1 = hypoData[,1], A2 = hypoData[,2], A3 = hypoData[,3],
-+   B1 = hypoData[,4], B2 = hypoData[,5], B3 = hypoData[,6])
-> m<-cbind(df[[1]], df[[2]], df[[3]],df[[4]],df[[5]],df[[6]])
-> tccdata=new("TCC", m, c(1, 1, 1, 2, 2, 2))
-> head(tccdata$names)
-[1] "gene_1" "gene_2" "gene_3" "gene_4" "gene_5" "gene_6"
+>   set.seed(1234567)
+>   tcc <- generateSimulationData(Ngene = 1000, PDEG = 0.3,
++                          DEG.assign = c(0.6, 0.2, 0.2),
++                          DEG.foldchange = list(3, 10, 6),
++                          replicates = c(2, 4, 3))
+TCC::INFO: Generating simulation data under NB distribution ...
+TCC::INFO: (genesizes   :  1000 )
+TCC::INFO: (group  :  1, 1, 2, 2, 2, 2, 3, 3, 3 )
+TCC::INFO: (foldhcange distribution :  uniform )
+TCC::INFO: (PDEG        :  0.18, 0.06, 0.06 )
+>   cat("dim(tcc$count): ")
+dim(tcc$count): >   cat(dim(tcc$count))
+1000 9>   cat("\n")
+
+>   cat("tcc$group: ")
+tcc$group: >   cat(tcc$group)
+1 1 2 2 2 2 3 3 3>   cat("\n")
+
+>   cat("tcc$count: ")
+tcc$count: >   cat("\n")
+
+>   print(head(tcc$count))
+       G1_rep1 G1_rep2 G2_rep1 G2_rep2 G2_rep3 G2_rep4 G3_rep1 G3_rep2 G3_rep3
+gene_1       0       1       1       1       0       1       0       0       5
+gene_2      45      13       1       0       0       1       3       0       0
+gene_3    8969    8355    2255    2203    2375    3066    2464    2731    2675
+gene_4      33      26       9      13      16      12       8      13      15
+gene_5       1       4       1       1       3       7       1       6      10
+gene_6     319     180     155     159      59      48     132      68     337
+>   png("plot5-3-1.png", 500, 500)
+>   plotFCPseudocolor(tcc)
+>   dev.off()
+null device 
+          1 
+>   png("plot5-3-2.png", 600, 600)
+>   plot(tcc)
+[1] 0.4782712
+[1] 0.4782712
+[1] 0.2120897
+>   dev.off()
+null device 
+          1 
 > 
 > proc.time()
    user  system elapsed 
-  3.900   0.070   3.971 
+  7.832   0.075   7.931 

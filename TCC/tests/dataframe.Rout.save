@@ -76,11 +76,10 @@ The following object(s) are masked from 'package:edgeR':
 > df<-data.frame(row.names = paste('a', rownames(hypoData), sep=""),
 +   A1 = hypoData[,1], A2 = hypoData[,2], A3 = hypoData[,3],
 +   B1 = hypoData[,4], B2 = hypoData[,5], B3 = hypoData[,6])
-> m<-cbind(df[[1]], df[[2]], df[[3]],df[[4]],df[[5]],df[[6]])
-> tccdata=new("TCC", m, c(1, 1, 1, 2, 2, 2))
+> tccdata=new("TCC",df,c(1, 1, 1, 2, 2, 2))
 > head(tccdata$names)
-[1] "gene_1" "gene_2" "gene_3" "gene_4" "gene_5" "gene_6"
+[1] "agene_1" "agene_2" "agene_3" "agene_4" "agene_5" "agene_6"
 > 
 > proc.time()
    user  system elapsed 
-  3.900   0.070   3.971 
+  3.829   0.070   3.906 
