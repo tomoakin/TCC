@@ -140,52 +140,14 @@ setMethod(
   f = "length",
   signature(x = "TCC"),
   definition = function(x) {
-    return (8)
+    return (ncol(tcc$count))
   }
 )
 setMethod(
   f = "[",
   signature(x = "TCC"),
   definition = function(x, i) {
-    if (is.numeric(i)) {
-      if (i == 1)
-        return (x$count)
-      else if (i == 2)
-         return (x$gene_id)
-      else if (i == 3)
-        return (x$group)
-      else if (i == 4)
-        return (x$norm.factors)
-      else if (i == 5)
-        return (x$DEES)
-      else if (i == 6)
-        return (x$stat)
-      else if (i == 7)
-        return (x$estimatedDEG)
-      else if (i == 8)
-        return (x$simulation)
-      else
-        return (NULL)
-    } else  {
-      if (i == "count")
-        return (x$count)
-      else if (i == "gene_id")
-         return (x$gene_id)
-      else if (i == "group")
-        return (x$group)
-      else if (i == "norm.factors")
-        return (x$norm.factors)
-      else if (i == "DEGES")
-        return (x$DEGES)
-      else if (i == "stat")
-        return (x$stat)
-      else if (i == "estimatedDEG")
-        return (x$estimatedDEG)
-      else if (i == "simulation")
-        return (x$simulation)
-      else
-        return (NULL)
-    }
+	return (x$count[i, ])
   }
 )
 
