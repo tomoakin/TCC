@@ -22,5 +22,7 @@ export(
   MAplot,
   NBsample,
   plotFCPseudocolor,
-  plot.TCC
+  plot.TCC,
+  subset,
+  subset.TCC
 )
