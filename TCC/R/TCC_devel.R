@@ -15,8 +15,11 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
-  group <- rep(1:length(replicates), times = replicates)
-  max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
+  if (class(DEG.foldchange) == "list") {
+    max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange[[1]]))
+  } else {
+    max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
+  }
   if (length(replicates) != max.len) {
     g <- rep(replicates, length = max.len)
   } else {
@@ -45,6 +48,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   message(paste("TCC::INFO: (PDEG        : ", paste(PDEG * DEG.assign, collapse=", "), ")"))
 
   # 1) Prepare the super population for sampling.
+  group <- rep(1:length(g), times = g)
   arab <- NULL
   rm(arab)
   data(arab)
@@ -107,6 +111,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
           count[(DEG.index == i), col.idx] * fc.matrix[(DEG.index == i), col.idx]
         col.idx <- col.idx + 1
       }
+      count <- round(count)
     }
     # sort by DEG.index .
     DEG.index[(DEG.index == 0)] <- 100
@@ -118,17 +123,17 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   colnames(count) <- paste("G", rep(1:length(g), times=g), "_rep", sequence(g), sep="")
   rownames(count) <- paste("gene", 1:nrow(count), sep="_") 
   # Adjust column index.
-  count.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
-  fc.matrix.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
-  labels.old <- rep(unique(group), times = replicates)
-  labels <- table(group)
-  for (i in 1:length(labels)) {
-    count.adjust[, (group == names(labels)[[i]])] <- count[, (labels.old == names(labels)[[i]])]
-    fc.matrix.adjust[, (group == names(labels)[[i]])] <- fc.matrix[, (labels.old == names(labels)[[i]])]
-  }
-  tcc <- new("TCC", count.adjust, group)
+  #count.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
+  #fc.matrix.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
+  #labels.old <- rep(unique(group), times = replicates)
+  #labels <- table(group)
+  #for (i in 1:length(labels)) {
+  #  count.adjust[, (group == names(labels)[[i]])] <- count[, (labels.old == names(labels)[[i]])]
+  #  fc.matrix.adjust[, (group == names(labels)[[i]])] <- fc.matrix[, (labels.old == names(labels)[[i]])]
+  #}
+  tcc <- new("TCC", count, group)
   tcc$simulation$trueDEG <- DEG.index
-  tcc$simulation$DEG.foldchange <- fc.matrix.adjust
+  tcc$simulation$DEG.foldchange <- fc.matrix
   tcc$simulation$PDEG <- PDEG * DEG.assign
   tcc$private$simulation.rep <- g
   tcc$private$simulation <- TRUE
