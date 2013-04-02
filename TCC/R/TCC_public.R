@@ -140,7 +140,7 @@ setMethod(
   f = "length",
   signature(x = "TCC"),
   definition = function(x) {
-    return (ncol(tcc$count))
+    return (ncol(x$count))
   }
 )
 setMethod(
