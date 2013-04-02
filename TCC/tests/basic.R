@@ -11,7 +11,7 @@ if (Sys.getenv("TCC_REAL_TEST")!=""){
   print(head(result))
 
   print(names(tcc))
-  print(head(tcc["count"]))
+  print(head(tcc[c("gene_1", "gene_2", "gene_3")]))
   print(length(tcc))
-  print(head(tcc[1]))
+  print(head(tcc[c(1,2,3)]))
 }

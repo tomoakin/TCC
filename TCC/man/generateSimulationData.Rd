@@ -9,7 +9,7 @@ such as two or more groups and/or without replicates.
 }
 \usage{
 generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
-                  DEG.model = "uniform", DEG.foldchange = NULL,
+                  DEG.model = NULL, DEG.foldchange = NULL,
                   replicates = c(3, 3))
 }
 \arguments{

@@ -1,7 +1,7 @@
 # getSimulationData
 # sample the simulation data under NB model.
 generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
-                                   DEG.model="uniform", DEG.foldchange=NULL,
+                                   DEG.model=NULL, DEG.foldchange=NULL,
                                    replicates=c(3, 3)) {
 # The method is for generating simulation data.
 # 1) Make super dispersion from arab data for generating simulation data.
@@ -15,6 +15,13 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
+  if (is.null(DEG.model)) {
+    if (class(DEG.foldchange) == "list") {
+      DEG.model <- "gamma"
+    } else {
+      DEG.model <- "uniform"
+    }
+  }
   if (class(DEG.foldchange) == "list") {
     max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange[[1]]))
   } else {
@@ -36,7 +43,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
     if (DEG.model == "gamma")
       DEG.foldchange <- lapply(list(1.2, 2.0, 0.5), function(l){rep(l, length = max.len)})
   }
-  if (DEG.model == "gamma" && length(DEG.foldchange) != 3)
+  if (DEG.model == "gamma" && (length(DEG.foldchange) != 3 || class(DEG.foldchange) != "list"))
     stop ("\nTCC::ERROR: It need a list object contained three vectors when the DEG.mode is specified to gamma.\n")
 
   if (sum(DEG.assign) > 1)
