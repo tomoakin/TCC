@@ -8,10 +8,7 @@ setMethod(
     return(edgeR::calcNormFactors(tcc, ...))
   }
 )
-setMethod(
-  f = "calcNormFactors",
-  signature(tcc = "TCC"),
-  definition = function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
+calcNormFactors.tcc <- function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
                         FDR=NULL, floorPDEG=NULL, samplesize=10000, processors=NULL) {
       ex.time <- proc.time()
       obj <- tcc$copy()
@@ -19,7 +16,11 @@ setMethod(
                       FDR=FDR, floorPDEG=floorPDEG, samplesize=samplesize, processors=processors)
       obj$stat$execution.time <- proc.time() - ex.time
       return(obj)
-    }
+}
+setMethod(
+  f = "calcNormFactors",
+  signature(tcc = "TCC"),
+  definition = calcNormFactors.tcc
 )
 
 # estimateDE

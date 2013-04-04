@@ -9,14 +9,9 @@ This function calculates normalization factors using a specified
 multi-step normalization method from a \link{TCC-class} object.
 The procedure can generally be described as the \eqn{STEP1-(STEP2-STEP3)_{n}}{STEP1-(STEP2-STEP3)n} pipeline.
 }
-\synopsis{
-calcNormFactors(tcc, ...)
-}
 \usage{
-calcNormFactors(tcc, norm.method = c("tmm", "deseq"), 
-                test.method = c("edger", "deseq", "bayseq"),
-                iteration = 1, FDR = 0.1, floorPDEG = 0.05, 
-                samplesize = 10000, processors = NULL)
+\S4method{calcNormFactors}{TCC}(tcc, norm.method = NULL, test.method = NULL,
+    iteration = TRUE, FDR = NULL, floorPDEG = NULL, samplesize = 10000, processors = NULL)
 }
 \arguments{
 	\item{tcc}{\link{TCC-class} object.}
@@ -55,6 +50,12 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
 	\code{\link[baySeq]{getPriors.NB}} function for details.}
 }
 \details{
+Typical usage are:
+calcNormFactors(tcc, norm.method = c("tmm", "deseq"), 
+                test.method = c("edger", "deseq", "bayseq"),
+                iteration = 1, FDR = 0.1, floorPDEG = 0.05, 
+                samplesize = 10000, processors = NULL)
+
 The \code{\link{calcNormFactors}} function is the main function in the TCC package. 
 Since this pipeline employs the DEG identification method at STEP2, 
 our multi-step strategy can eliminate the biased effect of potential DEGs 
