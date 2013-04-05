@@ -79,7 +79,7 @@ tcc <- generateSimulationData()
 tcc
 
 # Check the counts.
-tcc$count
+head(tcc$count)
 
 # Check the group of counts.
 tcc$group

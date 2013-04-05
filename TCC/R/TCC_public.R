@@ -9,11 +9,11 @@ setMethod(
   }
 )
 calcNormFactors.tcc <- function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
-                        FDR=NULL, floorPDEG=NULL, samplesize=10000, processors=NULL) {
+                        FDR=NULL, floorPDEG=NULL, samplesize=10000, cl=NULL) {
       ex.time <- proc.time()
       obj <- tcc$copy()
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
-                      FDR=FDR, floorPDEG=floorPDEG, samplesize=samplesize, processors=processors)
+                      FDR=FDR, floorPDEG=floorPDEG, samplesize=samplesize, cl=cl)
       obj$stat$execution.time <- proc.time() - ex.time
       return(obj)
 }
@@ -25,9 +25,9 @@ setMethod(
 
 # estimateDE
 # the method is for estimating DEGs.
-estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, processors=NULL) {
+estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, cl=NULL) {
   obj <- tcc$copy()
-  obj$estimateDE(test.method=test.method, FDR=FDR, samplesize=samplesize, processors=processors)
+  obj$estimateDE(test.method=test.method, FDR=FDR, samplesize=samplesize, cl=cl)
   return(obj)
 }
 
@@ -44,14 +44,14 @@ plot.TCC <- function(x, FDR=NULL, median.lines = FALSE, floor=0, main=NULL,
 # getResult
 # get p-value, FDR or the axes of MA-plot as data.frame.
 getResult <- function(tcc, sort = FALSE, floor = 0) {
-  if (length(table(tcc$group)) != 2)
+  if (length(table(tcc$group$group)) != 2)
     stop("\nTCC::EEROR: This version doesn't support when the group more than two.\n")
   if (length(tcc$stat) == 0)
     stop("\nTCC::ERROR: There are no statistics in stat fields of TCC class tcc. Execute TCC.estiamteDE for calculating them.\n")
   count.normed <- tcc$getNormalizedCount()
-  mean.exp <- matrix(0, ncol=length(tcc$group), nrow=nrow(tcc$count))
+  mean.exp <- matrix(0, ncol=length(tcc$group$group), nrow=nrow(tcc$count))
   for (g in 1:length(tcc$group)) {
-    mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group == g]))
+    mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group$group == g]))
   }
   ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
   result.df <- data.frame(
@@ -72,13 +72,13 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
 # remove the low count data.
 filterLowCountGenes <- function(tcc, low.count = 0) {
   obj <- tcc$copy()
-  filters <- matrix(0, ncol=length(obj$group), nrow=nrow(obj$count)) 
-  replicates=table(obj$group)
+  filters <- matrix(0, ncol=length(obj$group$group), nrow=nrow(obj$count)) 
+  replicates=table(obj$group$group)
   for (i in 1:length(replicates)) {
     if (replicates[i] == 1) {
-      filters[, i] <- as.numeric(obj$count[, (obj$group == i)] <= low.count)
+      filters[, i] <- as.numeric(obj$count[, (obj$group$group == i)] <= low.count)
     } else {
-      filters[, i] <- as.numeric(rowSums(obj$count[, (obj$group == i)]) <= low.count)
+      filters[, i] <- as.numeric(rowSums(obj$count[, (obj$group$group == i)]) <= low.count)
     }
   }
   left.tag <- as.logical(rowSums(filters) != length(replicates))
