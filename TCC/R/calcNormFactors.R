@@ -63,7 +63,6 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         "bayseq" = .self$.testByBayseq(samplesize = samplesize, cl = cl, comparison = comparison),
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
       )
-      message("internal test done")
       # Remove the DEG from original count data.
       deg.flg.FDR <- .self$.exactTest(FDR = FDR)
       deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, ties.method = "min") <= nrow(count) * floorPDEG)

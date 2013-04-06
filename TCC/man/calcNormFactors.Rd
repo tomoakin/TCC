@@ -11,7 +11,7 @@ The procedure can generally be described as the \eqn{STEP1-(STEP2-STEP3)_{n}}{ST
 }
 \usage{
 \S4method{calcNormFactors}{TCC}(tcc, norm.method = NULL, test.method = NULL,
-    iteration = TRUE, FDR = NULL, floorPDEG = NULL, samplesize = 10000, cl = NULL)
+    iteration = TRUE, FDR = NULL, floorPDEG = NULL, samplesize = 10000, cl = NULL, \dots)
 }
 \arguments{
 	\item{tcc}{\link{TCC-class} object.}
@@ -48,6 +48,8 @@ The procedure can generally be described as the \eqn{STEP1-(STEP2-STEP3)_{n}}{ST
 	\item{cl}{cluster object of 'snow' package for using multiple
 	 processors. Effective if \code{test.method = "bayseq"}. See the 
 	\code{\link[baySeq]{getPriors.NB}} function for details.}
+        \item{\dots}{other parameter thant can be passed to 
+        \code{EdgeR::calcNormFactors}.}
 }
 \details{
 Typical usage are:

@@ -8,13 +8,15 @@ setMethod(
     return(edgeR::calcNormFactors(tcc, ...))
   }
 )
-calcNormFactors.tcc <- function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
-                        FDR=NULL, floorPDEG=NULL, samplesize=10000, cl=NULL) {
-      ex.time <- proc.time()
+calcNormFactors.tcc <- function(tcc, norm.method=NULL, 
+    test.method=NULL, iteration=TRUE,
+    FDR=NULL, floorPDEG=NULL, 
+    samplesize=10000, cl = NULL, ...) {
       obj <- tcc$copy()
-      obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
-                      FDR=FDR, floorPDEG=floorPDEG, samplesize=samplesize, cl=cl)
-      obj$stat$execution.time <- proc.time() - ex.time
+      obj$calcNormFactors(norm.method = norm.method, 
+          test.method = test.method, iteration = iteration,
+          FDR = FDR, floorPDEG=floorPDEG, 
+          samplesize=samplesize, cl = cl, ...)
       return(obj)
 }
 setMethod(
