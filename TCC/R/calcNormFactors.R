@@ -1,3 +1,9 @@
+selectMethodByGroup <- function(group){
+  if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
+    "deseq"
+  else 
+    "edger"
+}
 #  calculate normalization factors.
 TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 test.method = NULL,
@@ -12,24 +18,16 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 samplesize = 10000,
                                 cl = NULL){
   ex.time <- proc.time()
-  if (is.null(norm.method)) {
-    if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
-      norm.method = "deseq"
-    else 
-      norm.method = "edger"
-  }
-  if (is.null(test.method)) {
-    if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
-      test.method = "deseq"
-    else 
-      test.method = "edger"
-  }
+  if (is.null(norm.method)) 
+      norm.method <- selectMethodByGroup(group)
+  if (is.null(test.method))
+      test.method <- selectMethodByGroup(group)
   if (norm.method == "edger")
     norm.method <- "tmm" 
-  if (test.method != "bayseq" && is.null(FDR))
-    FDR <- 0.1
-  if (test.method != "bayseq" && is.null(floorPDEG)) 
-    floorPDEG <- 0.05
+  if (test.method != "bayseq"){
+    if (is.null(FDR)) FDR <- 0.1
+    if (is.null(floorPDEG)) floorPDEG <- 0.05
+  }
   if (iteration) {
     if (is.logical(iteration))
       iteration <- 1
@@ -52,7 +50,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
   norm.factors <<- norm.factors / mean(norm.factors)
   DEGES$threshold <<- list(type = "Unused", input = 0, PDEG = 0)
   #  if DEGES not NULL then start DEGES strategy.
-  if (iteration) {
+  if (iteration > 0) {
     #  if iteration > 0 then change to iterate DEGES strategy.
     for (i in 1:iteration) {
       # DEGES strategy  STEP 2. (exact test and remove differential expression genes.)
