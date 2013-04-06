@@ -46,25 +46,29 @@ plot.TCC <- function(x, FDR=NULL, median.lines = FALSE, floor=0, main=NULL,
 # getResult
 # get p-value, FDR or the axes of MA-plot as data.frame.
 getResult <- function(tcc, sort = FALSE, floor = 0) {
-  if (length(table(tcc$group$group)) != 2)
-    stop("\nTCC::EEROR: This version doesn't support when the group more than two.\n")
   if (length(tcc$stat) == 0)
     stop("\nTCC::ERROR: There are no statistics in stat fields of TCC class tcc. Execute TCC.estiamteDE for calculating them.\n")
-  count.normed <- tcc$getNormalizedCount()
-  mean.exp <- matrix(0, ncol=length(tcc$group$group), nrow=nrow(tcc$count))
-  for (g in 1:length(tcc$group)) {
-    mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group$group == g]))
+  gru <- unique(tcc$group[, 1])
+  if ((length(gru) == 2) && (ncol(tcc$group) == 1)) {
+    count.normed <- tcc$getNormalizedCount()
+    mean.exp <- matrix(0, ncol=length(gru), nrow=nrow(tcc$count))
+    for (g in 1:length(gru))
+      mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == g]))
+    ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
+    result.df <- data.frame(
+      gene_id = rownames(tcc$count),
+      a.value = ma.axes$a.value, m.value = ma.axes$m.value,
+      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+    )
+  } else {
+    result.df <- data.frame(
+      gene_id = rownames(tcc$count),
+          a.value = rep(NA, length = nrow(tcc$count)), m.value = rep(NA, length = nrow(tcc$count)),
+      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+    )
   }
-  ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
-  result.df <- data.frame(
-    id = rownames(tcc$count),
-    a.value = ma.axes$a.value,
-    m.value = ma.axes$m.value,
-    p.value = tcc$stat$p.value,
-    q.value = tcc$stat$q.value,
-    rank = tcc$stat$rank,
-    estimatedDEG = tcc$estimatedDEG
-  )
   if (sort)
     result.df <- result.df[order(result.df$rank), ]
   return (result.df)
