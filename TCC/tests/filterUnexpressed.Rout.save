@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,37 +15,45 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
->   library(TCC)
+> library(TCC)
 Loading required package: edgeR
 Loading required package: limma
 Loading required package: baySeq
 
 Attaching package: 'baySeq'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     rbind
 
 Loading required package: DESeq
 Loading required package: Biobase
 Loading required package: BiocGenerics
+Loading required package: parallel
 
 Attaching package: 'BiocGenerics'
 
-The following object(s) are masked from 'package:baySeq':
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following object is masked from 'package:baySeq':
 
     rbind
 
-The following object(s) are masked from 'package:stats':
+The following object is masked from 'package:stats':
 
     xtabs
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
-    Filter, Find, Map, Position, Reduce, anyDuplicated, cbind,
-    colnames, duplicated, eval, get, intersect, lapply, mapply, mget,
-    order, paste, pmax, pmax.int, pmin, pmin.int, rbind, rep.int,
-    rownames, sapply, setdiff, table, tapply, union, unique
+    Filter, Find, Map, Position, Reduce, anyDuplicated, as.data.frame,
+    cbind, colnames, duplicated, eval, get, intersect, lapply, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, rank,
+    rbind, rep.int, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unlist
 
 Welcome to Bioconductor
 
@@ -55,12 +62,12 @@ Welcome to Bioconductor
     'citation("Biobase")', and for packages 'citation("pkgname")'.
 
 Loading required package: locfit
-locfit 1.5-8 	 2012-04-25
+locfit 1.5-9 	 2013-03-22
 Loading required package: lattice
 
 Attaching package: 'DESeq'
 
-The following object(s) are masked from 'package:limma':
+The following object is masked from 'package:limma':
 
     plotMA
 
@@ -68,31 +75,31 @@ Loading required package: ROC
 
 Attaching package: 'TCC'
 
-The following object(s) are masked from 'package:edgeR':
+The following object is masked from 'package:edgeR':
 
     calcNormFactors
 
->   data(hypoData)
->   group <- c(1, 1, 1, 2, 2, 2)
->   tcc <- new("TCC", hypoData, group)
->   cat("tcc$count: ")
-tcc$count: >   cat(dim(tcc$count))
-10000 6>   cat("\n")
+> data(hypoData)
+> group <- c(1, 1, 1, 2, 2, 2)
+> tcc <- new("TCC", hypoData, group)
+> cat("tcc$count: ")
+tcc$count: > cat(dim(tcc$count))
+10000 6> cat("\n")
 
->   tccf <- filterLowCountGenes(tcc)
->   cat("dim(tcc$count): ")
-dim(tcc$count): >   cat(dim(tccf$count))
-9941 6>   cat("\n")
+> tccf <- filterLowCountGenes(tcc)
+> cat("dim(tcc$count): ")
+dim(tcc$count): > cat(dim(tccf$count))
+9941 6> cat("\n")
 
->   cat("dim(hypoData): ")
-dim(hypoData): >   cat(dim(hypoData))
-10000 6>   cat("\n")
+> cat("dim(hypoData): ")
+dim(hypoData): > cat(dim(hypoData))
+10000 6> cat("\n")
 
->   cat("dim(hypoData[as.logical(rowSums(hypoData)>0),]): ")
-dim(hypoData[as.logical(rowSums(hypoData)>0),]): >   cat(dim(hypoData[as.logical(rowSums(hypoData) > 0),]))
-9941 6>   cat("\n")
+> cat("dim(hypoData[as.logical(rowSums(hypoData)>0),]): ")
+dim(hypoData[as.logical(rowSums(hypoData)>0),]): > cat(dim(hypoData[as.logical(rowSums(hypoData) > 0),]))
+9941 6> cat("\n")
 
 > 
 > proc.time()
    user  system elapsed 
-  3.885   0.069   3.953 
+  3.911   0.056   3.977 

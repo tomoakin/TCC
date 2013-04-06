@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,19 +15,107 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> if (Sys.getenv("TCC_REAL_TEST")!=""){
-+   library(TCC)
-+   tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
-+   tcc <- calcNormFactors(tcc)
-+   tcc <- estimateDE(tcc, test.method = "bayseq", FDR = 0.1, samplesize = 1000)
-+   result <- getResult(tcc, sort = TRUE)
-+   print(head(result))
-+   table(tcc$estimatedDEG) 
-+   png("plot4b.png", 600, 500)
-+   plot(tcc)
-+   dev.off()
-+ }
+> library(TCC)
+Loading required package: edgeR
+Loading required package: limma
+Loading required package: baySeq
+
+Attaching package: 'baySeq'
+
+The following object is masked from 'package:base':
+
+    rbind
+
+Loading required package: DESeq
+Loading required package: Biobase
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: 'BiocGenerics'
+
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following object is masked from 'package:baySeq':
+
+    rbind
+
+The following object is masked from 'package:stats':
+
+    xtabs
+
+The following objects are masked from 'package:base':
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, as.data.frame,
+    cbind, colnames, duplicated, eval, get, intersect, lapply, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, rank,
+    rbind, rep.int, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unlist
+
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+Loading required package: locfit
+locfit 1.5-9 	 2013-03-22
+Loading required package: lattice
+
+Attaching package: 'DESeq'
+
+The following object is masked from 'package:limma':
+
+    plotMA
+
+Loading required package: ROC
+
+Attaching package: 'TCC'
+
+The following object is masked from 'package:edgeR':
+
+    calcNormFactors
+
+> set.seed(1234567)
+> tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+TCC::INFO: Generating simulation data under NB distribution ...
+TCC::INFO: (genesizes   :  100 )
+TCC::INFO: (group  :  1, 1, 1, 2, 2, 2 )
+TCC::INFO: (foldhcange distribution :  uniform )
+TCC::INFO: (PDEG        :  0.18, 0.02 )
+> tcc <- calcNormFactors(tcc)
+TCC::INFO: Calculating normalization factors using DEGES
+TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
+TCC::INFO: First normalization done.
+Calculating library sizes from column totals.
+TCC::INFO: Done.
+> tcc <- estimateDE(tcc, test.method = "bayseq", FDR = 0.1, samplesize = 1000)
+TCC::INFO: Identifying DE genes using bayseq ...
+TCC::INFO: Done.
+> result <- getResult(tcc, sort = TRUE)
+[1] 0.3262505
+> print(head(result))
+   gene_id   a.value     m.value      p.value      q.value rank estimatedDEG
+10 gene_10  9.260971 -2.77275732 1.617195e-11 1.617195e-11    1            1
+12 gene_12  7.048986 -3.93397826 7.241148e-05 3.620575e-05    2            1
+6   gene_6  7.867208 -3.33306668 1.611264e-04 7.784596e-05    3            1
+96 gene_96 10.888870 -0.05441579 1.313698e-03 3.868089e-04    4            1
+7   gene_7  6.137323 -2.01700344 4.306678e-03 1.170783e-03    5            1
+8   gene_8  8.279749 -1.89639050 6.041425e-03 1.982556e-03    6            1
+> table(tcc$estimatedDEG) 
+
+ 0  1 
+86 14 
+> png("plot4b.png", 600, 500)
+> plot(tcc)
+[1] 0.3262505
+> dev.off()
+null device 
+          1 
 > 
 > proc.time()
    user  system elapsed 
-  0.125   0.024   0.133 
+ 17.866   0.099  18.036 

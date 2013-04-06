@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,30 +22,38 @@ Loading required package: baySeq
 
 Attaching package: 'baySeq'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     rbind
 
 Loading required package: DESeq
 Loading required package: Biobase
 Loading required package: BiocGenerics
+Loading required package: parallel
 
 Attaching package: 'BiocGenerics'
 
-The following object(s) are masked from 'package:baySeq':
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following object is masked from 'package:baySeq':
 
     rbind
 
-The following object(s) are masked from 'package:stats':
+The following object is masked from 'package:stats':
 
     xtabs
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
-    Filter, Find, Map, Position, Reduce, anyDuplicated, cbind,
-    colnames, duplicated, eval, get, intersect, lapply, mapply, mget,
-    order, paste, pmax, pmax.int, pmin, pmin.int, rbind, rep.int,
-    rownames, sapply, setdiff, table, tapply, union, unique
+    Filter, Find, Map, Position, Reduce, anyDuplicated, as.data.frame,
+    cbind, colnames, duplicated, eval, get, intersect, lapply, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, rank,
+    rbind, rep.int, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unlist
 
 Welcome to Bioconductor
 
@@ -55,12 +62,12 @@ Welcome to Bioconductor
     'citation("Biobase")', and for packages 'citation("pkgname")'.
 
 Loading required package: locfit
-locfit 1.5-8 	 2012-04-25
+locfit 1.5-9 	 2013-03-22
 Loading required package: lattice
 
 Attaching package: 'DESeq'
 
-The following object(s) are masked from 'package:limma':
+The following object is masked from 'package:limma':
 
     plotMA
 
@@ -68,11 +75,12 @@ Loading required package: ROC
 
 Attaching package: 'TCC'
 
-The following object(s) are masked from 'package:edgeR':
+The following object is masked from 'package:edgeR':
 
     calcNormFactors
 
 > data(hypoData)
+> set.seed(74192836)
 > tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 TCC::INFO: Generating simulation data under NB distribution ...
 TCC::INFO: (genesizes   :  100 )
@@ -81,25 +89,29 @@ TCC::INFO: (foldhcange distribution :  uniform )
 TCC::INFO: (PDEG        :  0.18, 0.02 )
 > #  group <- c(3, 3)
 > #  tcc <- new("TCC", hypoData, c(3,3))
-> tcc$calcNormFactors(norm.method = "tmm", test.method = "bayseq")
+> cat("calcNormfactors")
+calcNormfactors> tcc$calcNormFactors(norm.method = "tmm", test.method = "bayseq")
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ bayseq - tmm ] X 1 )
+TCC::INFO: First normalization done.
 TCC::INFO: Done.
-> tcc$estimateDE(test.method = "edger", FDR = 0.1)
+> cat("estimateDE")
+estimateDE> tcc$estimateDE(test.method = "edger", FDR = 0.1)
 TCC::INFO: Identifying DE genes using edger ...
-TCC::INFO: .testByEdger
+Calculating library sizes from column totals.
 TCC::INFO: Done.
-> result <- getResult(tcc, sort = TRUE)
-[1] 0.3085683
+> cat("getResult")
+getResult> result <- getResult(tcc, sort = TRUE)
+[1] 0.3395756
 > print(head(result))
-        id  a.value   m.value      p.value      q.value rank estimatedDEG
-16 gene_16 6.421709 -2.490215 4.210756e-11 4.210756e-09    1            1
-14 gene_14 8.965362 -2.089160 4.155419e-10 1.773185e-08    2            1
-11 gene_11 8.661241 -1.831122 5.319555e-10 1.773185e-08    3            1
-3   gene_3 5.761105 -2.303645 9.095866e-09 2.273967e-07    4            1
-17 gene_17 6.928942 -1.791048 1.378513e-06 2.757026e-05    5            1
-7   gene_7 8.195668 -1.405300 4.564068e-06 7.606780e-05    6            1
+   gene_id  a.value   m.value      p.value      q.value rank estimatedDEG
+5   gene_5 5.241326 -4.383333 7.909262e-11 7.909262e-09    1            1
+16 gene_16 6.862846 -1.924652 2.213957e-08 1.106978e-06    2            1
+14 gene_14 6.634396 -1.958956 6.739110e-07 2.246370e-05    3            1
+3   gene_3 6.349937 -1.980628 9.066754e-06 2.266688e-04    4            1
+18 gene_18 7.870036 -1.842370 2.418699e-05 4.776864e-04    5            1
+7   gene_7 5.265908 -3.224182 2.866118e-05 4.776864e-04    6            1
 > 
 > proc.time()
    user  system elapsed 
- 14.809   0.098  14.957 
+ 15.068   0.077  15.202 

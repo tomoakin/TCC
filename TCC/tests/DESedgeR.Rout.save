@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,37 +15,45 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
->   library(TCC)
+> library(TCC)
 Loading required package: edgeR
 Loading required package: limma
 Loading required package: baySeq
 
 Attaching package: 'baySeq'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     rbind
 
 Loading required package: DESeq
 Loading required package: Biobase
 Loading required package: BiocGenerics
+Loading required package: parallel
 
 Attaching package: 'BiocGenerics'
 
-The following object(s) are masked from 'package:baySeq':
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following object is masked from 'package:baySeq':
 
     rbind
 
-The following object(s) are masked from 'package:stats':
+The following object is masked from 'package:stats':
 
     xtabs
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
-    Filter, Find, Map, Position, Reduce, anyDuplicated, cbind,
-    colnames, duplicated, eval, get, intersect, lapply, mapply, mget,
-    order, paste, pmax, pmax.int, pmin, pmin.int, rbind, rep.int,
-    rownames, sapply, setdiff, table, tapply, union, unique
+    Filter, Find, Map, Position, Reduce, anyDuplicated, as.data.frame,
+    cbind, colnames, duplicated, eval, get, intersect, lapply, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, rank,
+    rbind, rep.int, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unlist
 
 Welcome to Bioconductor
 
@@ -55,12 +62,12 @@ Welcome to Bioconductor
     'citation("Biobase")', and for packages 'citation("pkgname")'.
 
 Loading required package: locfit
-locfit 1.5-8 	 2012-04-25
+locfit 1.5-9 	 2013-03-22
 Loading required package: lattice
 
 Attaching package: 'DESeq'
 
-The following object(s) are masked from 'package:limma':
+The following object is masked from 'package:limma':
 
     plotMA
 
@@ -68,32 +75,34 @@ Loading required package: ROC
 
 Attaching package: 'TCC'
 
-The following object(s) are masked from 'package:edgeR':
+The following object is masked from 'package:edgeR':
 
     calcNormFactors
 
->   tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+> set.seed(1234567)
+> tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 TCC::INFO: Generating simulation data under NB distribution ...
 TCC::INFO: (genesizes   :  100 )
 TCC::INFO: (group  :  1, 1, 1, 2, 2, 2 )
 TCC::INFO: (foldhcange distribution :  uniform )
 TCC::INFO: (PDEG        :  0.18, 0.02 )
->   cat("simulation data generated \n")
+> cat("simulation data generated \n")
 simulation data generated 
->   tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger")
+> tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger")
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
-TCC::INFO: .testByEdger
+TCC::INFO: First normalization done.
+Calculating library sizes from column totals.
 TCC::INFO: Done.
->   cat("tcc$norm.factors: ")
-tcc$norm.factors: >   cat(tcc$norm.factors)
-0.960779 0.9762051 0.7871008 1.20578 1.000352 1.069783>   cat("\n")
+> cat("tcc$norm.factors: ")
+tcc$norm.factors: > cat(tcc$norm.factors)
+0.7556781 0.6347706 0.6472161 1.295271 1.36294 1.304124> cat("\n")
 
->   cat("tcc$stat$execution.time: ")
-tcc$stat$execution.time: >   cat(tcc$stat$execution.time)
-0.182 0 0.182 0 0>   cat("\n")
+> cat("tcc$stat$execution.time: ")
+tcc$stat$execution.time: > cat(tcc$stat$execution.time)
+> cat("\n")
 
 > 
 > proc.time()
    user  system elapsed 
-  7.575   0.069   7.660 
+  7.726   0.096   7.850 

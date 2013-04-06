@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,30 +22,38 @@ Loading required package: baySeq
 
 Attaching package: 'baySeq'
 
-The following object(s) are masked from 'package:base':
+The following object is masked from 'package:base':
 
     rbind
 
 Loading required package: DESeq
 Loading required package: Biobase
 Loading required package: BiocGenerics
+Loading required package: parallel
 
 Attaching package: 'BiocGenerics'
 
-The following object(s) are masked from 'package:baySeq':
+The following objects are masked from 'package:parallel':
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following object is masked from 'package:baySeq':
 
     rbind
 
-The following object(s) are masked from 'package:stats':
+The following object is masked from 'package:stats':
 
     xtabs
 
-The following object(s) are masked from 'package:base':
+The following objects are masked from 'package:base':
 
-    Filter, Find, Map, Position, Reduce, anyDuplicated, cbind,
-    colnames, duplicated, eval, get, intersect, lapply, mapply, mget,
-    order, paste, pmax, pmax.int, pmin, pmin.int, rbind, rep.int,
-    rownames, sapply, setdiff, table, tapply, union, unique
+    Filter, Find, Map, Position, Reduce, anyDuplicated, as.data.frame,
+    cbind, colnames, duplicated, eval, get, intersect, lapply, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, rank,
+    rbind, rep.int, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unlist
 
 Welcome to Bioconductor
 
@@ -55,12 +62,12 @@ Welcome to Bioconductor
     'citation("Biobase")', and for packages 'citation("pkgname")'.
 
 Loading required package: locfit
-locfit 1.5-8 	 2012-04-25
+locfit 1.5-9 	 2013-03-22
 Loading required package: lattice
 
 Attaching package: 'DESeq'
 
-The following object(s) are masked from 'package:limma':
+The following object is masked from 'package:limma':
 
     plotMA
 
@@ -68,7 +75,7 @@ Loading required package: ROC
 
 Attaching package: 'TCC'
 
-The following object(s) are masked from 'package:edgeR':
+The following object is masked from 'package:edgeR':
 
     calcNormFactors
 
@@ -93,13 +100,13 @@ gene_5      14      18       0       6       0       0
 gene_6      20       0       0       3       0       0
 
 Sample:
-        object$group norm.factors lib.sizes
-G1_rep1            1            1     21296
-G1_rep2            1            1     24490
-G1_rep3            1            1     22009
-G2_rep1            2            1     12174
-G2_rep2            2            1     12570
-G2_rep3            2            1     12399
+        group norm.factors lib.sizes
+G1_rep1     1            1     21296
+G1_rep2     1            1     24490
+G1_rep3     1            1     22009
+G2_rep1     2            1     12174
+G2_rep2     2            1     12570
+G2_rep3     2            1     12399
 
 > sub_tcc <- subset(tcc,1:10*10)
 > show(sub_tcc)
@@ -113,13 +120,13 @@ gene_50       0       0       1       3       5       4
 gene_60    1777    3663    2679     809    2480    2344
 
 Sample:
-        object$group norm.factors lib.sizes
-G1_rep1            1            1      2232
-G1_rep2            1            1      4678
-G1_rep3            1            1      3381
-G2_rep1            2            1      1519
-G2_rep2            2            1      3044
-G2_rep3            2            1      2980
+        group norm.factors lib.sizes
+G1_rep1     1            1      2232
+G1_rep2     1            1      4678
+G1_rep3     1            1      3381
+G2_rep1     2            1      1519
+G2_rep2     2            1      3044
+G2_rep3     2            1      2980
 
 > sub2_tcc <- tcc[1:10*10-1]
 > show(sub2_tcc)
@@ -133,25 +140,26 @@ gene_49       5       6       1       7       9       8
 gene_59     501     310     422     351     364     298
 
 Sample:
-        object$group norm.factors lib.sizes
-G1_rep1            1            1       654
-G1_rep2            1            1       451
-G1_rep3            1            1       562
-G2_rep1            2            1       482
-G2_rep2            2            1       512
-G2_rep3            2            1       480
+        group norm.factors lib.sizes
+G1_rep1     1            1       654
+G1_rep2     1            1       451
+G1_rep3     1            1       562
+G2_rep1     2            1       482
+G2_rep2     2            1       512
+G2_rep3     2            1       480
 
 > tcc$calcNormFactors(norm.method = "tmm", test.method = "bayseq")
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ bayseq - tmm ] X 1 )
+TCC::INFO: First normalization done.
 TCC::INFO: Done.
 > tcc$estimateDE(test.method = "edger", FDR = 0.1)
 TCC::INFO: Identifying DE genes using edger ...
-TCC::INFO: .testByEdger
+Calculating library sizes from column totals.
 TCC::INFO: Done.
 > 
 > sub_tcc <- subset(tcc,1:10*10)
-  [1] 0 0 1 0 0 0 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+  [1] 0 1 1 0 0 0 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1
  [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 > show(sub_tcc)
@@ -165,27 +173,33 @@ gene_50       0       0       1       3       5       4
 gene_60    1777    3663    2679     809    2480    2344
 
 Sample:
-        object$group norm.factors lib.sizes
-G1_rep1            1    0.7425331  1657.334
-G1_rep2            1    0.6432589  3009.165
-G1_rep3            1    0.8289986  2802.844
-G2_rep1            2    1.2919032  1962.401
-G2_rep2            2    1.2432106  3784.333
-G2_rep3            2    1.2500955  3725.285
+        group norm.factors lib.sizes
+G1_rep1     1    0.7425331  1657.334
+G1_rep2     1    0.6432589  3009.165
+G1_rep3     1    0.8289986  2802.844
+G2_rep1     2    1.2919032  1962.401
+G2_rep2     2    1.2432106  3784.333
+G2_rep3     2    1.2500955  3725.285
+
+DEGES:
+   Pipeline       : 
+   Execution time :  sec
+   Threshold type :  < 
+   Potential PDEG : 
 
 [1] 0.335797
 Results:
-       id    a.value    m.value     p.value    q.value rank estimatedDEG
-1 gene_10  7.0999304 -1.2225541 0.047562108 0.31708072   15            0
-2 gene_20  5.4737028  1.8542629 0.005130367 0.05700408    9            1
-3 gene_30  7.1840774 -0.5490388 0.667493260 1.00000000   63            0
-4 gene_40  1.0573908  0.8035592 0.455835366 1.00000000   43            0
-5 gene_50  0.1552182  3.4591136 0.060329987 0.37706242   16            0
-6 gene_60 11.1089202 -0.9355377 0.368894854 0.94942959   36            0
+  gene_id    a.value    m.value     p.value    q.value rank estimatedDEG
+1 gene_10  7.0999304 -1.2225541 0.039249548 0.26166365   15            0
+2 gene_20  5.4737028  1.8542629 0.008126364 0.09029293    9            1
+3 gene_30  7.1840774 -0.5490388 0.642433147 1.00000000   63            0
+4 gene_40  1.0573908  0.8035592 0.460317629 1.00000000   44            0
+5 gene_50  0.1552182  3.4591136 0.045936994 0.28710621   16            0
+6 gene_60 11.1089202 -0.9355377 0.380313786 0.95078446   40            0
 
 > 
 > show(tcc[c("gene_13", "gene_17", "gene_23")])
-  [1] 0 0 1 0 0 0 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+  [1] 0 1 1 0 0 0 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1
  [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 Count:
@@ -195,32 +209,38 @@ gene_17     315     194     191      29      19      57
 gene_23     398     372     414     292     330     337
 
 Sample:
-        object$group norm.factors lib.sizes
-G1_rep1            1    0.7425331 1209.5863
-G1_rep2            1    0.6432589  787.3489
-G1_rep3            1    0.8289986  907.7535
-G2_rep1            2    1.2919032  543.8913
-G2_rep2            2    1.2432106  640.2535
-G2_rep3            2    1.2500955  680.0520
+        group norm.factors lib.sizes
+G1_rep1     1    0.7425331 1209.5863
+G1_rep2     1    0.6432589  787.3489
+G1_rep3     1    0.8289986  907.7535
+G2_rep1     2    1.2919032  543.8913
+G2_rep2     2    1.2432106  640.2535
+G2_rep3     2    1.2500955  680.0520
+
+DEGES:
+   Pipeline       : 
+   Execution time :  sec
+   Threshold type :  < 
+   Potential PDEG : 
 
 [1] 190.0204
 Results:
-       id  a.value    m.value      p.value      q.value rank estimatedDEG
-1 gene_13 8.300190 -1.6841326 2.771171e-06 1.385585e-04    2            1
-2 gene_17 6.517910 -2.1042009 9.728478e-07 9.728478e-05    1            1
-3 gene_23 8.529967  0.2996084 6.091303e-01 1.000000e+00   55            0
+  gene_id  a.value    m.value      p.value      q.value rank estimatedDEG
+1 gene_13 8.300190 -1.6841326 1.688802e-06 8.444011e-05    2            1
+2 gene_17 6.517910 -2.1042009 1.066919e-06 8.444011e-05    1            1
+3 gene_23 8.529967  0.2996084 5.806314e-01 1.000000e+00   54            0
 
 > result <- getResult(sub_tcc, sort = TRUE)
 [1] 0.335797
 > print(head(result))
-         id    a.value    m.value     p.value    q.value rank estimatedDEG
-2   gene_20  5.4737028  1.8542629 0.005130367 0.05700408    9            1
-1   gene_10  7.0999304 -1.2225541 0.047562108 0.31708072   15            0
-5   gene_50  0.1552182  3.4591136 0.060329987 0.37706242   16            0
-10 gene_100  6.5126110  0.4479500 0.121803289 0.58001566   21            0
-8   gene_80  7.2328350 -0.7545750 0.243687612 0.87031290   28            0
-6   gene_60 11.1089202 -0.9355377 0.368894854 0.94942959   36            0
+    gene_id    a.value    m.value     p.value    q.value rank estimatedDEG
+2   gene_20  5.4737028  1.8542629 0.008126364 0.09029293    9            1
+1   gene_10  7.0999304 -1.2225541 0.039249548 0.26166365   15            0
+5   gene_50  0.1552182  3.4591136 0.045936994 0.28710621   16            0
+10 gene_100  6.5126110  0.4479500 0.102393405 0.51196702   20            0
+8   gene_80  7.2328350 -0.7545750 0.311054469 0.95078446   32            0
+6   gene_60 11.1089202 -0.9355377 0.380313786 0.95078446   40            0
 > 
 > proc.time()
    user  system elapsed 
- 17.295   0.082  17.428 
+ 16.127   0.101  16.284 
