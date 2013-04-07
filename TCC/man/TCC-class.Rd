@@ -56,6 +56,7 @@ This class contains the following fields:
 		\item{count}{numeric matrix containing count data. }
 		\item{group}{numeric vector indicating the numbers of
 		 replicates for individual groups compared.}
+                \item{gene_id}{character vector indicating the id of the count unit, usually gene}
 		\item{replicates}{numeric vector indicating the 
 		 experimental group for each sample (or library).}
 		\item{norm.factors}{numeric vector containing

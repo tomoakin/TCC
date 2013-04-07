@@ -4,3 +4,7 @@ Incompatible change from 1.0:
   ForgenerateSimulationData(), replicates parameter is used to
   distiguish different semantics. This parameter accepts the number of replicates
   in each group.
+
+  names field were changed to gene_id to be more specific nature of the field.
+  Although the count unit is not limited to gene, we here call it gene_id, 
+  because the unit is actually often the gene.

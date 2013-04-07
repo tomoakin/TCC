@@ -149,14 +149,14 @@ subset.TCC <- function(x, subset, ...){
       }
       if(is.character(subset)){
         new_v = logical(length(x))
-        names(new_v) <- x$names
+        names(new_v) <- x$gene_id
         new_v[subset] <- TRUE
         return(subset(x, new_v))
       }
       message("subset called with unsupported type")
       return(F);
     }
-    new_tcc <- new("TCC", as.matrix(x$count[subset,]), x$group, x$norm.factors, as.character(x$names[subset]))
+    new_tcc <- new("TCC", as.matrix(x$count[subset,]), x$group, x$norm.factors, as.character(x$gene_id[subset]))
 #    show(new_tcc)
     if (x$private$estimated == TRUE) {
       new_tcc$stat$rank <- x$stat$rank[subset]

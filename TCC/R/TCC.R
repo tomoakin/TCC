@@ -19,7 +19,7 @@ TCC <- setRefClass(
     count = "matrix",              # counts data of libraries.
     group = "data.frame",             # group of libraries.
     norm.factors = "numeric",      # normalization factors.
-    names = "character",           # gene names
+    gene_id = "character",           # gene names
     stat = "list",                 # the result of identify DE genes.
     estimatedDEG = "numeric",      # identified result by identifyDEG().
     simulation = "list",           # the aurgument inputed.
@@ -53,9 +53,9 @@ TCC <- setRefClass(
         if (is.null(rownames(count))){
           new_names <- paste("gene_", c(1:nrow(count)), sep="")
           rownames(count) <<- new_names
-          names <<- new_names
+          gene_id <<- new_names
 	} else {
-          names <<- rownames(count)
+          gene_id <<- rownames(count)
         }
         if (is.null(colnames(count))) {
           g <- as.numeric(table(group))
