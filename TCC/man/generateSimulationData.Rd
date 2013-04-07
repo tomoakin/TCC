@@ -9,7 +9,7 @@ such as two or more groups and/or without replicates.
 }
 \usage{
 generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
-                  DEG.model = "uniform", DEG.foldchange = NULL,
+                  DEG.model = NULL, DEG.foldchange = NULL,
                   replicates = c(3,3))
 }
 \arguments{
@@ -77,7 +77,7 @@ A \link{TCC-class} object containing following fields:
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform", 
-                         DEG.foldchange = list(4, 4), replicates = c(3, 3))
+                         DEG.foldchange = c(4, 4), replicates = c(3, 3))
 dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)
@@ -89,7 +89,7 @@ head(tcc$simulation$trueDEG)
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform", 
-                         DEG.foldchange = list(3, 7), replicates = c(1, 1))
+                         DEG.foldchange = c(3, 7), replicates = c(1, 1))
 dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)
@@ -103,7 +103,7 @@ head(tcc$simulation$trueDEG)
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
                 DEG.assign = c(0.9, 0.1),
                 DEG.model = "gamma", 
-                DEG.foldchange = list(c(2, 5, 0.5), c(2, 5, 0.5)), 
+                DEG.foldchange = list(c(2,2), c(5, 5), c(0.5, 0.5)), 
                 replicates = c(2, 2))
 dim(tcc$count)
 str(tcc$simulation)
@@ -118,7 +118,7 @@ str(tcc$simulation)
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3, 
                          DEG.assign = c(0.7, 0.2, 0.1),
                          DEG.model = "uniform", 
-                         DEG.foldchange = list(3, 10, 6), 
+                         DEG.foldchange = c(3, 10, 6), 
                          replicates = c(2, 4, 3))
 dim(tcc$count)
 head(tcc$count)
