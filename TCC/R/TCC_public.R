@@ -27,9 +27,9 @@ setMethod(
 
 # estimateDE
 # the method is for estimating DEGs.
-estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, cl=NULL) {
+estimateDE <- function(tcc, test.method=NULL, FDR=NULL, samplesize=10000, cl=NULL, ...) {
   obj <- tcc$copy()
-  obj$estimateDE(test.method=test.method, FDR=FDR, samplesize=samplesize, cl=cl)
+  obj$estimateDE(test.method=test.method, FDR=FDR, samplesize=samplesize, cl=cl, ...)
   return(obj)
 }
 

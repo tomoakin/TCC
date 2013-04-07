@@ -162,7 +162,11 @@ TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL) {
     # exact test.
 TCC$methods(estimateDE = function (test.method=NULL,
                            FDR = NULL,
-                           significance.level = NULL,
+                           significance.level = NULL, 
+			   design = NULL, 
+			   coef = NULL,
+			   contrast = NULL,
+			   dispersion = NULL,
                            samplesize=10000,
                            comparison=NULL,
                            cl=NULL) {
@@ -180,7 +184,7 @@ TCC$methods(estimateDE = function (test.method=NULL,
       # calculate statistics values related DE gene.
       private$stat <<- list()
       switch(test.method,
-        "edger" = .self$.testByEdger(),
+        "edger" = .self$.testByEdger(design, coef, contrast, dispersion),
         "deseq" = .self$.testByDeseq(),
         "bayseq" = .self$.testByBayseq(samplesize, comparison=comparison, cl=cl),
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))

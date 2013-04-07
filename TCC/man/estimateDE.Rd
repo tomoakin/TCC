@@ -3,7 +3,7 @@
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \usage{
 estimateDE(tcc, test.method = NULL, FDR = NULL,  
-           samplesize = 10000, cl = NULL)
+           samplesize = 10000, cl = NULL, \dots)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -29,6 +29,7 @@ implemented in other R packages.
 	\item{cl}{cluster object of 'snow' package for using multiple
 	 processors. Effective when \code{test.method = "bayseq"}. See the
 	 \code{\link[baySeq]{getPriors.NB}} function for details.}
+        \item{\dots}{parameters to pass to edgeR, baySeq etc.}
 }
 \details{
 \code{estimateDE} function is generally used after the 
