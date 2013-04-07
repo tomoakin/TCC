@@ -57,16 +57,22 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
     ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
     result.df <- data.frame(
       gene_id = rownames(tcc$count),
-      a.value = ma.axes$a.value, m.value = ma.axes$m.value,
-      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
-      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+      a.value = ma.axes$a.value, 
+      m.value = ma.axes$m.value,
+      p.value = tcc$stat$p.value, 
+      q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, 
+      estimatedDEG = tcc$estimatedDEG
     )
   } else {
     result.df <- data.frame(
       gene_id = rownames(tcc$count),
-          a.value = rep(NA, length = nrow(tcc$count)), m.value = rep(NA, length = nrow(tcc$count)),
-      p.value = tcc$stat$p.value, q.value = tcc$stat$q.value,
-      rank = tcc$stat$rank, estimatedDEG = tcc$estimatedDEG
+      a.value = rep(NA, length = nrow(tcc$count)), 
+      m.value = rep(NA, length = nrow(tcc$count)),
+      p.value = tcc$stat$p.value, 
+      q.value = tcc$stat$q.value,
+      rank = tcc$stat$rank, 
+      estimatedDEG = tcc$estimatedDEG
     )
   }
   if (sort)
