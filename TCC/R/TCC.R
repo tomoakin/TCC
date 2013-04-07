@@ -167,6 +167,8 @@ TCC$methods(estimateDE = function (test.method=NULL,
 			   coef = NULL,
 			   contrast = NULL,
 			   dispersion = NULL,
+                           fit1 = NULL,
+			   fit0 = NULL,
                            samplesize=10000,
                            comparison=NULL,
                            cl=NULL) {
@@ -185,7 +187,7 @@ TCC$methods(estimateDE = function (test.method=NULL,
       private$stat <<- list()
       switch(test.method,
         "edger" = .self$.testByEdger(design, coef, contrast, dispersion),
-        "deseq" = .self$.testByDeseq(),
+        "deseq" = .self$.testByDeseq(fit1, fit0, comparison),
         "bayseq" = .self$.testByBayseq(samplesize, comparison=comparison, cl=cl),
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
       )
