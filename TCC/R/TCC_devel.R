@@ -1,8 +1,9 @@
 # getSimulationData
 # sample the simulation data under NB model.
 generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
-                                   DEG.model=NULL, DEG.foldchange=NULL,
-                                   replicates=c(3, 3)) {
+                                   DEG.foldchange=NULL, replicates=c(3, 3)) {
+#                                   DEG.model=NULL, DEG.foldchange=NULL,
+#                                   replicates=c(3, 3)) {
 # The method is for generating simulation data.
 # 1) Make super dispersion from arab data for generating simulation data.
 # 2) Adjust disersion$mean for resampling.
@@ -15,18 +16,18 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
 # 5) Return the simulation data as matrix object.
 
   # Prepare and adjust default paramaters.
-  if (is.null(DEG.model)) {
-    if (class(DEG.foldchange) == "list") {
-      DEG.model <- "gamma"
-    } else {
-      DEG.model <- "uniform"
-    }
-  }
-  if (class(DEG.foldchange) == "list") {
-    max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange[[1]]))
-  } else {
+  #if (is.null(DEG.model)) {
+  #  if (class(DEG.foldchange) == "list") {
+  #    DEG.model <- "gamma"
+  #  } else {
+  #    DEG.model <- "uniform"
+  #  }
+  #}
+  #if (class(DEG.foldchange) == "list") {
+  #  max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange[[1]]))
+  #} else {
     max.len <- max(length(DEG.assign), length(replicates), length(DEG.foldchange))
-  }
+  #}
   if (length(replicates) != max.len) {
     g <- rep(replicates, length = max.len)
   } else {
@@ -38,20 +39,20 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
       rep(DEG.assign[length(DEG.assign)] / (def.num + 1), times=def.num + 1))
   }
   if (is.null(DEG.foldchange)) {
-    if (DEG.model == "uniform")
+    #if (DEG.model == "uniform")
       DEG.foldchange <- rep(4, length = max.len)
-    if (DEG.model == "gamma")
-      DEG.foldchange <- lapply(list(1.2, 2.0, 0.5), function(l){rep(l, length = max.len)})
+    #if (DEG.model == "gamma")
+    #  DEG.foldchange <- lapply(list(1.2, 2.0, 0.5), function(l){rep(l, length = max.len)})
   }
-  if (DEG.model == "gamma" && (length(DEG.foldchange) != 3 || class(DEG.foldchange) != "list"))
-    stop ("\nTCC::ERROR: It need a list object contained three vectors when the DEG.mode is specified to gamma.\n")
+  #if (DEG.model == "gamma" && (length(DEG.foldchange) != 3 || class(DEG.foldchange) != "list"))
+  #  stop ("\nTCC::ERROR: It need a list object contained three vectors when the DEG.mode is specified to gamma.\n")
 
   if (sum(DEG.assign) > 1)
     stop("TCC::ERROR: The total value of DEG.assign must less than one.\n") 
   message("TCC::INFO: Generating simulation data under NB distribution ...")
   message(paste("TCC::INFO: (genesizes   : ", paste(Ngene, collapse=", "), ")"))
   message(paste("TCC::INFO: (replicates  : ", paste(g, collapse=", "), ")"))
-  message(paste("TCC::INFO: (foldhcange distribution : ", DEG.model, ")"))
+  #message(paste("TCC::INFO: (foldhcange distribution : ", DEG.model, ")"))
   message(paste("TCC::INFO: (PDEG        : ", paste(PDEG * DEG.assign, collapse=", "), ")"))
 
   # 1) Prepare the super population for sampling.
@@ -75,14 +76,14 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   fc.matrix <- matrix(1, ncol=sum(g), nrow=Ngene)
   DEG.index <- rep(0, length = nrow(population))              # The DEGs position.
   reps <- rep(1:length(g), times=g)
-  if (DEG.model == "uniform") {
+  #if (DEG.model == "uniform") {
     DEG.index[1:round(Ngene * PDEG)] <- 
       rep(1:length(DEG.assign), times = round(Ngene * PDEG * DEG.assign))
     for (i in 1:length(reps)) {
       fc.matrix[, i] <- rep(1, length=Ngene)
       fc.matrix[(DEG.index == reps[i]), i] <- DEG.foldchange[reps[i]]
     }
-  }
+  #}
 
   # 3) Sample simulation data from NB dispersion.
   count <- matrix(0, ncol = sum(g), nrow = nrow(population))
@@ -93,40 +94,48 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   }
 
   # 4) Adjust count data with DEG.gamma paramaters only for "gamma" model.
-  if (DEG.model == "gamma") {
-    count.means <- matrix(0, ncol=length(g), nrow=Ngene)
-    for (i in 1:length(g)) {
-      if (is.null(ncol(count[, (reps == i)]))) {
-        count.means[, i] <- count[, (reps == i)]
-      } else {
-        count.means[, i] <- rowMeans(count[, (reps == i)])
-      }
-    }
-    col.idx <- 1
-    for (i in 1:length(g)) {
-      deg.num <- round(Ngene * PDEG * DEG.assign[i])
-      if (is.null(ncol(count.means[, -i]))) {
-        deg.candidate <- (count.means[, i] > count.means[, -i])
-      } else {
-        deg.candidate <- (count.means[, i] > apply(count.means[, -i], 1, max))
-      }
-      DEG.index[(deg.candidate & cumsum(deg.candidate) <= deg.num)] <- i
-      for (j in 1:g[i]) {
-        fc.matrix[(DEG.index == i), col.idx] <- 
-          DEG.foldchange[[1]][i] + rgamma(sum(DEG.index == i), shape=DEG.foldchange[[2]][i], scale=DEG.foldchange[[3]][i])
-        count[(DEG.index == i), col.idx] <- 
-          count[(DEG.index == i), col.idx] * fc.matrix[(DEG.index == i), col.idx]
-        col.idx <- col.idx + 1
-      }
-      count <- round(count)
-    }
-    # sort by DEG.index .
-    DEG.index[(DEG.index == 0)] <- 100
-    count <- count[order(DEG.index), ]
-    fc.matrix <- fc.matrix[order(DEG.index), ]
-    DEG.index <- DEG.index[order(DEG.index)]
-    DEG.index[(DEG.index == 100)] <- 0
-  }
+  #if (DEG.model == "gamma") {
+  #  count.means <- matrix(0, ncol=length(g), nrow=Ngene)
+  #  for (i in 1:length(g)) {
+  #    if (is.null(ncol(count[, (reps == i)]))) {
+  #      count.means[, i] <- count[, (reps == i)]
+  #    } else {
+  #      count.means[, i] <- rowMeans(count[, (reps == i)])
+  #    }
+  #  }
+  #  col.idx <- 1
+  #  for (i in 1:length(g)) {
+  #    deg.num <- round(Ngene * PDEG * DEG.assign[i])
+  #    #if (is.null(ncol(count.means[, -i]))) {
+  #    #  deg.candidate <- (count.means[, i] > count.means[, -i])
+  #    #} else {
+  #    #  deg.candidate <- (count.means[, i] > apply(count.means[, -i], 1, max))
+  #    #}
+  #    deg.candidate <- combn(length(g), 1, function(cmb) {
+  #        if (cmb != i) {
+  #          browser()
+  #          return (as.logical(count.means[, i] > count.means[, cmb]))
+  #        }
+  #      })
+  #    deg.candidate <- as.logical(rowSums(deg.candidate) == ncol(deg.candidate))
+  #
+  #    DEG.index[(deg.candidate & cumsum(deg.candidate) <= deg.num)] <- i
+  #    for (j in 1:g[i]) {
+  #      fc.matrix[(DEG.index == i), col.idx] <- 
+  #        DEG.foldchange[[1]][i] + rgamma(sum(DEG.index == i), shape=DEG.foldchange[[2]][i], scale=DEG.foldchange[[3]][i])
+  #      count[(DEG.index == i), col.idx] <- 
+  #        count[(DEG.index == i), col.idx] * fc.matrix[(DEG.index == i), col.idx]
+  #      col.idx <- col.idx + 1
+  #    }
+  #    count <- round(count)
+  #  }
+  #  # sort by DEG.index .
+  #  DEG.index[(DEG.index == 0)] <- 100
+  #  count <- count[order(DEG.index), ]
+  #  fc.matrix <- fc.matrix[order(DEG.index), ]
+  #  DEG.index <- DEG.index[order(DEG.index)]
+  #  DEG.index[(DEG.index == 100)] <- 0
+  #}
   colnames(count) <- paste("G", rep(1:length(g), times=g), "_rep", sequence(g), sep="")
   rownames(count) <- paste("gene", 1:nrow(count), sep="_") 
   # Adjust column index.

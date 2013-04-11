@@ -28,7 +28,6 @@ in magenta and no-changes are in white.
 # the first 20 genes are DEGs, where 18 are up in G1.
 tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform",
                          DEG.foldchange = c(4, 4), 
                          replicates = c(3, 3))
 plotFCPseudocolor(tcc)
@@ -40,7 +39,6 @@ plotFCPseudocolor(tcc)
 # 3-, 10, and 6-fold in individual groups.
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3,
                          DEG.assign = c(0.7, 0.2, 0.1),
-                         DEG.model = "uniform",
                          DEG.foldchange = c(3, 10, 6),
                          replicates = c(3, 3, 3))
 plotFCPseudocolor(tcc)

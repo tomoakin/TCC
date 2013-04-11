@@ -33,7 +33,6 @@ numeric scalar.
 # with the DEGES/edgeR normalization factors.
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform",
                          DEG.foldchange = c(4, 4), 
                          replicates = c(3, 3))
 tcc <- calcNormFactors(tcc)
@@ -48,7 +47,6 @@ calcAUCValue(tcc)
 # DESeq coupled with the DEGES/DESeq normalization factors.
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform",
                          DEG.foldchange = c(3, 7), 
                          replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)

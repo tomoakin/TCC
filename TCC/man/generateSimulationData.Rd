@@ -9,8 +9,7 @@ such as two or more groups and/or without replicates.
 }
 \usage{
 generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
-                  DEG.model = NULL, DEG.foldchange = NULL,
-                  replicates = c(3, 3))
+                  DEG.foldchange = NULL, replicates = c(3, 3))
 }
 \arguments{
 	\item{Ngene}{numeric scalar specifying the number of genes.}
@@ -20,22 +19,25 @@ generateSimulationData(Ngene = 10000, PDEG = 0.20, DEG.assign = c(0.9, 0.1),
 	 of DEGs up-regulated in individual groups to be compared.
 	 The number of element should be the same as the number of
 	 groups compared.}
-	\item{DEG.model}{character string specifying the distribution
-	 for sampling the fold-change (FC) values. Possible values 
- 	 are \code{"uniform"} (default) and \code{"gamma"}.}
-	\item{DEG.foldchange}{vector or list. If \code{DEG.model = "uniform"},
-	 \eqn{i}-th element specifying the
-	 degree of FC for Group \eqn{i}. The default is
-	 \code{DEG.foldchange = c(4, 4)}, indicating that the levels
-	 of DE are four-fold in both groups. If \code{DEG.model = "gamma"},
-	 \code{DEG.foldchange} should be given as a list contained three components,
-	 i.e., \eqn{x_{i}}, \eqn{y_{i}}, \eqn{z_{i}} of \code{list(x, y, z)}, for determining
-	 the FC value for DEGs up-regulated in Group \eqn{i}. Specifically,
-	 the FC value for each DEG is randomly sampled from
-	 "\eqn{x_{i}} + a gamma distribution with shape (= \eqn{y_{i}}) and
-	 scale (= \eqn{z_{i}}) parameters", indicating that the minimum and
-	 average FC values for DEGs correspond to \eqn{x_{i}} and
-	 (\eqn{x_{i}} + \eqn{y_{i}} * \eqn{z_{i}}).}
+%	\item{DEG.model}{character string specifying the distribution
+%	 for sampling the fold-change (FC) values. Possible values 
+% 	 are \code{"uniform"} (default) and \code{"gamma"}.}
+	\item{DEG.foldchange}{numeric vector. The \eqn{i}-th element specifying the
+     degree of FC for Group \eqn{i}. The default is \code{DEG.foldchange = c(4, 4)},
+     indicating that the levels of DE are four-fold in both groups.}
+%	\item{DEG.foldchange}{vector or list. If \code{DEG.model = "uniform"},
+%	 \eqn{i}-th element specifying the
+%	 degree of FC for Group \eqn{i}. The default is
+%	 \code{DEG.foldchange = c(4, 4)}, indicating that the levels
+%	 of DE are four-fold in both groups. If \code{DEG.model = "gamma"},
+%	 \code{DEG.foldchange} should be given as a list contained three components,
+%	 i.e., \eqn{x_{i}}, \eqn{y_{i}}, \eqn{z_{i}} of \code{list(x, y, z)}, for determining
+%	 the FC value for DEGs up-regulated in Group \eqn{i}. Specifically,
+%	 the FC value for each DEG is randomly sampled from
+%	 "\eqn{x_{i}} + a gamma distribution with shape (= \eqn{y_{i}}) and
+%	 scale (= \eqn{z_{i}}) parameters", indicating that the minimum and
+%	 average FC values for DEGs correspond to \eqn{x_{i}} and
+%	 (\eqn{x_{i}} + \eqn{y_{i}} * \eqn{z_{i}}).}
  	\item{replicates}{numeric vector indicating the numbers of (biological)
 	 replicates for individual groups compared.}
 }
@@ -77,7 +79,6 @@ A \link{TCC-class} object containing following fields:
 \dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
                          DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform", 
                          DEG.foldchange = c(4, 4), 
                          replicates = c(3, 3))
 dim(tcc$count)
@@ -93,7 +94,6 @@ head(tcc$simulation$trueDEG)
 \dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
                          DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform", 
                          DEG.foldchange = c(3, 7),
                          replicates = c(1, 1))
 dim(tcc$count)
@@ -101,22 +101,6 @@ head(tcc$count)
 str(tcc$simulation)
 head(tcc$simulation$trueDEG)
 }
-
-
-# Generating a simulation data for comparing two groups
-# (G1 vs. G2) with replicates. 
-# the DEG.model are changed, minimum FC = 2-fold,
-# and the average FC = 4.5-fold.
-\dontrun{
-tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.2, 
-                DEG.assign = c(0.9, 0.1),
-                DEG.model = "gamma", 
-                DEG.foldchange = list(c(2, 2), c(5, 5), c(0.5, 0.5)), 
-                replicates = c(2, 2))
-dim(tcc$count)
-str(tcc$simulation)
-}
-
 
 
 # Generating a simulation data for comparing three groups
@@ -127,7 +111,6 @@ str(tcc$simulation)
 \dontrun{
 tcc <- generateSimulationData(Ngene = 10000, PDEG = 0.3, 
                          DEG.assign = c(0.7, 0.2, 0.1),
-                         DEG.model = "uniform", 
                          DEG.foldchange = c(3, 10, 6), 
                          replicates = c(2, 4, 3))
 dim(tcc$count)
