@@ -98,4 +98,4 @@ TCC::INFO: Done.
 > 
 > proc.time()
    user  system elapsed 
-  4.893   0.067   4.967 
+  5.980   0.078   6.074 

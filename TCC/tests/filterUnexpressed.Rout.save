@@ -102,4 +102,4 @@ dim(hypoData[as.logical(rowSums(hypoData)>0),]): > cat(dim(hypoData[as.logical(r
 > 
 > proc.time()
    user  system elapsed 
-  4.585   0.067   4.664 
+  3.928   0.061   4.002 

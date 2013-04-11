@@ -90,4 +90,4 @@ The following object is masked from 'package:edgeR':
 > 
 > proc.time()
    user  system elapsed 
-  3.881   0.087   3.980 
+  3.816   0.086   3.904 

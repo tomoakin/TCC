@@ -11,9 +11,9 @@ defaultFC <- function(DEG.model, max.len){
   if (DEG.model == "gamma")
     return(lapply(list(1.2, 2.0, 0.5), function(l){rep(l, length = max.len)}))
 }
-# getSimulationData
+# simulateReadCounts
 # sample the simulation data under NB model.
-generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
+simulateReadCounts <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
                                    DEG.model=NULL, DEG.foldchange=NULL,
                                    replicates=c(3, 3)) {
 # The method is for generating simulation data.
@@ -71,7 +71,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   population <- population[resampling.vector, ]  # super dispersion
 
   # 2) Make foldchagen-matrix for sampling count data.
-  fc.matrix <- matrix(1, ncol=sum(replicates), nrow=Ngene)
+  fc.matrix <- matrix(1, ncol=length(group), nrow=Ngene)
   DEG.index <- rep(0, length = nrow(population))              # The DEGs position.
   if (DEG.model == "uniform") {
     DEG.index[1:round(Ngene * PDEG)] <- 
@@ -83,7 +83,7 @@ generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1
   }
 
   # 3) Sample simulation data from NB dispersion.
-  count <- matrix(0, ncol = sum(replicates), nrow = nrow(population))
+  count <- matrix(0, ncol = length(group), nrow = nrow(population))
   for (i in 1:length(group)) {
     count[, i] <- rnbinom(n = Ngene, 
       mu = fc.matrix[, i] * population$mean, 

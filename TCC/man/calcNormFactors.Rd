@@ -126,26 +126,20 @@ tcc$norm.factors
 
 # calculating normalization factors for another simulation data without 
 # replicates
-tcc <- generateSimulationData(replicates = c(1, 1))
+tcc <- simulateReadCounts(replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 
 # calculating normalization factors for a simulation data using the 
 # TbT method with four processors
-\dontrun{
-tcc <- generateSimulationData()
-tcc <- calcNormFactors(tcc, norm.method = "tmm", 
-                       test.method = "bayseq", processors = 4)
-tcc$norm.factors
-}
 
 # calculating normalization factors for a simulation data using 
 # the TbT method with four processors (another way)
 \dontrun{
-tcc <- generateSimulationData()
+tcc <- simulateReadCounts()
 cl <- makeCluster(2, "SOCK")
 tcc <- calcNormFactors(tcc, norm.method = "tmm", 
-                       test.method = "bayseq", processors = cl)
+                       test.method = "bayseq", cl = cl)
 tcc$norm.factors
 }
 }

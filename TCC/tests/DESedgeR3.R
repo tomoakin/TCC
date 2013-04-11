@@ -1,6 +1,6 @@
 library(TCC)
 set.seed(347819)
-tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 tcc <- calcNormFactors(tcc, iteration = 3)
 cat("tcc$norm.factors: ")
 cat(tcc$norm.factors)

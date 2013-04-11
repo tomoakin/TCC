@@ -80,7 +80,7 @@ The following object is masked from 'package:edgeR':
     calcNormFactors
 
 > set.seed(73428)
-> tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+> tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 TCC::INFO: Generating simulation data under NB distribution ...
 TCC::INFO: (genesizes   :  100 )
 TCC::INFO: (group  :  1, 1, 1, 2, 2, 2 )
@@ -102,4 +102,4 @@ tcc$stat$execution.time: > cat(tcc$stat$execution.time)
 > 
 > proc.time()
    user  system elapsed 
- 16.663   0.090  16.823 
+ 19.864   0.087  20.026 

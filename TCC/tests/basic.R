@@ -1,7 +1,7 @@
 library(TCC)
 data(hypoData)
 set.seed(74192836)
-tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
+tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 #  group <- c(3, 3)
 #  tcc <- new("TCC", hypoData, c(3,3))
 cat("calcNormfactors")

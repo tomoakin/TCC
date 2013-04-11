@@ -80,7 +80,7 @@ The following object is masked from 'package:edgeR':
     calcNormFactors
 
 > set.seed(1234567)
-> tcc <- generateSimulationData(Ngene = 1000, PDEG = 0.3,
+> tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.3,
 +                        DEG.assign = c(0.6, 0.2, 0.2),
 +                        DEG.foldchange = c(3, 10, 6),
 +                        replicates = c(2, 4, 3))
@@ -123,4 +123,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  8.418   0.084   8.524 
+  7.914   0.097   8.040 

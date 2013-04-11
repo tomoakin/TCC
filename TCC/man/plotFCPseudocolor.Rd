@@ -17,7 +17,7 @@ plotFCPseudocolor(tcc, main, xlab, ylab)
 }
 \details{
 This function should be used after the 
-\code{\link{generateSimulationData}} function that generates 
+\code{\link{simulateReadCounts}} function that generates 
 simulation data with arbitrary defined conditions. 
 The largest log fold-change (FC) values are 
 in magenta and no-changes are in white. 
@@ -26,7 +26,7 @@ in magenta and no-changes are in white.
 # Generating a simulation data for comparing two groups
 # (G1 vs. G2) with biological replicates.
 # the first 20 genes are DEGs, where 18 are up in G1.
-tcc <- generateSimulationData(Ngene = 100, PDEG = 0.2,
+tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.model = "uniform",
                          DEG.foldchange = c(4, 4), 
@@ -38,7 +38,7 @@ plotFCPseudocolor(tcc)
 # the first 3000 genes are DEGs, where the 70%, 20%, and 10% are
 # up-regulated in G1, G2, G3, respectively. The levels of DE are
 # 3-, 10, and 6-fold in individual groups.
-tcc <- generateSimulationData(Ngene = 100, PDEG = 0.3,
+tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3,
                          DEG.assign = c(0.7, 0.2, 0.1),
                          DEG.model = "uniform",
                          DEG.foldchange = c(3, 10, 6),

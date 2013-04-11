@@ -1,6 +1,6 @@
 set.seed(1000)
 library(TCC)
-tcc <- generateSimulationData(Ngene = 20000, PDEG = 0.30,
+tcc <- simulateReadCounts(Ngene = 20000, PDEG = 0.30,
                               DEG.assign = c(0.85, 0.15),
                               DEG.foldchange = list(min = c(1.2, 1.2),
                                                     shape = c(2.0, 2.0),

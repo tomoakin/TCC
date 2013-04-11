@@ -1,7 +1,9 @@
 Incompatible change from 1.0:
+  generatesimulationData renamed to simulateReadCounts()
+
   Semantics of group parameter was changed to adhere to the semantics of edgeR.
   Now you should specify the group each sample belongs to.
-  ForgenerateSimulationData(), replicates parameter is used to
+  For simulateReadCounts(), replicates parameter is used to
   distiguish different semantics. This parameter accepts the number of replicates
   in each group.
 
@@ -10,4 +12,4 @@ Incompatible change from 1.0:
   because the unit is actually often the gene.
 
   hypoData are reduced to a smaller data set, so that you can readily learn how to
-  use TCC. For larger data set, you can use generatesimulationData()
+  use TCC. For larger data set, you can use simulateReadCounts()

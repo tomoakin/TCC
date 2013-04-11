@@ -44,7 +44,7 @@ This function generates roughly three different M-A plots
 depending on the conditions for \link{TCC-class} objects. 
 When the function is performed just after the \code{new} method, 
 all the genes (points) are treated as non-DEGs (the default is black; see Example 1). 
-The \code{\link{generateSimulationData}} function followed 
+The \code{\link{simulateReadCounts}} function followed 
 by the \code{\link{plot}} function can classify the genes as \emph{true} non-DEGs (black), 
 \emph{true} DEGs up-regulated in Group 1 (G1; blue), 
 and \emph{true} DEGs up-regulated in G2 (red) (see Example 2). 
@@ -89,7 +89,7 @@ mean(colSums(hypoData))
 # non-DEGs are in black, DEGs up-regulated in G1 and G2 are in
 # blue and red.
 \dontrun{
-tcc <- generateSimulationData()
+tcc <- simulateReadCounts()
 plot(tcc, median.lines = TRUE)
 }
 
@@ -99,7 +99,7 @@ plot(tcc, median.lines = TRUE)
 # It can be seen that the median M value for non-DEGs approaches
 # zero.
 \dontrun{
-tcc <- generateSimulationData()
+tcc <- simulateReadCounts()
 tcc <- calcNormFactors(tcc)
 plot(tcc, median.lines = TRUE)
 }
