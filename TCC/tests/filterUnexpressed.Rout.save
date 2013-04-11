@@ -84,22 +84,22 @@ The following object is masked from 'package:edgeR':
 > tcc <- new("TCC", hypoData, group)
 > cat("tcc$count: ")
 tcc$count: > cat(dim(tcc$count))
-10000 6> cat("\n")
+1000 6> cat("\n")
 
 > tccf <- filterLowCountGenes(tcc)
 > cat("dim(tcc$count): ")
 dim(tcc$count): > cat(dim(tccf$count))
-9941 6> cat("\n")
+996 6> cat("\n")
 
 > cat("dim(hypoData): ")
 dim(hypoData): > cat(dim(hypoData))
-10000 6> cat("\n")
+1000 6> cat("\n")
 
 > cat("dim(hypoData[as.logical(rowSums(hypoData)>0),]): ")
 dim(hypoData[as.logical(rowSums(hypoData)>0),]): > cat(dim(hypoData[as.logical(rowSums(hypoData) > 0),]))
-9941 6> cat("\n")
+996 6> cat("\n")
 
 > 
 > proc.time()
    user  system elapsed 
-  3.911   0.056   3.977 
+  4.585   0.067   4.664 

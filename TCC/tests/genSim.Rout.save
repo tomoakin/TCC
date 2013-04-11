@@ -82,7 +82,7 @@ The following object is masked from 'package:edgeR':
 > set.seed(1234567)
 > tcc <- generateSimulationData(Ngene = 1000, PDEG = 0.3,
 +                        DEG.assign = c(0.6, 0.2, 0.2),
-+                        DEG.foldchange = list(3, 10, 6),
++                        DEG.foldchange = c(3, 10, 6),
 +                        replicates = c(2, 4, 3))
 TCC::INFO: Generating simulation data under NB distribution ...
 TCC::INFO: (genesizes   :  1000 )
@@ -97,9 +97,8 @@ dim(tcc$count): > cat(dim(tcc$count))
 tcc$group$group: > cat(tcc$group$group)
 1 1 2 2 2 2 3 3 3> cat("\n")
 
-> cat("tcc$count: ")
-tcc$count: > cat("\n")
-
+> cat("tcc$count:\n")
+tcc$count:
 > print(head(tcc$count))
        G1_rep1 G1_rep2 G2_rep1 G2_rep2 G2_rep3 G2_rep4 G3_rep1 G3_rep2 G3_rep3
 gene_1       0       1       1       1       0       1       0       0       5
@@ -124,4 +123,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  7.941   0.084   8.048 
+  8.418   0.084   8.524 
