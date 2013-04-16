@@ -9,6 +9,7 @@
 \alias{length,TCC-method}
 \alias{[}
 \alias{[,TCC-method}
+\alias{subset,TCC-subset}
 \title{A container for storing information used in TCC}
 \description{
 This is the container class for TCC. This class initially contains 

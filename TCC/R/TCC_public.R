@@ -140,15 +140,59 @@ setMethod(
   f = "length",
   signature(x = "TCC"),
   definition = function(x) {
-    return (ncol(x$count))
+    return (nrow(x$count))
   }
 )
+
+
 setMethod(
   f = "[",
   signature(x = "TCC"),
-  definition = function(x, i) {
-	return (x$count[i, ])
+  definition = function(x, i){
+    return(subset(x,i))
   }
+)
+
+
+subset.TCC <- function(x, subset, ...){
+  if(!is.logical(subset)){
+    if(is.numeric(subset)){
+      new_v = logical(length(x))
+      new_v[subset] <- TRUE
+      return(subset(x, new_v))
+    }
+    if(is.character(subset)){
+      new_v = logical(length(x))
+      names(new_v) <- x$gene_id
+      new_v[subset] <- TRUE
+      return(subset(x, new_v))
+    }
+    message("subset called with unsupported type")
+    return(F);
+  }
+  new_tcc <- new("TCC", as.matrix(x$count[subset,]), x$group, x$norm.factors, as.character(x$gene_id[subset]))
+  if (x$private$estimated == TRUE) {
+    new_tcc$stat$rank <- x$stat$rank[subset]
+    new_tcc$stat$p.value <- x$stat$p.value[subset]
+    new_tcc$stat$q.value <- x$stat$q.value[subset]
+  }
+  if (!is.null(x$estimatedDEG) && length(x$estimatedDEG) > 0){
+    new_tcc$estimatedDEG <- x$estimatedDEG[subset]
+  }
+  if (!is.null(x$simulation)){
+    if(length(x$simulation$trueDEG)>0)
+      new_tcc$simulation$trueDEG <- x$simulation$trueDEG[subset] 
+    if(length(x$simulation$fold.change)>0)
+      new_tcc$simulation$fold.change <- x$simulation$fold.change[subset] 
+    new_tcc$simulation$PDEG <- x$simulation$PDEG
+  }
+  new_tcc$private <- x$private
+  return(new_tcc)
+}
+setMethod (
+  f = "subset",
+  signature(x = "TCC"),
+  definition = subset.TCC
 )
 
 setMethod(
