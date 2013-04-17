@@ -19,7 +19,7 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
                 dispersion = NULL, 
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
-                samplesize = 10000, cl = NULL)
+                samplesize = 10000, cl = NULL, increment = TRUE)
 }
 \arguments{
 	\item{tcc}{\link{TCC-class} object.}
@@ -77,6 +77,11 @@ calcNormFactors(tcc, norm.method = c("tmm", "deseq"),
 	\item{cl}{a 'snow' object for using multi 
 	 processors if \code{test.method = "bayseq"}. See the 
 	\code{\link[baySeq]{getPriors.NB}} function for details.}
+	\item{increment}{logical value. if \code{increment = TRUE}, the DEGES
+	pipeline will perform again from current iteration DEGES. 
+	For example, assume that the iDEGES (iteration = n) was performed, and 
+	if increment is TRUE, it will perform again. the result are same to 
+	iteration n + 1.}
 }
 \details{
 The \code{\link{calcNormFactors}} function is the main function in the TCC package. 
@@ -148,7 +153,7 @@ tcc$norm.factors
 
 # calculating normalization factors for another simulation data without 
 # replicates
-tcc <- generateSimulationData(replicates = c(1, 2))
+tcc <- simulateReadCounts(replicates = c(1, 2))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 
@@ -157,7 +162,7 @@ tcc$norm.factors
 \dontrun{
 library(snow)
 cl <- makeCluster(4, "SOCK")
-tcc <- generateSimulationData()
+tcc <- simulateReadCounts()
 tcc <- calcNormFactors(tcc, norm.method = "tmm", 
                        test.method = "bayseq", cl = cl)
 tcc$norm.factors
@@ -166,7 +171,7 @@ tcc$norm.factors
 # calculating normalization factors for a simulation data using 
 # the TbT method with four processors (another way)
 \dontrun{
-tcc <- generateSimulationData()
+tcc <- simulateReadCounts()
 cl <- makeCluster(2, "SOCK")
 tcc <- calcNormFactors(tcc, norm.method = "tmm", 
                        test.method = "bayseq", processors = cl)

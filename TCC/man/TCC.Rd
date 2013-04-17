@@ -33,7 +33,7 @@ The estimated normalization factors obtained by using the
 model for differential analysis in the \code{\link{estimateDE}} function.
 Both two functions internally call functions from other packages
 (edgeR, DESeq, and baySeq) when needed. TCC also provides a useful function
-\code{\link{generateSimulationData}} for generating simulation data 
+\code{\link{simulateReadCounts}} for generating simulation data 
 with various conditions.
 Convenient plotting functions are also included.
 }

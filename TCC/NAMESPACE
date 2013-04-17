@@ -22,7 +22,7 @@ export(
   estimateDE,
   exactTestafterTbT,
   filterLowCountGenes,
-  generateSimulationData,
+  simulateReadCounts,
   getNormalizedData,
   getResult,
   MAplot,

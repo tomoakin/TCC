@@ -1,6 +1,6 @@
 # getSimulationData
 # sample the simulation data under NB model.
-generateSimulationData <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
+simulateReadCounts <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
                                    DEG.foldchange=NULL, replicates=c(3, 3)) {
 #                                   DEG.model=NULL, DEG.foldchange=NULL,
 #                                   replicates=c(3, 3)) {
