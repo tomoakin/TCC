@@ -9,7 +9,8 @@ TCC <- setRefClass(
     estimatedDEG = "numeric",      # identified result by identifyDEG().
     simulation = "list",           # the aurgument inputed.
     DEGES = "list",                # detailed informations about DEGES .
-    private = "list"               # intermediate data on DEGES process.
+    private = "list",              # intermediate data on DEGES process.
+    debug = "list"
   ),
 
   #  Class Methods.
@@ -226,7 +227,14 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 fit0 = NULL, fit1 = NULL,
                                 comparison = NULL,
                                 samplesize = 10000,
-                                cl = NULL){
+                                cl = NULL, increment = FALSE){
+  if ((increment == FALSE) || 
+      (increment == TRUE && private$normalized == FALSE)) {
+    DEGES$iteration <<- 0
+    private$debug <<- list()
+    private$debug$potentialDEG <<- list()
+    private$debug$potentialPval <<- list()
+  }
   ex.time <- proc.time()
   if (is.null(norm.method)) {
     if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
@@ -252,18 +260,22 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
     if (iteration < 0 && 100 < iteration)
       stop("TCC::ERROR: The iteration must be given within the limits of from '0' to '100'.")
     message(paste("TCC::INFO: Calculating normalization factors using DEGES"))
-    message(paste("TCC::INFO: (iDEGES pipeline :", norm.method, "- [", test.method, "-", norm.method, "] X", iteration, ")"))
-    DEGES$protocol <<- paste(norm.method, "- [", test.method, "-", norm.method, "] X", iteration)
+    message(paste("TCC::INFO: (iDEGES pipeline :", norm.method, 
+                  "- [", test.method, "-", norm.method, "] X", iteration + DEGES$iteration, ")"))
+    DEGES$protocol <<- paste(norm.method, "- [", test.method, "-", norm.method, "] X", iteration + DEGES$iteration)
   } else {
     message(paste("TCC::INFO: Calculating normalization factors using", norm.method, "..."))
     DEGES$protocol <<- norm.method
   }
   # DEGES strategy STEP 1. (First normalization)
-  norm.factors <<- switch(norm.method,
-    "tmm" = .self$.normByTmm(count),
-    "deseq" = .self$.normByDeseq(count),
-    stop(paste("\nTCC::ERROR: The normalization method of ", norm.method, " doesn't supported.\n"))
-  )
+  if ((increment == FALSE) || 
+      (increment == TRUE && private$normalized == FALSE)) {
+    norm.factors <<- switch(norm.method,
+      "tmm" = .self$.normByTmm(count),
+      "deseq" = .self$.normByDeseq(count),
+      stop(paste("\nTCC::ERROR: The normalization method of ", norm.method, " doesn't supported.\n"))
+    )
+  }
   norm.factors <<- norm.factors / mean(norm.factors)
   DEGES$threshold <<- data.frame(type = "Unused", input = 0, PDEG = 0)
   #  if DEGES not NULL then start DEGES strategy.
@@ -306,6 +318,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         message ("TCC::INFO: No non-DE genes after eliminate DE genes. stop DEGES strategy.")
         break
       }
+      private$debug$potentialDEG[[DEGES$iteration + 1]] <<- deg.flg
+      private$debug$potentialThreshold[[DEGES$iteration + 1]] <<- DEGES$threshold
+      private$debug$potentialPval[[DEGES$iteration + 1]] <<- private$stat$p.value
       # DEGES strategy STEP 3. (Second normalization)
       norm.factors <<- switch(norm.method,
         "tmm" = .self$.normByTmm(count.ndeg),
@@ -313,6 +328,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
       )
       norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
       norm.factors <<- norm.factors / mean(norm.factors)
+      DEGES$iteration <<- DEGES$iteration + 1
     }
     DEGES$potentialDEG <<- deg.flg
   }

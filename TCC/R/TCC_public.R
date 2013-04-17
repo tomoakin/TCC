@@ -22,12 +22,12 @@ setMethod(
                         FDR=NULL, floorPDEG=NULL, dispersion=NULL,
                         design=NULL,contrast=NULL, coef=NULL,
                         fit0=NULL, fit1=NULL,  comparison = NULL,
-                        samplesize=10000, cl=NULL) {
+                        samplesize=10000, cl=NULL, increment=FALSE) {
       obj <- tcc$copy()
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
                       FDR=FDR, floorPDEG=floorPDEG, dispersion=dispersion,
                       fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
-                      comparison=comparison,samplesize=samplesize, cl=cl)
+                      comparison=comparison,samplesize=samplesize, cl=cl, increment=FALSE)
       return(obj)
     }
 )
