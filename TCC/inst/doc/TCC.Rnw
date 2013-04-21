@@ -7,7 +7,6 @@
 \usepackage{sectsty}
 \usepackage[dvips]{graphicx}
 \usepackage{Sweave}
-\usepackage{here}
 \SweaveOpts{keep.source=TRUE,eps=TRUE}
 
 
@@ -239,6 +238,8 @@ result <- getResult(tcc, sort = TRUE)
 head(result)
 @
 
+\newpage
+
 \section{Preparations}
 
 \subsection{Reading the count data}
@@ -344,6 +345,8 @@ dim(hypoData[filter, ])
 tcc <- new("TCC", hypoData[filter, ], group)
 dim(tcc$count)
 @
+
+\newpage
 
 \section{Normalization}
 
@@ -1224,6 +1227,8 @@ $\Sexpr{sprintf("%.1f", max(hypoData_mg.median))}$) than those
 to $\Sexpr{sprintf("%.5f", max(normByTMM))}$) 
 from TMM-normalized data.
 
+\newpage
+
 \section{Differential expression (DE)}
 \label{section-4}
 
@@ -1295,7 +1300,7 @@ The magenta points indicate the identified DEGs at FDR $< 0.1$.
 plot(tcc)
 @
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plot(tcc)
@@ -1908,7 +1913,9 @@ $210$, $60$, and $30$ genes are up-regulated in G1, G2, and G3, respectively.
 plotFCPseudocolor(tcc)
 @
 
-\begin{figure}[H]
+\newpage
+
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plotFCPseudocolor(tcc)
@@ -1944,7 +1951,9 @@ head(tcc$count)
 plotFCPseudocolor(tcc)
 @
 
-\begin{figure}[H]
+\newpage
+
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plotFCPseudocolor(tcc)
@@ -1990,7 +1999,7 @@ blue and red, respectively. The non-DEGs are in black:
 plot(tcc)
 @
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plot(tcc)
@@ -2031,7 +2040,7 @@ plot(tcc, median.lines = TRUE)
 @
 
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plot(tcc, median.lines = TRUE)
@@ -2046,6 +2055,8 @@ isnot.na <- as.logical(xy[, 1] != min(xy[, 1]))
 median.nonDEG <- median(xy[(tcc$simulation$trueDEG == 0) & isnot.na, 2])
 @
 
+\newpage
+
 These upshifted M values for non-DEGs can be modified after performing the 
 iDEGES/\Rpackage{edgeR} normalization, e.g., the median M value 
 ($= \Sexpr{sprintf("%.3f", median.nonDEG)}$) 
@@ -2057,7 +2068,7 @@ tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
 plot(tcc, median.line = TRUE)
 @
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{center}
 <<fig = TRUE, echo = FALSE>>=
 plot(tcc, median.line = TRUE)
