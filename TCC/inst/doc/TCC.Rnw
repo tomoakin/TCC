@@ -4,7 +4,6 @@
 \documentclass[12pt,oneside]{article}
 \usepackage[a4paper,left=2cm,top=2.5cm,bottom=2cm,right=2cm,ignoreheadfoot]{geometry}
 \usepackage[usenames,dvipsnames]{color}
-\usepackage{sectsty}
 \usepackage[dvips]{graphicx}
 \usepackage{Sweave}
 \SweaveOpts{keep.source=TRUE,eps=TRUE}
@@ -14,9 +13,6 @@
 \definecolor{TccRed}{cmyk}{0,1,0.78,0.1}
 \definecolor{TccGreen}{cmyk}{0.99,0,0.29,0.47}
 \definecolor{TccOrange}{cmyk}{0,0.27,1,0.03}
-\sectionfont{\bf\sectionrule{0pt}{0pt}{-1ex}{1pt}}
-\subsectionfont{\bf}
-\subsubsectionfont{\bf}
 
 \renewcommand{\floatpagefraction}{0.9}
 \newcommand{\Robject}[1]{{\texttt{#1}}}
@@ -2093,7 +2089,6 @@ sessionInfo()
 \section{References}
 \renewcommand{\refname}{}
 \renewcommand\refname{\vskip -1cm}
-\sectionfont{}
 
 \begin{thebibliography}{99}
 \item Anders S and Huber W. Differential expression analysis for sequence count data. Genome Biol. 11(10): R106, 2010
