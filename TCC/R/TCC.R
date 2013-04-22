@@ -291,6 +291,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
       )
       # Remove the DEG from original count data.
+      deg.flg <- rep(0, length = nrow(count))
       deg.flg.FDR <- .self$.exactTest(FDR = FDR)
       deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, ties.method = "min") <= nrow(count) * floorPDEG)
       if (is.null(floorPDEG) && is.null(FDR)) {
@@ -301,10 +302,12 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
       } else {
         # use FDR
-        deg.flg <- deg.flg.FDR
-        DEGES$threshold$type <<- "FDR"
-        DEGES$threshold$input <<- FDR
-        DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+        if (!is.null(FDR)) {
+          deg.flg <- deg.flg.FDR
+          DEGES$threshold$type <<- "FDR"
+          DEGES$threshold$input <<- FDR
+          DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+        }
         if ((!is.null(floorPDEG)) && (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
         # use floorPDEG
           deg.flg <- deg.flg.floorPDEG
