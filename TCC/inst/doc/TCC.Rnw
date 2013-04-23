@@ -1,13 +1,11 @@
 %\VignetteIndexEntry{TCC}
 %\VignettePackage{TCC}
 
-\documentclass[12pt,oneside]{article}
-\usepackage[a4paper,left=2cm,top=2.5cm,bottom=2cm,right=2cm,ignoreheadfoot]{geometry}
-\usepackage[usenames,dvipsnames]{color}
-\usepackage[dvips]{graphicx}
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+\usepackage{color}
 \usepackage{Sweave}
-%\SweaveOpts{keep.source=TRUE,png=TRUE}
-\SweaveOpts{keep.source=TRUE}
+\SweaveOpts{pdf=TRUE}
 
 
 \definecolor{TccBlue}{cmyk}{0.74,0.26,0,0.14}
@@ -1294,21 +1292,11 @@ indicates average read count
 from the normalized count data. 
 The magenta points indicate the identified DEGs at FDR $< 0.1$.
 
-<<fig = FALSE, eval = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc)
 @
 
-<<echo = FALSE>>=
-png("maplot1.png")
-plot(tcc)
-dev.off()
-@
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics{maplot1}
-\end{center}
-\end{figure}
 
 
 \subsubsection{baySeq coupled with iDEGES/edgeR normalization}
@@ -1911,19 +1899,9 @@ The right bar (from white to magenta) indicates the degree of
 fold-change (FC). As expected, it can be seen that the first 
 $210$, $60$, and $30$ genes are up-regulated in G1, G2, and G3, respectively.
 
-<<fig = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plotFCPseudocolor(tcc)
 @
-
-\newpage
-
-\begin{figure}[h]
-\begin{center}
-<<fig = TRUE, echo = FALSE>>=
-plotFCPseudocolor(tcc)
-@
-\end{center}
-\end{figure}
 
 Next, let us generate another dataset consisting of a total of eight groups. 
 The simulation conditions for this dataset are as follows: 
@@ -1940,7 +1918,7 @@ and (v) there are a total of nine libraries (except for G3,
 none of the groups have replicates) 
 (\Robject{replicates = c(1, 1, 2, 1, 1, 1, 1, 1)}).
 
-<<fig = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.34,
@@ -1953,15 +1931,6 @@ head(tcc$count)
 plotFCPseudocolor(tcc)
 @
 
-\newpage
-
-\begin{figure}[h]
-\begin{center}
-<<fig = TRUE, echo = FALSE>>=
-plotFCPseudocolor(tcc)
-@
-\end{center}
-\end{figure}
 
 This kind of simulation data may be useful for evaluating methods 
 aimed at identifying tissue-specific (or tissue-selective) genes.
@@ -1997,17 +1966,9 @@ An M-A plot for the simulation data can be viewed as follows;
 the points for up-regulated DEGs in G1 and G2 are colored 
 blue and red, respectively. The non-DEGs are in black:
 
-<<fig = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc)
 @
-
-\begin{figure}[h]
-\begin{center}
-<<fig = TRUE, echo = FALSE>>=
-plot(tcc)
-@
-\end{center}
-\end{figure}
 
 This plot is generated from simulation data that has been scaled 
 in such a way that the library sizes of each sample are the same 
@@ -2037,18 +1998,9 @@ $\Sexpr{sprintf("%.3f", median.G1)}$,
 and $\Sexpr{sprintf("%.3f", median.G2)}$ for non-DEGs 
 and up-regulated DEGs in G1 and G2.
 
-<<fig = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc, median.lines = TRUE) 
 @
-
-
-\begin{figure}[h]
-\begin{center}
-<<fig = TRUE, echo = FALSE>>=
-plot(tcc, median.lines = TRUE)
-@
-\end{center}
-\end{figure}
 
 <<echo = FALSE, fig = FALSE>>=
 tcc <- calcNormFactors(tcc, "tmm", "edger", iteration = 3, FDR = 0.1, floorPDEG = 0.05)
@@ -2057,27 +2009,16 @@ isnot.na <- as.logical(xy[, 1] != min(xy[, 1]))
 median.nonDEG <- median(xy[(tcc$simulation$trueDEG == 0) & isnot.na, 2])
 @
 
-\newpage
-
 These upshifted M values for non-DEGs can be modified after performing the 
 iDEGES/\Rpackage{edgeR} normalization, e.g., the median M value 
 ($= \Sexpr{sprintf("%.3f", median.nonDEG)}$) 
 for non-DEGs based on the iDEGES/\Rpackage{edgeR}-normalized data is nearly zero. 
 
-<<fig = FALSE>>=
+<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger", 
                        iteration = 3, FDR = 0.1, floorPDEG = 0.05)
 plot(tcc, median.line = TRUE)
 @
-
-\begin{figure}[h]
-\begin{center}
-<<fig = TRUE, echo = FALSE>>=
-plot(tcc, median.line = TRUE)
-@
-\end{center}
-\end{figure}
-
 
 The comparison of those values obtained from different normalization 
 methods might be another evaluation metric.
