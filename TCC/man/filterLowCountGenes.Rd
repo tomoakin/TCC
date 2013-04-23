@@ -24,15 +24,12 @@ data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 dim(tcc$count)
-tcc <- filterLowCountGenes(tcc)
-dim(tcc$count)
+tcc0 <- filterLowCountGenes(tcc)
+dim(tcc0$count)
 
 # Filtering genes with 10 counts across samples from hypoData
-data(hypoData)
-group <- c(1, 1, 1, 2, 2, 2)
-tcc <- new("TCC", hypoData, group)
 dim(tcc$count)
-tcc <- filterLowCountGenes(tcc, low.count = 10)
-dim(tcc$count)
+tcc1 <- filterLowCountGenes(tcc, low.count = 10)
+dim(tcc1$count)
 }
 \keyword{methods}

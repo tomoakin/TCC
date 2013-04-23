@@ -82,6 +82,7 @@ A \code{\link{TCC-class}} object containing following fields:
 # For retrieving the summaries of DE results, we recommend to use
 # the getResult function.
 data(hypoData)
+hypoData <- hypoData[1:100*10,]
 group <- c(1, 1, 1, 3, 3, 3)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
@@ -95,7 +96,6 @@ head(tcc$estimatedDEG)
 # (G1 vs. G2) without any replicates
 # The DE analysis is performed by an negative binomial (NB) test
 # in DESeq coupled with the DEGES/DESeq normalization factors.
-data(hypoData)
 group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)

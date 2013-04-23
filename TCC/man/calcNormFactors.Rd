@@ -107,6 +107,7 @@ tcc$norm.factors
 # calculating normalization factors using the DEGES/edgeR method 
 # (the TMM-edgeR-TMM pipeline)
 data(hypoData)
+hypodata <- hypoData[1:100*10,]
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)
