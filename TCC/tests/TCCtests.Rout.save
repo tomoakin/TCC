@@ -16,17 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(TCC)
-Loading required package: edgeR
-Loading required package: limma
-Loading required package: baySeq
-
-Attaching package: 'baySeq'
-
-The following object is masked from 'package:base':
-
-    rbind
-
-Loading required package: DESeq
 Loading required package: Biobase
 Loading required package: BiocGenerics
 Loading required package: parallel
@@ -38,10 +27,6 @@ The following objects are masked from 'package:parallel':
     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
     clusterExport, clusterMap, parApply, parCapply, parLapply,
     parLapplyLB, parRapply, parSapply, parSapplyLB
-
-The following object is masked from 'package:baySeq':
-
-    rbind
 
 The following object is masked from 'package:stats':
 
@@ -63,23 +48,8 @@ Welcome to Bioconductor
 
 Loading required package: locfit
 locfit 1.5-9 	 2013-03-22
-Loading required package: lattice
-
-Attaching package: 'DESeq'
-
-The following object is masked from 'package:limma':
-
-    plotMA
-
-Loading required package: ROC
-
-Attaching package: 'TCC'
-
-The following object is masked from 'package:edgeR':
-
-    calcNormFactors
-
 > data(hypoData)
+> set.seed(1834016)
 > 
 > df<-data.frame(row.names = paste('a', rownames(hypoData), sep=""),
 +   A1 = hypoData[,1], A2 = hypoData[,2], A3 = hypoData[,3],
@@ -143,61 +113,61 @@ TCC::INFO: (PDEG        :  0.18, 0.02 )
 > show(tcc)
 Count:
        G1_rep1 G1_rep2 G1_rep3 G2_rep1 G2_rep2 G2_rep3
-gene_1       2       3       0       1       8       0
-gene_2     665     453     492     102     120      77
-gene_3       1       0       2       9       0       0
-gene_4      32      11       7       5      11       2
-gene_5     120     116     148      42      33      38
-gene_6     215     184     212      38      49      68
+gene_1    1731    1798    1504     514     574     526
+gene_2    1107     844     897     273     288     331
+gene_3      75      46      69      15      10      27
+gene_4      21      37      49       5      12       4
+gene_5       4       1       0       0       4       1
+gene_6      37      45      99      15      22      31
 
 Sample:
         group norm.factors lib.sizes
-G1_rep1     1            1      8767
-G1_rep2     1            1      8172
-G1_rep3     1            1      8245
-G2_rep1     2            1      6829
-G2_rep2     2            1      6613
-G2_rep3     2            1      6493
+G1_rep1     1            1     11941
+G1_rep2     1            1     12200
+G1_rep3     1            1     12627
+G2_rep1     2            1      6952
+G2_rep2     2            1      7399
+G2_rep3     2            1      6961
 
 > sub_tcc <- subset(tcc,1:10*10)
 > show(sub_tcc)
 Count:
         G1_rep1 G1_rep2 G1_rep3 G2_rep1 G2_rep2 G2_rep3
-gene_10      36      12      15       4       2       1
-gene_20      18      16      12     311     661      91
-gene_30       7       8       1       4      11       6
-gene_40      10       0      11      26      19       3
-gene_50     260     141     158     295      67     258
-gene_60      20       0      16       0       0       7
+gene_10    1991    2028    2053     529     517     605
+gene_20      35      71      33     108       1       9
+gene_30      20      24      19      21      37      28
+gene_40      62      63      71      71      73      74
+gene_50      47      59      39      49      51      92
+gene_60     122     140     160     137     130     161
 
 Sample:
         group norm.factors lib.sizes
-G1_rep1     1            1       445
-G1_rep2     1            1       269
-G1_rep3     1            1       298
-G2_rep1     2            1       746
-G2_rep2     2            1       901
-G2_rep3     2            1       475
+G1_rep1     1            1      2354
+G1_rep2     1            1      2476
+G1_rep3     1            1      2526
+G2_rep1     2            1      1153
+G2_rep2     2            1       871
+G2_rep3     2            1      1075
 
 > sub2_tcc <- tcc[1:10*10-1]
 > show(sub2_tcc)
 Count:
         G1_rep1 G1_rep2 G1_rep3 G2_rep1 G2_rep2 G2_rep3
-gene_9      232     170     189      52      47      55
-gene_19       0       2       0       1       1      14
-gene_29     944    1101     619     950    1070    1065
-gene_39     149     150     121     130     235     114
-gene_49      14       9       6      11       2      12
-gene_59     250     277     234     225     201     189
+gene_9       68     391     239      33      34      22
+gene_19       1       1       4      15       5       8
+gene_29       0       0      23       1      44       1
+gene_39       0       1       4       4       1       4
+gene_49      10      10       4       6       1      10
+gene_59       1       2       0       0       4       0
 
 Sample:
         group norm.factors lib.sizes
-G1_rep1     1            1      1700
-G1_rep2     1            1      1824
-G1_rep3     1            1      1282
-G2_rep1     2            1      1466
-G2_rep2     2            1      1628
-G2_rep3     2            1      1547
+G1_rep1     1            1       158
+G1_rep2     1            1       593
+G1_rep3     1            1       429
+G2_rep1     2            1       160
+G2_rep2     2            1       252
+G2_rep3     2            1       196
 
 > tcc$calcNormFactors(norm.method = "tmm", test.method = "bayseq")
 TCC::INFO: Calculating normalization factors using DEGES
@@ -210,27 +180,27 @@ Calculating library sizes from column totals.
 TCC::INFO: Done.
 > 
 > sub_tcc <- subset(tcc,1:10*10)
-  [1] 0 1 0 0 1 1 0 0 1 1 0 1 0 0 1 1 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
- [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
- [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+  [1] 1 1 1 1 0 1 0 1 1 1 1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+ [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0
 > show(sub_tcc)
 Count:
         G1_rep1 G1_rep2 G1_rep3 G2_rep1 G2_rep2 G2_rep3
-gene_10      36      12      15       4       2       1
-gene_20      18      16      12     311     661      91
-gene_30       7       8       1       4      11       6
-gene_40      10       0      11      26      19       3
-gene_50     260     141     158     295      67     258
-gene_60      20       0      16       0       0       7
+gene_10    1991    2028    2053     529     517     605
+gene_20      35      71      33     108       1       9
+gene_30      20      24      19      21      37      28
+gene_40      62      63      71      71      73      74
+gene_50      47      59      39      49      51      92
+gene_60     122     140     160     137     130     161
 
 Sample:
         group norm.factors lib.sizes
-G1_rep1     1    0.8802946  391.7311
-G1_rep2     1    0.9169333  246.6551
-G1_rep3     1    0.9584188  285.6088
-G2_rep1     2    1.1587498  864.4274
-G2_rep2     2    0.9796862  882.6973
-G2_rep3     2    1.1059173  525.3107
+G1_rep1     1    0.6885772  1620.911
+G1_rep2     1    0.6922255  1713.950
+G1_rep3     1    0.6921484  1748.367
+G2_rep1     2    1.3032154  1502.607
+G2_rep2     2    1.1987110  1044.077
+G2_rep3     2    1.4251225  1532.007
 
 DEGES:
    Pipeline       : 
@@ -238,35 +208,35 @@ DEGES:
    Threshold type :  < 
    Potential PDEG : 
 
-[1] 1.439901
+[1] 5.110865
 Results:
-  gene_id  a.value    m.value      p.value      q.value rank estimatedDEG
-1 gene_10 2.871513 -4.4560090 3.676660e-03 3.342418e-02   11            1
-2 gene_20 6.296449  3.0681938 4.053046e-10 4.053046e-08    1            1
-3 gene_30 2.798088 -0.9162145 7.326357e-01 9.664782e-01   73            0
-4 gene_40 3.427411 -0.1601406 2.999998e-01 9.636273e-01   30            0
-5 gene_50 7.822352 -0.9775558 7.079689e-01 9.664782e-01   64            0
-6 gene_60 2.745839 -3.0063809 2.379991e-01 8.715036e-01   27            0
+  gene_id   a.value     m.value      p.value      q.value rank estimatedDEG
+1 gene_10 10.069066 -1.52946908 1.806655e-14 1.735809e-12    1            1
+2 gene_20  5.352768 -0.05722729 7.363558e-01 1.000000e+00   62            0
+3 gene_30  4.674950  0.86330819 6.732386e-01 1.000000e+00   57            0
+4 gene_40  6.137549  0.51723877 9.731833e-01 1.000000e+00   88            0
+5 gene_50  5.808930  0.72308838 6.244810e-01 1.000000e+00   48            0
+6 gene_60  7.166883  0.36854275 7.479358e-01 1.000000e+00   63            0
 
 > 
 > show(tcc[c("gene_13", "gene_17", "gene_23")])
-  [1] 0 1 0 0 1 1 0 0 1 1 0 1 0 0 1 1 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
- [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
- [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+  [1] 1 1 1 1 0 1 0 1 1 1 1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+ [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0
 Count:
         G1_rep1 G1_rep2 G1_rep3 G2_rep1 G2_rep2 G2_rep3
-gene_13       5       6       2       0       1       2
-gene_17     576     811     743     174     201     124
-gene_23     395     392     495     592     460     386
+gene_13       9       0       6       0       0       1
+gene_17       4       5       2      11       0       8
+gene_23      34      34       6       1      10       1
 
 Sample:
         group norm.factors lib.sizes
-G1_rep1     1    0.8802946  859.1675
-G1_rep2     1    0.9169333 1108.5724
-G1_rep3     1    0.9584188 1188.4393
-G2_rep1     2    1.1587498  887.6024
-G2_rep2     2    0.9796862  648.5523
-G2_rep3     2    1.1059173  566.2296
+G1_rep1     1    0.6885772 32.363128
+G1_rep2     1    0.6922255 26.996794
+G1_rep3     1    0.6921484  9.690077
+G2_rep1     2    1.3032154 15.638585
+G2_rep2     2    1.1987110 11.987110
+G2_rep3     2    1.4251225 14.251225
 
 DEGES:
    Pipeline       : 
@@ -274,23 +244,23 @@ DEGES:
    Threshold type :  < 
    Potential PDEG : 
 
-[1] 3.77297
+[1] 3.174983
 Results:
-  gene_id  a.value    m.value      p.value      q.value rank estimatedDEG
-1 gene_13 1.241789 -1.3478246 2.071739e-01 0.8490029975   24            0
-2 gene_17 8.468238 -1.4835247 2.225325e-05 0.0005563313    4            1
-3 gene_23 8.860380  0.7426972 4.168073e-01 0.9664782452   39            0
+  gene_id   a.value   m.value    p.value    q.value rank estimatedDEG
+1 gene_13 0.6288523 -3.676651 0.05610405 0.31168916   18            0
+2 gene_17 2.3145673  1.295637 0.69112281 1.00000000   59            0
+3 gene_23 3.3755837 -1.596905 0.01560963 0.09756018   16            1
 
 > result <- getResult(sub_tcc, sort = TRUE)
-[1] 1.439901
+[1] 5.110865
 > print(head(result))
-    gene_id    a.value    m.value      p.value      q.value rank estimatedDEG
-2   gene_20  6.2964488  3.0681938 4.053046e-10 4.053046e-08    1            1
-1   gene_10  2.8715131 -4.4560090 3.676660e-03 3.342418e-02   11            1
-10 gene_100  5.9230628 -0.5551795 9.996736e-02 6.077284e-01   16            0
-6   gene_60  2.7458391 -3.0063809 2.379991e-01 8.715036e-01   27            0
-4   gene_40  3.4274114 -0.1601406 2.999998e-01 9.636273e-01   30            0
-9   gene_90 -0.4152608  0.1175388 6.225220e-01 9.664782e-01   56            0
+    gene_id    a.value     m.value      p.value      q.value rank estimatedDEG
+1   gene_10 10.0690664 -1.52946908 1.806655e-14 1.735809e-12    1            1
+9   gene_90  5.9284985  1.16354675 2.666371e-01 8.332410e-01   32            0
+10 gene_100  5.6123940 -0.02573024 3.861672e-01 9.978664e-01   38            0
+5   gene_50  5.8089296  0.72308838 6.244810e-01 1.000000e+00   48            0
+7   gene_70  0.1585319 -2.39007117 6.652762e-01 1.000000e+00   56            0
+3   gene_30  4.6749496  0.86330819 6.732386e-01 1.000000e+00   57            0
 > 
 > tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1))
 TCC::INFO: Generating simulation data under NB distribution ...
@@ -308,22 +278,22 @@ TCC::INFO: Done.
 TCC::INFO: Identifying DE genes using bayseq ...
 TCC::INFO: Done.
 > result <- getResult(tcc, sort = TRUE)
-[1] 0.3567222
+[1] 0.347561
 > print(head(result))
    gene_id  a.value   m.value      p.value      q.value rank estimatedDEG
-10 gene_10 7.294534 -3.061864 7.699557e-05 7.699557e-05    1            1
-6   gene_6 4.342652 -2.727006 1.670628e-02 8.391637e-03    2            1
-1   gene_1 5.539692 -2.374812 1.961574e-02 1.213301e-02    3            1
-7   gene_7 3.926304 -3.606390 5.942730e-02 2.395658e-02    4            1
-5   gene_5 8.092454 -2.033375 6.796439e-02 3.275814e-02    5            1
-85 gene_85 3.980096  5.227524 1.368052e-01 5.009932e-02    6            1
+3   gene_3 9.719396 -2.493471 0.0003522294 0.0003522294    1            1
+14 gene_14 6.886086 -3.001922 0.0006102909 0.0004812602    2            1
+6   gene_6 4.987508 -2.798769 0.0053443353 0.0021022852    3            1
+9   gene_9 4.108466 -3.076008 0.0105588258 0.0042164203    4            1
+11 gene_11 4.371245 -3.182033 0.0169581287 0.0067647620    5            1
+15 gene_15 8.500282 -1.808074 0.0374273494 0.0118751932    6            1
 > table(tcc$estimatedDEG) 
 
  0  1 
-93  7 
+87 13 
 > png("plot4b.png", 600, 500)
 > plot(tcc)
-[1] 0.3567222
+[1] 0.347561
 > dev.off()
 null device 
           1 
@@ -345,22 +315,22 @@ TCC::INFO: Identifying DE genes using edger ...
 Calculating library sizes from column totals.
 TCC::INFO: Done.
 > result <- getResult(tcc, sort = TRUE)
-[1] 0.3607615
+[1] 0.6367243
 > print(head(result))
-   gene_id  a.value   m.value      p.value      q.value rank estimatedDEG
-20 gene_20 5.954710  2.507263 1.334354e-08 1.334354e-06    1            1
-4   gene_4 6.322689 -2.483281 8.412091e-08 4.206045e-06    2            1
-9   gene_9 5.897170 -2.669554 3.479720e-07 1.159907e-05    3            1
-13 gene_13 5.662524 -2.010877 1.569347e-05 3.923367e-04    4            1
-8   gene_8 7.795372 -1.798777 3.643931e-05 7.123074e-04    5            1
-6   gene_6 5.708091 -1.963821 4.273844e-05 7.123074e-04    6            1
+   gene_id   a.value   m.value      p.value      q.value rank estimatedDEG
+9   gene_9  7.398564 -3.089512 1.159385e-13 1.159385e-11    1            1
+8   gene_8  9.167551 -1.979781 1.493112e-09 7.465562e-08    2            1
+6   gene_6  9.253955 -1.915356 2.742932e-09 9.143106e-08    3            1
+12 gene_12  7.165079 -2.403530 1.391984e-08 3.479960e-07    4            1
+7   gene_7  7.190636 -2.246915 3.799004e-08 7.598008e-07    5            1
+2   gene_2 10.630217 -1.937970 5.726209e-08 9.543681e-07    6            1
 > table(tcc$estimatedDEG) 
 
  0  1 
-85 15 
+82 18 
 > png("plot4.png", 600, 500)
 > plot(tcc)
-[1] 0.3607615
+[1] 0.6367243
 > dev.off()
 null device 
           1 
@@ -396,7 +366,7 @@ TCC::INFO: First normalization done.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
-1.121314 0.8786861> cat("\n")
+1.060704 0.9392961> cat("\n")
 
 > cat("tcc$stat$execution.time: ")
 tcc$stat$execution.time: > cat(tcc$stat$execution.time)
@@ -417,7 +387,7 @@ TCC::INFO: First normalization done.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
-0.6957668 0.6845971 0.660554 1.345843 1.363689 1.24955> cat("\n")
+0.9560651 1.133139 0.9758629 0.9473964 0.9718567 1.01568> cat("\n")
 
 > cat("tcc$stat$execution.time: ")
 tcc$stat$execution.time: > cat(tcc$stat$execution.time)
@@ -434,7 +404,7 @@ Calculating library sizes from column totals.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
-0.590021 0.6374263 0.6703091 1.346994 1.410647 1.344602> cat("\n")
+0.8776823 1.12015 0.9346365 1.014701 1.00042 1.05241> cat("\n")
 
 > cat("tcc$stat$execution.time: ")
 tcc$stat$execution.time: > cat(tcc$stat$execution.time)
@@ -449,7 +419,7 @@ Calculating library sizes from column totals.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
-0.590021 0.6374263 0.6703091 1.346994 1.410647 1.344602> cat("\n")
+0.9149296 1.108213 0.9625698 0.881606 0.9852985 1.147383> cat("\n")
 
 > cat("tcc$stat$execution.time: ")
 tcc$stat$execution.time: > cat(tcc$stat$execution.time)
@@ -463,7 +433,7 @@ TCC::INFO: First normalization done.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
-0.6593808 0.7413749 0.6348948 1.305597 1.355168 1.303585> cat("\n")
+0.9056277 1.096987 0.9831748 0.8653313 1.037738 1.111141> cat("\n")
 
 > cat("tcc$stat$execution.time: ")
 tcc$stat$execution.time: > cat(tcc$stat$execution.time)
@@ -513,34 +483,6 @@ TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
 TCC::INFO: First normalization done.
 TCC::INFO: Done.
-> ###  DE analysis  ###
-> fit1 <- count ~ condition
-> fit0 <- count ~ 1
-> cds <- newCountDataSet(tcc$count, group)
-> sizeFactors(cds) <- tcc$norm.factors * colSums(tcc$count)
-> cds <- estimateDispersions(cds)
-> reduced.model <- fitNbinomGLMs(cds, fit0)
-.
-> full.model <- fitNbinomGLMs(cds, fit1)
-.
-> p.value <- nbinomGLMTest(full.model, reduced.model)
-> p.value[is.na(p.value)] <- 1
-> q.value <- p.adjust(p.value, method = "BH")
-> tmp <- cbind(p.value, q.value)
-> rownames(tmp) <- tcc$gene_id
-> result <- tmp[order(p.value), ]
-> head(result)
-              p.value      q.value
-gene_126 2.182698e-13 2.182698e-10
-gene_63  1.244090e-10 6.220452e-08
-gene_27  2.134407e-08 7.114689e-06
-gene_176 4.139815e-08 1.034954e-05
-gene_83  5.531305e-08 1.106261e-05
-gene_121 6.736260e-08 1.122710e-05
-> sum(q.value < 0.1)
-[1] 130
-> sum(q.value < 0.2)
-[1] 143
 > 
 > group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
 > tcc <- new("TCC", hypoData_mg, group)
@@ -572,7 +514,63 @@ TCC::INFO: Done.
   0   1 
 828 172 
 > 
+> tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3,
++                        DEG.assign = c(0.6, 0.2, 0.2),
++                        DEG.foldchange = c(3, 10, 6),
++                        replicates = c(2, 4, 3))
+TCC::INFO: Generating simulation data under NB distribution ...
+TCC::INFO: (genesizes   :  100 )
+TCC::INFO: (group  :  1, 1, 2, 2, 2, 2, 3, 3, 3 )
+TCC::INFO: (foldhcange distribution :  uniform )
+TCC::INFO: (PDEG        :  0.18, 0.06, 0.06 )
+> cat("dim(tcc$count): ")
+dim(tcc$count): > cat(dim(tcc$count))
+100 9> cat("\n")
+
+> cat("tcc$group$group: ")
+tcc$group$group: > cat(tcc$group$group)
+1 1 2 2 2 2 3 3 3> cat("\n")
+
+> cat("tcc$count:\n")
+tcc$count:
+> print(head(tcc$count))
+       G1_rep1 G1_rep2 G2_rep1 G2_rep2 G2_rep3 G2_rep4 G3_rep1 G3_rep2 G3_rep3
+gene_1     163     210      53      47      68      32      13      48      42
+gene_2       5      11       5       2       0       4       3       3       6
+gene_3     232     173      46      51      74      45      80      40      61
+gene_4      91      98      43      40      45      40      31      25      40
+gene_5     206     216      35      28      65      19      69      31     131
+gene_6       0       0       1       0       1       0       2       0      16
+> plotFCPseudocolor(tcc)
+> plot(tcc)
+[1] 0.4567399
+[1] 0.4567399
+[1] 0.2595467
+> 
+> tcc <- simulateReadCounts(Ngene = 200, PDEG = 0.30,
++                               DEG.assign = c(0.85, 0.15),
++                               DEG.foldchange = list(min = c(1.2, 1.2),
++                                                     shape = c(2.0, 2.0),
++                                                     scale = c(0.5, 0.5)),
++                               replicates = c(2, 2))
+TCC::INFO: Generating simulation data under NB distribution ...
+TCC::INFO: (genesizes   :  200 )
+TCC::INFO: (group  :  1, 1, 2, 2 )
+TCC::INFO: (foldhcange distribution :  gamma )
+TCC::INFO: (PDEG        :  0.255, 0.045 )
+> tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
++                        iteration = 3, FDR = 0.1, floorPDEG = 0.05)
+TCC::INFO: Calculating normalization factors using DEGES
+TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 3 )
+TCC::INFO: First normalization done.
+Calculating library sizes from column totals.
+Calculating library sizes from column totals.
+Calculating library sizes from column totals.
+TCC::INFO: Done.
+> plot(tcc, median.lines = TRUE)
+[1] 0.457113
+> 
 > 
 > proc.time()
    user  system elapsed 
- 61.589   0.145  62.018 
+ 63.870   0.123  64.240 

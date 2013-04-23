@@ -1,5 +1,6 @@
 library(TCC)
 data(hypoData)
+set.seed(1834016)
 
 df<-data.frame(row.names = paste('a', rownames(hypoData), sep=""),
   A1 = hypoData[,1], A2 = hypoData[,2], A3 = hypoData[,3],
@@ -146,23 +147,6 @@ design <- model.matrix(~ as.factor(group))
 coef <- 2:length(unique(group))
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
                         iteration = 1, design = design, coef = coef)
-###  DE analysis  ###
-fit1 <- count ~ condition
-fit0 <- count ~ 1
-cds <- newCountDataSet(tcc$count, group)
-sizeFactors(cds) <- tcc$norm.factors * colSums(tcc$count)
-cds <- estimateDispersions(cds)
-reduced.model <- fitNbinomGLMs(cds, fit0)
-full.model <- fitNbinomGLMs(cds, fit1)
-p.value <- nbinomGLMTest(full.model, reduced.model)
-p.value[is.na(p.value)] <- 1
-q.value <- p.adjust(p.value, method = "BH")
-tmp <- cbind(p.value, q.value)
-rownames(tmp) <- tcc$gene_id
-result <- tmp[order(p.value), ]
-head(result)
-sum(q.value < 0.1)
-sum(q.value < 0.2)
 
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
 tcc <- new("TCC", hypoData_mg, group)
@@ -177,4 +161,29 @@ tcc <- estimateDE(tcc, test.method = "edger",
 result <- getResult(tcc, sort = TRUE)
 head(result)
 table(tcc$estimatedDEG)
+
+tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3,
+                       DEG.assign = c(0.6, 0.2, 0.2),
+                       DEG.foldchange = c(3, 10, 6),
+                       replicates = c(2, 4, 3))
+cat("dim(tcc$count): ")
+cat(dim(tcc$count))
+cat("\n")
+cat("tcc$group$group: ")
+cat(tcc$group$group)
+cat("\n")
+cat("tcc$count:\n")
+print(head(tcc$count))
+plotFCPseudocolor(tcc)
+plot(tcc)
+
+tcc <- simulateReadCounts(Ngene = 200, PDEG = 0.30,
+                              DEG.assign = c(0.85, 0.15),
+                              DEG.foldchange = list(min = c(1.2, 1.2),
+                                                    shape = c(2.0, 2.0),
+                                                    scale = c(0.5, 0.5)),
+                              replicates = c(2, 2))
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 3, FDR = 0.1, floorPDEG = 0.05)
+plot(tcc, median.lines = TRUE)
 
