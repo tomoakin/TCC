@@ -27,7 +27,7 @@ setMethod(
       obj$calcNormFactors(norm.method=norm.method, test.method=test.method, iteration=iteration,
                       FDR=FDR, floorPDEG=floorPDEG, dispersion=dispersion,
                       fit0=fit0, fit1=fit1, design=design, contrast=contrast, coef=coef,
-                      comparison=comparison,samplesize=samplesize, cl=cl, increment=FALSE)
+                      comparison=comparison,samplesize=samplesize, cl=cl, increment=increment)
       return(obj)
     }
 )
