@@ -159,7 +159,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
     if (class(e) == "try-error") {
       message("TCC::WARN: 'estimateDispersions' with method=\"pooled\" in DESeq could not be performed.")
       message("TCC::WARN: 'estimateDispersions' with method=\"blind\" in DESeq was used instead.")
-      suppressMessages(e <- (d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only")))
+      e <- try(suppressMessages(d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only"), silent = TRUE))
       # try local mode
       if (class(e) == "try-error") {
         message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
