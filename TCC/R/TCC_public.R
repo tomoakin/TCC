@@ -19,7 +19,7 @@ setMethod(
   f = "calcNormFactors",
   signature(tcc = "TCC"),
   definition = function(tcc, norm.method=NULL, test.method=NULL, iteration=TRUE,
-                        FDR=NULL, floorPDEG=NULL, dispersion=NULL,
+                        FDR=NULL, floorPDEG=0.05, dispersion=NULL,
                         design=NULL,contrast=NULL, coef=NULL,
                         fit0=NULL, fit1=NULL,  comparison = NULL,
                         samplesize=10000, cl=NULL, increment=FALSE) {

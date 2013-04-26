@@ -31,7 +31,8 @@ group <- c(1, 1, 1, 2, 2, 2)
 # i.e., TbT-normalized data
 \dontrun{
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq")
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
+                       floorPDEG = 0)
 normalized.count <- getNormalizedData(tcc)
 summary(normalized.count[nonDEG, ])
 }

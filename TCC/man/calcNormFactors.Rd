@@ -129,7 +129,8 @@ group <- c(1, 1, 1, 2, 2, 2)
 # using the TbT method (the TMM-baySeq-TMM pipeline; Kadota et al., 2012)
 \dontrun{
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq")
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
+                       floorPDEG = 0)
 tcc$norm.factors
 }
 

@@ -220,7 +220,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 test.method = NULL,
                                 iteration = 1,
                                 FDR = NULL,
-                                floorPDEG = NULL,
+                                floorPDEG = 0.05,
                                 dispersion = NULL,
                                 design = NULL,
                                 contrast = NULL, coef = NULL,
@@ -252,8 +252,6 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
     norm.method <- "tmm" 
   if (test.method != "bayseq" && is.null(FDR))
     FDR <- 0.1
-  if (test.method != "bayseq" && is.null(floorPDEG)) 
-    floorPDEG <- 0.05
   if (iteration) {
     if (is.logical(iteration))
       iteration <- 1
@@ -294,7 +292,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
       deg.flg <- rep(0, length = nrow(count))
       deg.flg.FDR <- .self$.exactTest(FDR = FDR)
       deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, ties.method = "min") <= nrow(count) * floorPDEG)
-      if (is.null(floorPDEG) && is.null(FDR)) {
+      if (is.null(FDR)) {
         # use TbT
         deg.flg <- deg.flg.FDR
         DEGES$threshold$type <<- "TbT"
@@ -302,19 +300,17 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
       } else {
         # use FDR
-        if (!is.null(FDR)) {
-          deg.flg <- deg.flg.FDR
-          DEGES$threshold$type <<- "FDR"
-          DEGES$threshold$input <<- FDR
-          DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-        }
-        if ((!is.null(floorPDEG)) && (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
+        deg.flg <- deg.flg.FDR
+        DEGES$threshold$type <<- "FDR"
+        DEGES$threshold$input <<- FDR
+        DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+      }
+      if ((sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
         # use floorPDEG
-          deg.flg <- deg.flg.floorPDEG
-          DEGES$threshold$type <<- "floorPDEG"
-          DEGES$threshold$input <<- floorPDEG
-          DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-        }
+        deg.flg <- deg.flg.floorPDEG
+        DEGES$threshold$type <<- "floorPDEG"
+        DEGES$threshold$input <<- floorPDEG
+        DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
       }
       count.ndeg <- count[(deg.flg == 0), ]
       if (nrow(count.ndeg) == 0) {
