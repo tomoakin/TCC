@@ -168,14 +168,4 @@ tcc <- calcNormFactors(tcc, norm.method = "tmm",
                        test.method = "bayseq", cl = cl)
 tcc$norm.factors
 }
-
-# calculating normalization factors for a simulation data using 
-# the TbT method with four processors (another way)
-\dontrun{
-tcc <- simulateReadCounts()
-cl <- makeCluster(2, "SOCK")
-tcc <- calcNormFactors(tcc, norm.method = "tmm", 
-                       test.method = "bayseq", processors = cl)
-tcc$norm.factors
-}
 }
