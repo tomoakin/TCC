@@ -150,7 +150,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
     if (class(e) == "try-error") {
       message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
       message("TCC::WARN: 'estimateDispersions' with sharingMode=\"local\" in DESeq was used instead.")
-      suppressMessages(d <- estimateDispersions(d, fitType = "local"))
+      suppressMessages(d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only", fitType = "local"))
     }
   } else { # otherwise conditions
     # try default
@@ -164,7 +164,7 @@ TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, comparison = NULL)
       if (class(e) == "try-error") {
         message("TCC::WARN: 'estimateDispersions' with sharingMode=\"fit-only\" in DESeq could not be performed.")
         message("TCC::WARN: 'estimateDispersions' with sharingMode=\"local\" in DESeq was used instead.")
-        suppressMessages(d <- estimateDispersions(d, fitType = "local"))
+        suppressMessages(d <- estimateDispersions(d, method = "blind", sharingMode = "fit-only", fitType = "local"))
       }
     }
   }
