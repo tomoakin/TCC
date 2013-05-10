@@ -215,6 +215,7 @@ TCC$methods(.testByBayseq = function(samplesize = NULL, cl = NULL, comparison = 
   private$tbt$estProps <<- d@estProps[2]
 })
 
+
 #  calculate normalization factors.
 TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 test.method = NULL,
@@ -348,7 +349,20 @@ TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL) {
   return (deg.flg)
 })
  
-    # exact test.
+# rank
+#TCC$methods(.getRank = function() {
+#  rk<- private$stat$rank
+#  nm <- apply(count, 1, function(i) {
+#    return(paste(i, collapse = "_"))
+#  })
+#  names(rk) <- nm
+#  r <- apply(as.matrix(nm), 1, function(i, rk) {
+#    return(mean(rk[names(rk) == i]))
+#  }, rk)
+#  return(r)
+#})
+
+# exact test.
 TCC$methods(estimateDE = function (test.method = NULL,
                            FDR = NULL,
                            significance.level = NULL,
@@ -384,7 +398,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
     stat$p.value <<- private$stat$p.value
   if (!is.null(private$stat$q.value))
     stat$q.value <<- private$stat$q.value
-  if (!is.null(private$stat$rank))
+  if (!is.null(private$stat$rank)) 
     stat$rank <<- private$stat$rank
   private$estimated <<- TRUE
   message("TCC::INFO: Done.")
