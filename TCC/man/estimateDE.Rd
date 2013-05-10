@@ -1,13 +1,8 @@
 \name{estimateDE}
 \alias{estimateDE}
 \title{Estimate degrees of differential expression (DE) for individual genes}
-\synopsis{
-estimateDE(tcc, test.method = NULL, FDR = NULL, dispersion = NULL,
-           fit0 = NULL, fit1 = NULL, design = NULL, contrast = NULL, coef = NULL,
-           comparison = NULL, samplesize = 10000, cl = NULL)
-}
 \usage{
-estimateDE(tcc, test.method = c("edger", "deseq", "bayseq"), FDR = 0.1, 
+estimateDE(tcc, test.method = NULL, FDR = NULL, 
            dispersion = NULL, fit0 = NULL, fit1 = NULL, design = NULL,
            contrast = NULL, coef = NULL, comparison = NULL,
            samplesize = 10000, cl = NULL)
