@@ -299,12 +299,14 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         DEGES$threshold$type <<- "TbT"
         DEGES$threshold$input <<- private$tbt$estProps
         DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+        private$DEGES.PrePDEG <<- private$tbt$estProps
       } else {
         # use FDR
         deg.flg <- deg.flg.FDR
         DEGES$threshold$type <<- "FDR"
         DEGES$threshold$input <<- FDR
         DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+        private$DEGES.PrePDEG <<- sum(deg.flg) / length(deg.flg)
       }
       if ((sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
         # use floorPDEG
