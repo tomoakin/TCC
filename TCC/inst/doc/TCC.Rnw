@@ -163,8 +163,9 @@ replicates (i.e., two samples), using the data of the first and the fourth
 column of \Robject{hypoData} (Case 3). We recommend the use of commands in 
 Cases 2 and 3.
 
-Case 1: DE analysis of tag count data with replicates by using the exact test 
-(Robinson and Smyth, 2008 \cite{robinson3}) in \Rpackage{edgeR} coupled with TbT normalization. 
+Case 1: DE analysis of two-group count data with replicates by using the exact test 
+(Robinson and Smyth, 2008 \cite{robinson3}) in \Rpackage{edgeR} coupled with TbT 
+normalization (termed the TbT-\Rpackage{edgeR} combination). 
 The \Rpackage{TCC} package was originally designed with the TbT normalization 
 method, and the original study (Kadota et al., 2012 \cite{kadota}) recommended this analysis 
 pipeline. Note that a smaller sampling size (i.e., \Robject{samplesize = 100}) 
@@ -189,9 +190,9 @@ result <- getResult(tcc, sort = TRUE)
 head(result)
 @
 
-Case 2: DE analysis for tag count data with replicates by using the exact test 
-coupled with iterative DEGES/\Rpackage{edgeR} normalization (i.e., 
-iDEGES/\Rpackage{edgeR}). This is an alternative pipeline designed to reduce 
+Case 2: DE analysis for two-group count data with replicates by using the exact test 
+coupled with iterative DEGES/\Rpackage{edgeR} normalization (i.e., the 
+iDEGES/\Rpackage{edgeR}-\Rpackage{edgeR} combination). This is an alternative pipeline designed to reduce 
 the runtime (approx. $20$ sec.), yet its performance is comparable to 
 the above pipeline. Accordingly, we recommend using this pipeline as a default 
 when analyzing tag count data with replicates. A notable advantage of this 
@@ -213,9 +214,10 @@ result <- getResult(tcc, sort = TRUE)
 head(result)
 @
 
-Case 3: DE analysis for tag count data without replicates by using the negative 
+Case 3: DE analysis for two-group count data without replicates by using the negative 
 binomial (NB) test in \Rpackage{DESeq} coupled with iDEGES/\Rpackage{DESeq} 
-normalization. A procedure using the data of the first and fourth columns of 
+normalization (i.e., the iDEGES/\Rpackage{DESeq}-\Rpackage{DESeq} combination). 
+A procedure using the data of the first and fourth columns of 
 \Robject{hypoData} is shown here. Similar to Case 2, this pipeline entirely 
 consists of methods implemented in the \Rpackage{DESeq} package. Suggested 
 citations are as follows: \Rpackage{TCC} (Sun et al., submitted \cite{sun}) and 
@@ -275,7 +277,7 @@ group <- c(1, 1, 1, 1, 2, 2, 2, 2, 2)
 \subsection{Constructing TCC class object}
 \label{section-2-2}
 
-The new function has to be used to perform the main functionalities 
+The \Rfunction{new} function has to be used to perform the main functionalities 
 of \Rpackage{TCC}. This function constructs a \Rpackage{TCC} class object, 
 and subsequent analyses are performed on this class object. The object 
 is constructed from i) a count matrix (\Robject{hypoData}) and ii) the 
@@ -346,7 +348,7 @@ dim(tcc$count)
 
 \section{Normalization}
 
-\subsection{Normalization of count data with replicates}
+\subsection{Normalization of two-group count data with replicates}
 \label{section-3-1}
 
 This package provides robust normalization methods based on DEGES 
@@ -404,7 +406,7 @@ the default sample size is set to a suggested value of $10,000$
 (i.e., \Robject{samplesize = 10000}). While the sampling size can be 
 made smaller to reduce the computation time (e.g., \Robject{samplesize = 100}), 
 the resulting normalization factors will vary from trial to trial. 
-In this vignette, we will call the set.seed function for obtaining 
+In this vignette, we will call the \Rfunction{set.seed} function for obtaining 
 reproducible results (i.e., the \Robject{tcc\$norm.factors}, 
 values) when using any random function. That is,
 
@@ -424,7 +426,7 @@ tcc$DEGES$execution.time
 Of course, the procedure can be performed by using functions in \Rpackage{edgeR} 
 and \Rpackage{baySeq}, instead of using the \Rfunction{calcNormFators} 
 function in \Rpackage{TCC}. The \Rfunction{calcNormFators} function 
-with the default parameter settings can be regarded as a wrapper 
+together with the above parameter settings can be regarded as a wrapper 
 function for the following commands.
 
 <<>>=
@@ -458,7 +460,7 @@ norm.factors
 \subsubsection{DEGES/edgeR}
 \label{section-3-1-2}
 
-Now let us describe an alternative approach that is roughly $400$-$500$ times 
+Now let us describe an alternative approach that is roughly $200$-$400$ times 
 faster than DEGES/TbT, yet has comparable performance. The 
 TMM-\Rpackage{edgeR}-TMM pipeline (called DEGES/\Rpackage{edgeR}) 
 employs the exact test implemented in \Rpackage{edgeR} in step 2. 
@@ -489,7 +491,7 @@ are very similar to those of DEGES/TbT with the default parameter
 settings (i.e., \Robject{samplesize = 10000}). For \Rpackage{edgeR} 
 users, we provide commands, consisting of functions in \Rpackage{edgeR}, 
 to perform the DEGES/\Rpackage{edgeR} pipeline without \Rpackage{TCC}. 
-The \Rfunction{calcNormFators} function with above parameter settings 
+The \Rfunction{calcNormFators} function together with the above parameter settings 
 can be regarded as a wrapper function for the following commands.
 
 <<>>=
@@ -527,7 +529,7 @@ norm.factors
 
 Our multi-step normalization can be repeated until the calculated 
 normalization factors converge (Kadota et al., 2012 \cite{kadota}). 
-An iterative version of DEGES/TbT (iDEGES/TbT) can be described 
+An iterative version of DEGES/TbT (i.e., iDEGES/TbT) can be described 
 as the TMM-(\Rpackage{baySeq}-TMM)$_{n}$ pipeline with $n \ge 2$. 
 Although the iDEGES/TbT would not be practical in terms of 
 the computation time, the TMM-(\Rpackage{edgeR}-TMM)$_{n}$ pipeline 
@@ -570,7 +572,7 @@ tcc$DEGES$execution.time
 For \Rpackage{DESeq} users, we also provide commands, consisting of 
 functions in \Rpackage{DESeq}, to perform the DEGES/\Rpackage{DESeq} 
 pipeline without \Rpackage{TCC}. The \Rfunction{calcNormFators} function 
-with the above arguments can be regarded as a wrapper function for 
+together with the above arguments can be regarded as a wrapper function for 
 the following commands.
 
 <<>>=
@@ -603,7 +605,7 @@ norm.factors
 @
 
 
-\subsection{Normalization of count data without replicates}
+\subsection{Normalization of two-group count data without replicates}
 \label{section-3-2}
 
 It is important to keep in mind that most R packages (including \Rpackage{edgeR},
@@ -618,7 +620,7 @@ be applied to data regardless of whether it has replicates. Although the
 the DE analysis, it is difficult to customize the analysis with DEGES to 
 data without replicates. 
 
-When obtaining normalization factors from count data without replicates, 
+When obtaining normalization factors from two-group count data without replicates, 
 users can select a total of four combinations (two normalization methods 
 $\times$ two DEG identification methods) coupled with an arbitrary number 
 of iterations ($n = 0, 1, 2, \dots, 100$) in our DEGES-based normalization 
@@ -637,7 +639,7 @@ head(tcc$count)
 tcc$group
 @
 
-A suggested pipeline (DEGES/\Rpackage{DESeq}) for obtaining normalization 
+A DEGES pipeline (DEGES/\Rpackage{DESeq}) for obtaining normalization 
 factors is as follows.
 
 <<>>=
@@ -686,7 +688,7 @@ norm.factors
 
 Many R packages (including \Rpackage{edgeR}, \Rpackage{DESeq}, 
 and \Rpackage{baySeq}) support DE analysis for multi-group tag count data. 
-\Rpackage{TCC} provides DEGES-based normalization methods for such data. 
+\Rpackage{TCC} provides some prototypes of DEGES-based pipelines for such data. 
 Here, we analyze another hypothetical three-group count matrix, the 
 \Robject{hypoData\_mg} object, provided in \Rpackage{TCC}. 
 It consists of $1,000$ genes and a total of nine columns for 
@@ -761,7 +763,7 @@ tcc$norm.factors
 
 For \Rpackage{edgeR} users, we provide commands, consisting of functions in 
 \Rpackage{edgeR}, to perform the DEGES/\Rpackage{edgeR} pipeline without 
-\Rpackage{TCC}. The \Rfunction{calcNormFators} function with the above 
+\Rpackage{TCC}. The \Rfunction{calcNormFators} function together with the above 
 parameter settings can be regarded as a wrapper function for the 
 following commands.
 
@@ -829,7 +831,7 @@ tcc$norm.factors
 
 For \Rpackage{DESeq} users, we provide commands, consisting of functions 
 in \Rpackage{DESeq}, to perform the DEGES/ \Rpackage{DESeq} pipeline without 
-\Rpackage{TCC}. The \Rfunction{calcNormFators} function with the above 
+\Rpackage{TCC}. The \Rfunction{calcNormFators} function together with the above 
 parameter settings can be regarded as a wrapper function for the 
 following commands.
 
@@ -896,7 +898,8 @@ replicates for G2); i.e., \{G1\_rep1, G1\_rep2, G1\_rep3\} vs.
 the same conditions as shown in Fig. 1 of the TbT paper (Kadota et 
 al., 2012 \cite{kadota}); i.e., (i) the first $200$ genes are 
 DEGs ($P_{\mbox{\small DEG}} = 200/1000 = 20\%$), 
-(ii) the first $180$ genes of the $200$ DEGs are higher in G1 (PG1 $= 180/200 = 90\%$), 
+(ii) the first $180$ genes of the $200$ DEGs are higher in G1 
+($P_{\mbox{\small G1}} = 180/200 = 90\%$), 
 and the remaining $20$ DEGs are higher in G2, and (iii) the level of 
 DE is four-fold. The last $800$ genes were designed to be non-DEGs. 
 The different normalization strategies can roughly be evaluated in terms 
@@ -1237,7 +1240,7 @@ implemented in three packages: \Rfunction{exactTest} in \Rpackage{edgeR},
 \Rfunction{nbinomTest} in \Rpackage{DESeq}, 
 and \Rfunction{getLikelihoods.NB} in \Rpackage{baySeq}. 
 Similar to the usage in the \Rfunction{calcNormFators} function 
-with the test.method argument in \Rpackage{TCC}, those DE methods in 
+with the \Rfunction{test.method} argument in \Rpackage{TCC}, those DE methods in 
 \Rpackage{edgeR}, \Rpackage{DESeq}, and \Rpackage{baySeq} can be performed 
 by using the \Rfunction{estimateDE} function with 
 \Rfunction{test.method = "edger"}, \Rfunction{"deseq"}, 
@@ -1252,11 +1255,12 @@ and multi-group data with replicates (\ref{section-4-3}).
 \subsubsection{edgeR coupled with iDEGES/edgeR normalization}
 \label{section-4-1-1}
 
-We give a pipeline for DE analysis using the exact test implemented 
-in \Rpackage{edgeR} with iDEGES/\Rpackage{edgeR} normalization factors 
+We give a procedure for DE analysis using the exact test implemented 
+in \Rpackage{edgeR} together with iDEGES/\Rpackage{edgeR} normalization factors 
+(i.e., the iDEGES/\Rpackage{edgeR}-\Rpackage{edgeR} combination) 
 for the hypothetical two-group count data with replicates (i.e., 
 the \Robject{hypoData} object). If the user wants to determine the 
-genes having an FDR threshold of $< 10\%$ as DEGs, he or she can do as follows.
+genes having an FDR threshold of $< 10\%$ as DEGs, one can do as follows.
 
 <<>>=
 library(TCC)
@@ -1285,7 +1289,7 @@ table(tcc$estimatedDEG)
 
 This means $\Sexpr{sum(tcc$estimatedDEG == FALSE)}$ non-DEGs 
 and $\Sexpr{sum(tcc$estimatedDEG == TRUE)}$ DEGs satisfy FDR $< 0.1$.
-The plot function generates an M-A plot, where "M" indicates the log-ratio 
+The \Rfunction{plot} function generates an M-A plot, where "M" indicates the log-ratio 
 (i.e., $\mbox{M} = log_{2}\mbox{G2} - log_{2}\mbox{G1}$) and "A" 
 indicates average read count 
 (i.e., $\mbox{A} = (log_{2}\mbox{G2} + log_{2}\mbox{G1}) / 2$), 
@@ -1303,8 +1307,9 @@ plot(tcc)
 \label{section-4-1-2}
 
 If the user wants to employ the empirical Bayesian method 
-in \Rpackage{baySeq} with iDEGES/\Rpackage{edgeR} normalization 
-factors, he or she can do as follows.
+in \Rpackage{baySeq} together with iDEGES/\Rpackage{edgeR} normalization 
+factors (i.e., the iDEGES/\Rpackage{edgeR}-\Rpackage{baySeq} combination), 
+one can do as follows.
 
 
 <<>>=
@@ -1367,13 +1372,14 @@ As described previously, the functions for the DEG identification
 method implemented in \Rpackage{edgeR} (i.e., the exact test; ver. 3.0.4) 
 do not allow analysis without replicates. Currently, 
 the \Rfunction{estimateDE} function only allows the \Robject{"deseq"} or 
-\Robject{"bayseq"} options for the \Robject{test.method} argument. Here, we show a pipeline 
-for DE analysis using the NB test implemented in \Rpackage{DESeq} with 
-iDEGES/\Rpackage{DESeq} normalization factors for the hypothetical 
+\Robject{"bayseq"} options for the \Robject{test.method} argument. Here, we show a procedure 
+for DE analysis using the NB test implemented in \Rpackage{DESeq} together with 
+iDEGES/\Rpackage{DESeq} normalization factors 
+(i.e., the iDEGES/\Rpackage{DESeq}-\Rpackage{DESeq} combination) for the hypothetical 
 two-group count data without replicates (i.e., 
 the \Robject{hypoData[, c(1, 4)]} object). If the user wants to determine 
 the genes having an FDR threshold of $< 10\%$ as DEGs, 
-he or she can do as follows.
+one can do as follows.
 
 <<>>=
 library(TCC)
@@ -1402,14 +1408,15 @@ DEGES/\Rpackage{edgeR} normalization for the hypothetical three-group
 data with replicates, i.e., the \Robject{hypoData\_mg} object. 
 The use of the DEGES/\Rpackage{edgeR} normalization 
 factors is simply for reducing the computation time.
-\subsubsection{\Rpackage{baySeq} coupled with 
-DEGES/\Rpackage{edgeR} normalization}
 
+
+\subsubsection{baySeq coupled with DEGES/edgeR normalization}
 \label{section-4-3-1}
 
 The empirical Bayesian method implemented in \Rpackage{baySeq} 
-after executing the DEGES/\Rpackage{edgeR} 
-normalization can be performed as follows.
+after executing the DEGES/\Rpackage{edgeR} normalization 
+(i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{baySeq} combination) 
+can be performed as follows.
 
 <<>>=
 library(TCC)
@@ -1471,7 +1478,9 @@ sum(q.value < 0.2)
 \label{section-4-3-2}
 
 The exact test implemented in \Rpackage{edgeR} after executing 
-the DEGES/\Rpackage{edgeR} normalization can be performed as follows.
+the DEGES/\Rpackage{edgeR} normalization 
+(i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{edgeR} combination)
+can be performed as follows.
 
 <<>>=
 library(TCC)
@@ -1533,7 +1542,7 @@ the both comparisons (i.e., G2 vs. G1 and G3 vs. G1) and
 identifies DEGs between any of the three groups. In other words, 
 one can do any two-group comparison of interest from multi-group data with 
 replicates. For example, the DE analysis for G3 vs. G1 together with 
-iDEGES/\Rpackage{edgeR} normalization can be performed as follows.
+DEGES/\Rpackage{edgeR} normalization can be performed as follows.
 
 <<>>=
 library(TCC)
@@ -1558,7 +1567,9 @@ table(tcc$estimatedDEG)
 \label{section-4-3-3}
 
 The NB test implemented in \Rpackage{DESeq} after executing the 
-DEGES/\Rpackage{edgeR} normalization can be performed as follows.
+DEGES/\Rpackage{edgeR} normalization 
+(i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{DESeq} combination) 
+can be performed as follows.
 
 <<>>=
 library(TCC)
@@ -1697,7 +1708,8 @@ DE method such as the exact test (Robinson and Smyth, 2008 \cite{robinson3}) and
 empirical Bayes (Hardcastle and Kelly, 2010) should produce well-ranked 
 gene lists in which the true DEGs are top-ranked and non-DEGs are 
 bottom-ranked when all genes are ranked according to the degree of DE. 
-The ranked gene list can be obtained as follows.
+The ranked gene list after performing the DEGES/\Rpackage{edgeR}-\Rpackage{edgeR} 
+combination can be obtained as follows.
 
 <<>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger", 
@@ -1729,8 +1741,9 @@ AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDEG != 0),
                 data = -tcc$stat$rank))
 @
 
-The following classic \Rpackage{edgeR} pipelines make it clear that 
-the DEGES-based normalization method (i.e., 
+The following classic \Rpackage{edgeR} procedure 
+(i.e., the TMM-\Rpackage{edgeR} combination) 
+make it clear that  the DEGES-based normalization method (i.e., 
 the DEGES/\Rpackage{edgeR} pipeline) outperforms the default 
 normalization method (i.e., TMM) implemented in \Rpackage{edgeR}.
 
@@ -1784,7 +1797,7 @@ calcAUCValue(tcc)
 Let us generate tag count data without replicates, 
 such as those used in section \ref{section-3-2} For simplicity, 
 we first generate simulation data whose conditions are essentially 
-the same as those in the previous section (i.e., \ref{section-5-2}), 
+the same as those in the previous section (i.e., \ref{section-5-1}), 
 except for the number of replicates in each group: (i) the number of 
 genes is $1,000$ (i.e., \Robject{Ngene = 1000}), 
 (ii) the first $20\%$ of genes 
@@ -1809,10 +1822,11 @@ head(tcc$count)
 tcc$group
 @
 
-Now let us see how DEGES/\Rpackage{DESeq} with the original \Rpackage{DESeq} 
-procedure performs. First, we calculate the AUC value for the ranked 
-gene list obtained from the NB test in \Rpackage{DESeq} coupled with 
-the DEGES/\Rpackage{DESeq} normalization.
+Now let us see how the DEGES/\Rpackage{DESeq}-\Rpackage{DESeq} combination 
+with the original \Rpackage{DESeq}-\Rpackage{DESeq} combination 
+performs. First, we calculate the AUC value for the ranked 
+gene list obtained from the DEGES/\Rpackage{DESeq}-\Rpackage{DESeq} 
+combination.
 
 <<>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
@@ -1822,7 +1836,8 @@ calcAUCValue(tcc)
 @
 
 Next, we calculate the corresponding value 
-using the original \Rpackage{DESeq} procedure.
+using the original \Rpackage{DESeq} procedure 
+(i.e., the \Rpackage{DESeq}-\Rpackage{DESeq} combination).
 
 <<>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", iteration = 0)
@@ -1830,7 +1845,8 @@ tcc <- estimateDE(tcc, test.method = "deseq")
 calcAUCValue(tcc)
 @
 
-It can be seen that DEGES/\Rpackage{DESeq} outperforms the original procedure 
+It can be seen that the DEGES/\Rpackage{DESeq}-\Rpackage{DESeq} combination 
+outperforms the original procedure 
 under the given simulation conditions. The following is an alternative 
 approach for \Rpackage{DESeq} users.
 
@@ -2047,7 +2063,7 @@ sessionInfo()
 \bibitem{robinson} Robinson MD, McCarthy DJ, and Smyth GK. \Rpackage{edgeR}: a Bioconductor package for differential expression analysis of digital gene expression data. Bioinformatics 26(1): 139-140, 2010
 \bibitem{robinson2} Robinson MD and Oshlack A. A scaling normalization method for differential expression analysis of RNA-seq data. Genome Biol., 11: R25, 2010
 \bibitem{robinson3} Robinson MD and Smyth GK. Small-sample estimation of negative binomial dispersion, with applications to SAGE data. Biostatistics 9: 321-332, 2008
-\bibitem{sun} Sun J, Nishiyama T, Shimizu K, and Kadota K. \Rpackage{TCC}: a Bioconductor package for comparing tag count data with robust normalization strategies. submitted
+\bibitem{sun} Sun J, Nishiyama T, Shimizu K, and Kadota K. \Rpackage{TCC}: an R package for comparing tag count data with robust normalization strategies. submitted
 \bibitem{mccarthy} McCarthy DJ, Chen Y, Smyth GK. Differential expression analysis of multifactor RNA-Seq experiments with respect to biological variation. Nucleic Acids Res. 40(10): 4288-4297, 2012
 \end{thebibliography}
 \end{document}
