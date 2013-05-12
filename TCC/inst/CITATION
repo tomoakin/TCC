@@ -1,24 +1,27 @@
 citHeader("Please cite appropriate references when you publish your results.")
 
+
 citEntry(
   entry = "article",
-  title = "TCC: a Bioconductor package for comparing tag count data with robust normalization strategies",
-  author = "Sun J, Nishiyama T, Shimizu K and Kadota K",
-  journal = "Submitted",
-  year = 2013,
-  textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. submitted"
+  title = "Differential expression analysis for sequence count data",
+  author = "Anders S and Huber W",
+  journal = "Genome Biology",
+  volume = "11(10)",
+  pages = "R106",
+  year = 2010,
+  textVersion = "Anders S and Huber W. Differential expression analysis for sequence count data. Genome Biol. 11(10): R106, 2010"
 )
 
 
 citEntry(
   entry = "article",
-  title = "A normalization strategy for comparing tag count data",
-  author = "Kadota K, Nishiyama T and Shimizu K",
-  journal = "Algorithms for Molecular Biology",
-  volume = 7,
-  pages = 5,
-  year = 2012,
-  textVersion = "Kadota K, Nishiyama T, and Shimizu K. A normalization strategy for comparing tag count data. Algorithms Mol Biol. 7:5, 2012"
+  title = "The NBP negative binomial model for assessing differential gene expression from RNA-Seq",
+  author = "Di Y, Schafer DW, Cumbie JS and Chang JH",
+  journal = "Stat Appl Genet Mol Biol",
+  volume = "26(1)",
+  pages = 139-140,
+  year = 2010,
+  textVersion = "Di Y, Schafer DW, Cumbie JS, and Chang JH. The NBP negative binomial model for assessing differential gene expression from RNA-Seq. Stat Appl Genet Mol Biol. 10: art24, 2011"
 )
 
 
@@ -36,13 +39,13 @@ citEntry(
 
 citEntry(
   entry = "article",
-  title = "Differential expression analysis for sequence count data",
-  author = "Anders S and Huber W",
-  journal = "Genome Biology",
-  volume = "11(10)",
-  pages = "R106",
-  year = 2010,
-  textVersion = "Anders S and Huber W. Differential expression analysis for sequence count data. Genome Biol. 11(10): R106, 2010"
+  title = "A normalization strategy for comparing tag count data",
+  author = "Kadota K, Nishiyama T and Shimizu K",
+  journal = "Algorithms for Molecular Biology",
+  volume = 7,
+  pages = 5,
+  year = 2012,
+  textVersion = "Kadota K, Nishiyama T, and Shimizu K. A normalization strategy for comparing tag count data. Algorithms Mol Biol. 7:5, 2012"
 )
 
 
@@ -55,18 +58,6 @@ citEntry(
   pages = 139-140,
   year = 2010,
   textVersion = "Robinson MD, McCarthy DJ, and Smyth GK. edgeR: a Bioconductor package for differential expression analysis of digital gene expression data. Bioinformatics 26(1): 139-140, 2010"
-)
-
-
-citEntry(
-  entry = "article",
-  title = "The NBP negative binomial model for assessing differential gene expression from RNA-Seq",
-  author = "Di Y, Schafer DW, Cumbie JS and Chang JH",
-  journal = "Stat Appl Genet Mol Biol",
-  volume = "26(1)",
-  pages = 139-140,
-  year = 2010,
-  textVersion = "Di Y, Schafer DW, Cumbie JS, and Chang JH. The NBP negative binomial model for assessing differential gene expression from RNA-Seq. Stat Appl Genet Mol Biol. 10: art24, 2011"
 )
 
 
@@ -96,6 +87,16 @@ citEntry(
 
 citEntry(
   entry = "article",
+  title = "TCC: an R package for comparing tag count data with robust normalization strategies",
+  author = "Sun J, Nishiyama T, Shimizu K and Kadota K",
+  journal = "Submitted",
+  year = 2013,
+  textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. submitted"
+)
+
+
+citEntry(
+  entry = "article",
   title = "Differential expression analysis of multifactor RNA-Seq experiments with respect to biological variation",
   author = "McCarthy DJ, Chen Y and Smyth GK",
   journal = "Nucleic Acids Research",
@@ -104,9 +105,5 @@ citEntry(
   year = 2012,
   textVersion = "McCarthy DJ, Chen Y and Smyth GK. Differential expression analysis of multifactor RNA-Seq experiments with respect to biological variation. Nucleic Acids Research 40: 4288-4297, 2012"
 )
-
-
-
-
 
 
