@@ -16,7 +16,7 @@ The procedure can generally be described as the \eqn{STEP1-(STEP2-STEP3)_{n}}{ST
                 dispersion = NULL, 
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
-                samplesize = 10000, cl = NULL, increment = FALSE)
+                samplesize = 10000, cl = NULL)
 }
 \arguments{
 	\item{tcc}{\link{TCC-class} object.}
@@ -74,11 +74,11 @@ The procedure can generally be described as the \eqn{STEP1-(STEP2-STEP3)_{n}}{ST
 	\item{cl}{a 'snow' object for using multi 
 	 processors if \code{test.method = "bayseq"}. See the 
 	\code{\link[baySeq]{getPriors.NB}} function for details.}
-	\item{increment}{logical value. if \code{increment = TRUE}, the DEGES
-	pipeline will perform again from current iteration DEGES. 
-	For example, assume that the iDEGES (iteration = n) was performed, 
-	when \code{increment} is \code{TRUE}, it will perform again. 
-	the result is same to iteration n + 1.}
+%	\item{increment}{logical value. if \code{increment = TRUE}, the DEGES
+%	pipeline will perform again from current iteration DEGES. 
+%	For example, assume that the iDEGES (iteration = n) was performed, 
+%	when \code{increment} is \code{TRUE}, it will perform again. 
+%	the result is same to iteration n + 1.}
 }
 \details{
 The \code{\link{calcNormFactors}} function is the main function in the TCC package. 
