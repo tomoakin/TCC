@@ -9,8 +9,7 @@ TCC <- setRefClass(
     estimatedDEG = "numeric",      # identified result by identifyDEG().
     simulation = "list",           # the aurgument inputed.
     DEGES = "list",                # detailed informations about DEGES .
-    private = "list",              # intermediate data on DEGES process.
-    debug = "list"
+    private = "list"               # intermediate data on DEGES process.
   ),
 
   #  Class Methods.
@@ -232,9 +231,6 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
   if ((increment == FALSE) || 
       (increment == TRUE && private$normalized == FALSE)) {
     DEGES$iteration <<- 0
-    private$debug <<- list()
-    private$debug$potentialDEG <<- list()
-    private$debug$potentialPval <<- list()
   }
   ex.time <- proc.time()
   if (is.null(norm.method)) {
@@ -320,9 +316,6 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         message ("TCC::INFO: No non-DE genes after eliminate DE genes. stop DEGES strategy.")
         break
       }
-      private$debug$potentialDEG[[DEGES$iteration + 1]] <<- deg.flg
-      private$debug$potentialThreshold[[DEGES$iteration + 1]] <<- DEGES$threshold
-      private$debug$potentialPval[[DEGES$iteration + 1]] <<- private$stat$p.value
       # DEGES strategy STEP 3. (Second normalization)
       norm.factors <<- switch(norm.method,
         "tmm" = .self$.normByTmm(count.ndeg),
