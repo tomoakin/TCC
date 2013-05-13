@@ -881,7 +881,7 @@ library sizes) and ours. The effective library size in \Rpackage{edgeR}
 is calculated as the library size multiplied by the normalization factor. 
 The size factors in the \Rpackage{DESeq} package are comparable to 
 the {\it normalized} effective library sizes wherein the summary statistics 
-for the effective library sizes are adjusted to zero. Our normalization 
+for the effective library sizes are adjusted to one. Our normalization 
 factors, which can be obtained from \Robject{tcc\$norm.factors}, 
 have the same names as those in \Rpackage{edgeR}. Accordingly, the 
 normalization factors calculated from \Rpackage{TCC} with arbitrary 
