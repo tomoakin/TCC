@@ -151,13 +151,13 @@ tcc$norm.factors
 
 # calculating normalization factors for another simulation data without 
 # replicates
-tcc <- simulateReadCounts(replicates = c(1, 2))
+tcc <- simulateReadCounts(replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 
+\dontrun{
 # calculating normalization factors for a simulation data using the 
 # TbT method with four processors
-\dontrun{
 library(snow)
 cl <- makeCluster(4, "SOCK")
 tcc <- simulateReadCounts()

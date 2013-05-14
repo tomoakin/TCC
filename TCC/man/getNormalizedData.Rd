@@ -20,7 +20,7 @@ stored in the \code{norm.factors} field in the \link{TCC-class} object.
 A numeric matrix containing normalized count data.
 }
 \examples{
-# Note that the hypoData has non-DEGs at 2001-10000th rows
+# Note that the hypoData has non-DEGs at 201-1000th rows
 nonDEG <- 201:1000
 data(hypoData)
 summary(hypoData[nonDEG, ])

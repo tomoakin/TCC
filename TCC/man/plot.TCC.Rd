@@ -89,6 +89,7 @@ colSums(normalized.count)
 colSums(hypoData)
 mean(colSums(hypoData))
 
+
 # 2-1. 
 # M-A plotting of simulation data with default parameter settings.
 # non-DEGs are in black, DEGs up-regulated in G1 and G2 are in
@@ -125,6 +126,5 @@ plot(tcc, FDR = 0.7)
 # Only plot Group 2 vs Group3.
 tcc <- simulateReadCounts(replicates = c(2, 2, 2))
 plot(tcc, groups = c(2, 3))
-
 }
 \keyword{methods}

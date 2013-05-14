@@ -25,8 +25,8 @@ in magenta and no-changes are in white.
 \examples{
 # Generating a simulation data for comparing two groups
 # (G1 vs. G2) with biological replicates.
-# the first 20 genes are DEGs, where 18 are up in G1.
-tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2,
+# the first 200 genes are DEGs, where 180 are up in G1.
+tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.2,
                           DEG.assign = c(0.9, 0.1),
                           DEG.foldchange = c(4, 4), 
                           replicates = c(3, 3))
@@ -34,10 +34,10 @@ plotFCPseudocolor(tcc)
 
 # Generating a simulation data for comparing three groups
 # (G1 vs. G2 vs. G3) with biological replicates.
-# the first 3000 genes are DEGs, where the 70%, 20%, and 10% are
+# the first 300 genes are DEGs, where the 70%, 20%, and 10% are
 # up-regulated in G1, G2, G3, respectively. The levels of DE are
 # 3-, 10, and 6-fold in individual groups.
-tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.3,
+tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.3,
                           DEG.assign = c(0.7, 0.2, 0.1),
                           DEG.foldchange = c(3, 10, 6),
                           replicates = c(3, 3, 3))

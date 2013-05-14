@@ -63,7 +63,6 @@ This class contains the following fields:
 	}
 }
 \examples{
-\dontrun{
 tcc <- simulateReadCounts()
 
 # Check the TCC class object.
@@ -71,10 +70,7 @@ tcc
 
 # Check the fields of TCC class object.
 names(tcc)
-head(tcc["count"])
-
-length(tcc)
-head(tcc[1])
+head(tcc$count)
 
 # Check the normalization factors.
 tcc <- calcNormFactors(tcc)
@@ -90,6 +86,5 @@ head(tcc$simulation$trueDEG)
 
 # M-A plotting.
 plot(tcc)
-}
 }
 \keyword{classes}
