@@ -380,45 +380,33 @@ The DEGES/TbT (Kadota et al., 2012 \cite{kadota}) with default parameter
 settings can be performed as follows.
 
 <<>>=
-library(TCC)
-data(hypoData)
-samplesize <- 10000
-group <- c(1, 1, 1, 2, 2, 2)
-tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
-                       iteration = 1, samplesize = samplesize) 
-@
-
-The calculated normalization factors and the computation time 
-can be retrieved with the following commands.
-
-<<>>=
-tcc$norm.factors
-tcc$DEGES$execution.time
-@
-
-The long computation time 
-(about $\Sexpr{sprintf("%.0f", tcc$DEGES$execution.time[3])}$ seconds) 
-is due to the empirical 
-Bayesian method in step 2. This method estimates an empirical distribution of 
-the parameters of the NB distribution by bootstrapping from the input data; 
-the default sample size is set to a suggested value of $10,000$ 
-(i.e., \Robject{samplesize = 10000}). While the sampling size can be 
-made smaller to reduce the computation time (e.g., \Robject{samplesize = 100}), 
-the resulting normalization factors will vary from trial to trial. 
-In this vignette, we will call the \Rfunction{set.seed} function for obtaining 
-reproducible results (i.e., the \Robject{tcc\$norm.factors}, 
-values) when using any random function. That is,
-
-<<>>=
 set.seed(1000)
 library(TCC)
 data(hypoData)
-samplesize <- 100
+samplesize <- 70
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
                        iteration = 1, samplesize = samplesize)
+@
+
+Note that a smaller sampling size (i.e., \Robject{samplesize = 70}) 
+is used here to reduce the computation time when performing 
+the empirical Bayesian method in step 2, 
+but a larger sampling size of around $10,000$ 
+(i.e., \Robject{samplesize = 10000}) is recommended 
+(Hardcastle and Kelly, 2010 \cite{hardcastle}). 
+This method estimates an empirical distribution of the parameters 
+of the NB distribution by bootstrapping from the input data. 
+While the sampling size can be made smaller to reduce the 
+computation time (e.g., \Robject{samplesize = 40}), the resulting 
+normalization factors will vary from trial to trial. 
+In this vignette, we will call the \Rfunction{set.seed} function for obtaining 
+reproducible results (i.e., the \Robject{tcc\$norm.factors} values) when 
+using any random function. The calculated normalization factors 
+and the computation time can be retrieved with the following commands.
+
+<<>>=
 tcc$norm.factors
 tcc$DEGES$execution.time
 @
@@ -433,7 +421,7 @@ function for the following commands.
 set.seed(1000)
 library(TCC)
 data(hypoData)
-samplesize <- 100
+samplesize <- 70
 group <- c(1, 1, 1, 2, 2, 2)
 ### STEP 1 ###
 d <- DGEList(count = hypoData, group = group)
@@ -1505,7 +1493,6 @@ because the two arguments indicated here (\Robject{design} and \Robject{coef}) c
 to an AVOVA-like test for any differences provided in \Rpackage{edgeR}, i.e., 
 
 <<>>=
-library(edgeR)
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
