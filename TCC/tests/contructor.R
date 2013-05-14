@@ -1,3 +1,4 @@
+if (Sys.getenv("TCC_REAL_TEST")!=""){
 library(TCC)
 data(hypoData)
 
@@ -32,4 +33,4 @@ rownames(mt) <- NULL
 group <- data.frame(replicates = c(1, 1, 1, 2, 2, 2), 
                     times = c(1, 2, 3, 1, 2, 3))
 tccdata <- new("TCC", mt, group)
-
+}
