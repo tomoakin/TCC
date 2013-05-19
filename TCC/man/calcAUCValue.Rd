@@ -38,19 +38,5 @@ tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2,
 tcc <- calcNormFactors(tcc)
 tcc <- estimateDE(tcc)
 calcAUCValue(tcc)
-
-
-# Analyzing a simulation data for comparing two groups
-# (G1 vs. G2) without any replicates.
-# the levels of DE are 3-fold in G1 and 7-fold in G2
-# The DE analysis is performed by an negative binomial test in
-# DESeq coupled with the DEGES/DESeq normalization factors.
-tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2,
-                         DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform",
-                         DEG.foldchange = c(3, 7), replicates = c(1, 1))
-tcc <- calcNormFactors(tcc)
-tcc <- estimateDE(tcc)
-calcAUCValue(tcc)
 }
 \keyword{methods}

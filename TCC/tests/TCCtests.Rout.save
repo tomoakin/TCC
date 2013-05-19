@@ -1,5 +1,5 @@
 
-R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+R version 3.0.1 (2013-05-16) -- "Good Sport"
 Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
@@ -47,7 +47,7 @@ Welcome to Bioconductor
     'citation("Biobase")', and for packages 'citation("pkgname")'.
 
 Loading required package: locfit
-locfit 1.5-9 	 2013-03-22
+locfit 1.5-9.1 	 2013-03-22
 > data(hypoData)
 > set.seed(1834016)
 > 
@@ -176,7 +176,6 @@ TCC::INFO: First normalization done.
 TCC::INFO: Done.
 > tcc$estimateDE(test.method = "edger", FDR = 0.1)
 TCC::INFO: Identifying DE genes using edger ...
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > 
 > sub_tcc <- subset(tcc,1:10*10)
@@ -272,7 +271,6 @@ TCC::INFO: (PDEG        :  0.18, 0.02 )
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
 TCC::INFO: First normalization done.
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > tcc <- estimateDE(tcc, test.method = "bayseq", FDR = 0.1, samplesize = 100)
 TCC::INFO: Identifying DE genes using bayseq ...
@@ -308,11 +306,9 @@ TCC::INFO: (PDEG        :  0.18, 0.02 )
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
 TCC::INFO: First normalization done.
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 TCC::INFO: Identifying DE genes using edger ...
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > result <- getResult(tcc, sort = TRUE)
 [1] 0.6367243
@@ -346,11 +342,8 @@ TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
 TCC::INFO: First normalization done.
 TCC::INFO: Done.
-> tcc$norm.factors
-  G1_rep1   G1_rep2   G1_rep3   G2_rep1   G2_rep2   G2_rep3   G3_rep1   G3_rep2 
-1.0285193 0.9001479 0.7877150 0.8308582 1.1867099 1.1835535 0.9994667 1.0281489 
-  G3_rep3 
-1.0548806 
+> #tcc$norm.factors
+> ## this will differ depending on edgeR versions
 > 
 > tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1),replicate=c(1,1))
 TCC::INFO: Generating simulation data under NB distribution ...
@@ -398,9 +391,6 @@ tcc$stat$execution.time: > cat(tcc$stat$execution.time)
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 3 )
 TCC::INFO: First normalization done.
-Calculating library sizes from column totals.
-Calculating library sizes from column totals.
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
@@ -415,7 +405,6 @@ tcc$stat$execution.time: > cat(tcc$stat$execution.time)
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 1 )
 TCC::INFO: First normalization done.
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > cat("tcc$norm.factors: ")
 tcc$norm.factors: > cat(tcc$norm.factors)
@@ -459,18 +448,9 @@ TCC::INFO: Done.
 TCC::INFO: Identifying DE genes using deseq ...
 TCC::INFO: Done.
 > result <- getResult(tcc, sort = TRUE)
-> head(result)
-     gene_id a.value m.value      p.value      q.value rank estimatedDEG
-126 gene_126      NA      NA 2.182698e-13 2.182698e-10    1            1
-63   gene_63      NA      NA 1.244090e-10 6.220452e-08    2            1
-27   gene_27      NA      NA 2.134407e-08 7.114689e-06    3            1
-176 gene_176      NA      NA 4.139815e-08 1.034954e-05    4            1
-83   gene_83      NA      NA 5.531305e-08 1.106261e-05    5            1
-121 gene_121      NA      NA 6.736260e-08 1.122710e-05    6            1
-> table(tcc$estimatedDEG)
-
-  0   1 
-870 130 
+> #head(result)
+> ## this will differ depending on edgeR versions
+> #table(tcc$estimatedDEG)
 > 
 > group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
 > tcc <- new("TCC", hypoData_mg, group)
@@ -501,18 +481,9 @@ TCC::INFO: Done.
 TCC::INFO: Identifying DE genes using edger ...
 TCC::INFO: Done.
 > result <- getResult(tcc, sort = TRUE)
-> head(result)
-     gene_id a.value m.value      p.value      q.value rank estimatedDEG
-176 gene_176      NA      NA 2.207155e-13 2.207155e-10    1            1
-27   gene_27      NA      NA 4.924858e-12 2.004363e-09    2            1
-126 gene_126      NA      NA 6.013088e-12 2.004363e-09    3            1
-56   gene_56      NA      NA 8.316457e-12 2.079114e-09    4            1
-64   gene_64      NA      NA 2.596476e-11 4.369393e-09    5            1
-121 gene_121      NA      NA 2.621636e-11 4.369393e-09    6            1
-> table(tcc$estimatedDEG)
-
-  0   1 
-828 172 
+> #head(result)
+> ## this will differ depending on edgeR versions
+> #table(tcc$estimatedDEG)
 > 
 > tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3,
 +                        DEG.assign = c(0.6, 0.2, 0.2),
@@ -563,9 +534,6 @@ TCC::INFO: (PDEG        :  0.255, 0.045 )
 TCC::INFO: Calculating normalization factors using DEGES
 TCC::INFO: (iDEGES pipeline : tmm - [ edger - tmm ] X 3 )
 TCC::INFO: First normalization done.
-Calculating library sizes from column totals.
-Calculating library sizes from column totals.
-Calculating library sizes from column totals.
 TCC::INFO: Done.
 > plot(tcc, median.lines = TRUE)
 [1] 0.457113
@@ -573,4 +541,4 @@ TCC::INFO: Done.
 > 
 > proc.time()
    user  system elapsed 
- 63.870   0.123  64.240 
+ 67.406   0.121  67.819 

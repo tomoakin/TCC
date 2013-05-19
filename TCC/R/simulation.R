@@ -56,8 +56,7 @@ simulateReadCounts <- function(Ngene=10000, PDEG=0.20, DEG.assign=c(0.9, 0.1),
 
   # 1) Prepare the super population for sampling.
   arab <- NULL
-  rm(arab)
-  data(arab)
+  data('arab', envir = environment())
   rpm.a <- sweep(arab[, 1:3], 2, median(colSums(arab[, 1:3])) / colSums(arab[, 1:3]), "*")
   rpm.b <- sweep(arab[, 4:6], 2, median(colSums(arab[, 4:6])) / colSums(arab[, 4:6]), "*")
   rpm.a <- rpm.a[apply(rpm.a, 1, var) > 0, ]

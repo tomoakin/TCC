@@ -78,7 +78,8 @@ design <- model.matrix(~ as.factor(group))
 coef <- 2:length(unique(group))
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
                         iteration = 1, design = design, coef = coef)
-tcc$norm.factors
+#tcc$norm.factors
+## this will differ depending on edgeR versions
 
 tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, DEG.assign = c(0.9, 0.1),replicate=c(1,1))
 tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
@@ -137,8 +138,9 @@ fit0 <- count ~ 1
 tcc <- estimateDE(tcc, test.method = "deseq",
                   FDR = 0.1, fit0 = fit0, fit1 = fit1)
 result <- getResult(tcc, sort = TRUE)
-head(result)
-table(tcc$estimatedDEG)
+#head(result)
+## this will differ depending on edgeR versions
+#table(tcc$estimatedDEG)
 
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
 tcc <- new("TCC", hypoData_mg, group)
@@ -159,8 +161,9 @@ tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
 tcc <- estimateDE(tcc, test.method = "edger",
                   FDR = 0.1, design = design, coef = coef)
 result <- getResult(tcc, sort = TRUE)
-head(result)
-table(tcc$estimatedDEG)
+#head(result)
+## this will differ depending on edgeR versions
+#table(tcc$estimatedDEG)
 
 tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3,
                        DEG.assign = c(0.6, 0.2, 0.2),

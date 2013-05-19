@@ -17,7 +17,7 @@ MAplot <- function(datalist, FDR_threshold=0.01){
 # generate negative binomial distributed datasets with different frequencies
 NBsample <- function(DEG_foldchange = 4, repA = 3, repB = 3, Ngene = 3000, PDEG = 0.15, PA = 0.2){
     arab <- NULL;rm(arab) # to avoid note by R CMD check
-    data(arab) #arab dataset from NBPseq
+    data('arab', envir = environment()) #arab dataset from NBPseq
     data.cl <- c(rep(1, 3), rep(2, 3))
     RPM <- sweep(arab, 2, 1000000/colSums(arab), "*")
     RPM_A <- RPM[,data.cl == 1]

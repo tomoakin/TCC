@@ -109,25 +109,25 @@ tcc$norm.factors
 data(hypoData)
 hypodata <- hypoData[1:100*10,]
 group <- c(1, 1, 1, 2, 2, 2)
-tcc <- new("TCC", hypoData, group)
+tcc <- new("TCC", hypodata, group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 
 # calculating normalization factors using the iterative DEGES/edgeR method 
 # (iDEGES/edgeR) with n = 3
-tcc <- new("TCC", hypoData, group)
+tcc <- new("TCC", hypodata, group)
 tcc <- calcNormFactors(tcc, iteration = 3)
 tcc$norm.factors
 
 # calculating normalization factors for count data without replicates
 group <- c(1, 2)
-tcc <- new("TCC", hypoData[, c(1, 4)], group)
+tcc <- new("TCC", hypodata[, c(1, 4)], group)
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 
 # calculating normalization factors for another simulation data without 
 # replicates
-tcc <- simulateReadCounts(replicates = c(1, 1))
+tcc <- simulateReadCounts(Ngene = 100, replicates = c(1, 1))
 tcc <- calcNormFactors(tcc)
 tcc$norm.factors
 

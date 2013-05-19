@@ -71,53 +71,13 @@ A \link{TCC-class} object containing following fields:
 	 the corresponding arguments.}
 }
 \examples{
-# Generating a simulation data for comparing two groups
-# (G1 vs. G2) with biological replicates. 
-# the first 20 genes are DEGs, where 18 are up in G1.
-tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, 
-                         DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform", 
-                         DEG.foldchange = c(4, 4), replicates = c(3, 3))
-dim(tcc$count)
-head(tcc$count)
-str(tcc$simulation)
-head(tcc$simulation$trueDEG)
-
-# Generating a simulation data for comparing two groups
-# (G1 vs. G2) without any replicates. 
-# the levels of DE are 3-fold in G1 and 7-fold in G2
-tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, 
-                         DEG.assign = c(0.9, 0.1),
-                         DEG.model = "uniform", 
-                         DEG.foldchange = c(3, 7), replicates = c(1, 1))
-dim(tcc$count)
-head(tcc$count)
-str(tcc$simulation)
-head(tcc$simulation$trueDEG)
-
-
-# Generating a simulation data for comparing two groups
-# (G1 vs. G2) with replicates. 
-# the DEG.model are changed, minimum FC = 2-fold,
-# and the average FC = 4.5-fold.
-tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.2, 
-                DEG.assign = c(0.9, 0.1),
-                DEG.model = "gamma", 
-                DEG.foldchange = list(c(2,2), c(5, 5), c(0.5, 0.5)), 
-                replicates = c(2, 2))
-dim(tcc$count)
-str(tcc$simulation)
-
-
-
 # Generating a simulation data for comparing three groups
 # (G1 vs. G2 vs. G3) with biological replicates. 
-# the first 3000 genes are DEGs, where the 70%, 20%, and 10% are
+# the first 30% genes are DEGs, where the 70%, 20%, and 10% are
 # up-regulated in G1, G2, G3, respectively. The levels of DE are
 # 3-, 10, and 6-fold in individual groups.
 tcc <- simulateReadCounts(Ngene = 100, PDEG = 0.3, 
                          DEG.assign = c(0.7, 0.2, 0.1),
-                         DEG.model = "uniform", 
                          DEG.foldchange = c(3, 10, 6), 
                          replicates = c(2, 4, 3))
 dim(tcc$count)

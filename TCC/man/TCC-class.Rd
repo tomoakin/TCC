@@ -74,7 +74,7 @@ This class contains the following fields:
 	}
 }
 \examples{
-tcc <- simulateReadCounts()
+tcc <- simulateReadCounts(Ngene=40)
 
 # show
 tcc
