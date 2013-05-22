@@ -447,12 +447,12 @@ TCC$methods(plotMA = function (FDR = NULL,
     } else {
       col <- rep(1, length = length(gru))
     }
-  } else {
-    if (length(col) != length(gru) + 1) {
-      if (length(col) == 1)
-        col <- c(col, col)
-      col <- c(col[1], rep(col[-1], length = length(gru) - 1))
-    }
+  #} else {
+  #  if (length(col) != length(gru) + 1) {
+  #    if (length(col) == 1)
+  #      col <- c(col, col)
+  #    col <- c(col[1], rep(col[-1], length = length(gru) - 1))
+  #  }
   }
   
   count.normed <- getNormalizedCount()  
@@ -532,11 +532,11 @@ TCC$methods(plotMA = function (FDR = NULL,
           }
 		#} else {
         if (is.null(col.tag))
-          col.tag <- col.tag.v
+          col.tag <- col.tag.v + 1
         if (length(col.tag) != nrow(count))
             stop("\nTCC::ERROR: The length of col.tag has to be equal to the number of genes.\n")
-        for (k in 0:max(col.tag)) {
-          points(a[col.tag == k], m[col.tag == k], col = col[k + 1], pch = pch, cex = cex)
+        for (k in unique(col.tag)) {
+          points(a[col.tag == k], m[col.tag == k], col = col[k], pch = pch, cex = cex)
         }
         if (median.lines == TRUE) {
           for (k in unique(col.tag.v)) {
