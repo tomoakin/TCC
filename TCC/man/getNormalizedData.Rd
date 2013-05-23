@@ -27,17 +27,6 @@ summary(hypoData[nonDEG, ])
 group <- c(1, 1, 1, 2, 2, 2)
 
 # Obtaining normalized count data after performing the 
-# TbT normalization method (Kadota et al., 2012) from hypoData,
-# i.e., TbT-normalized data
-\dontrun{
-tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
-                       floorPDEG = 0)
-normalized.count <- getNormalizedData(tcc)
-summary(normalized.count[nonDEG, ])
-}
-
-# Obtaining normalized count data after performing the 
 # DEGES/edgeR normalization method, i.e., DEGES/edgeR-normalized data
 tcc <- new("TCC", hypoData, group)
 tcc <- calcNormFactors(tcc)

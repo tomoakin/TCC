@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{plot.TCC}
 \alias{plot}
-\title{Plot an log fold-change versus log average expression
+\title{Plot a log fold-change versus log average expression
  (so-called M-A plot)}
 \description{This function generates a scatter plot of log fold-change
  (i.e., \eqn{M = \log_2 G2 - \log_2 G1}{M = log2(G2) - log2(G1)} on 
@@ -25,9 +25,8 @@
 	 specifying the median M values for non-DEGs (black), DEGs
 	 up-regulated in Group 1 (G1; blue), and G2 (red) are drawn.}
 	\item{floor}{numeric scalar specifying a threshold for adjusting low count data.}
-	\item{groups}{numeric or character vector consists two elements for 
-	specifying what two groups should be drawed when data contains three
-	or more groups.}
+	\item{groups}{numeric vector consists two elements for 
+	 specifying what two groups should be drawn when data contains more than three groups.}
 	\item{main}{character string indicating the plotting title.}
 	\item{xlab}{character string indicating the \eqn{x}-label title.}
 	\item{ylab}{character string indicating the \eqn{y}-label title.}
@@ -41,7 +40,8 @@
 	 to be used as the default in plotting points.}
 	\item{col}{vector specifying plotting color. The default is col 
 	 = c(1, 4, 2, 5, 6, 7, ...) of color index.}
-	\item{col.tag}{vector specifying the color of genes.}
+	\item{col.tag}{numeric vector spacifying the index of \code{col} 
+	 for coloring the points of the genes.}
 	\item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}
 }
 \details{
@@ -90,18 +90,11 @@ colSums(hypoData)
 mean(colSums(hypoData))
 
 
-# 2-1. 
-# M-A plotting of simulation data with default parameter settings.
-# non-DEGs are in black, DEGs up-regulated in G1 and G2 are in
-# blue and red.
-tcc <- simulateReadCounts()
-plot(tcc, median.lines = TRUE)
-
-
-# 2-2. 
+# 2. 
 # M-A plotting of DEGES/edgeR-normalized simulation data.
 # It can be seen that the median M value for non-DEGs approaches
-# zero.
+# zero. Note that non-DEGs are in black, DEGs up-regulated in 
+# G1 and G2 are in blue and red.
 tcc <- simulateReadCounts()
 tcc <- calcNormFactors(tcc)
 plot(tcc, median.lines = TRUE)
@@ -119,12 +112,5 @@ plot(tcc)
 
 # Changing the FDR threshold
 plot(tcc, FDR = 0.7)
-
-
-# 4.
-# M-A plotting for multiple groups
-# Only plot Group 2 vs Group3.
-tcc <- simulateReadCounts(replicates = c(2, 2, 2))
-plot(tcc, groups = c(2, 3))
 }
 \keyword{methods}

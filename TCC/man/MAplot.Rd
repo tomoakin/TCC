@@ -2,7 +2,7 @@
 \alias{MAplot}
 \title{plot a MA plot}
 \description{
-   This method plots a MA plot based on the exactTestafterTbT.
+   This method plots a MA plot based on the exactTestafterTbT. This function will be obsoleted.
 }
 \usage{
    MAplot(datalist, FDR_threshold = 0.01)

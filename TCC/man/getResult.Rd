@@ -19,7 +19,7 @@
 }
 \value{
 A data frame object containing following fields:
-	\item{id}{(character) vector of gene ID.}
+	\item{gene_id}{character vector indicating the id of the count unit, usually gene.}
 	\item{a.value}{numeric vector of average expression level on log2
 	 scale (i.e., A-value) for each gene across the compared two groups.
 	 It corresponds to the \eqn{x} coordinate in the M-A plot.}
@@ -32,11 +32,10 @@ A data frame object containing following fields:
 	 function with default parameter settings.}
 	\item{rank}{numeric vector of gene rank in order of
 	 the \eqn{p}-values.}
-	\item{estimatedDEG}{numeric vector consisting of 0, 1, or 2
-	 depending on whether each gene is classified as non-DEG, DEG
-	 up-regulated in Group 1 or Group 2, respectively. The threshold
-	 for classifying DEGs or non-DEGs is preliminarily given when
-	 performing \code{\link{estimateDE}}.}
+	\item{estimatedDEG}{numeric vector consisting of 0 or 1
+	 depending on whether each gene is classified as non-DEG or DEG.
+	 The threshold for classifying DEGs or non-DEGs is preliminarily 
+	 given when performing \code{\link{estimateDE}}.}
 }
 \examples{
 # Obtaining DE results by an exact test in edgeR coupled with

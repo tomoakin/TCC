@@ -41,7 +41,7 @@ calcAUCValue(tcc)
 
 
 # Analyzing a simulation data for comparing two groups
-# (G1 vs. G2) without any replicates.
+# (G1 vs. G2) without replicates.
 # the levels of DE are 3-fold in G1 and 7-fold in G2
 # The DE analysis is performed by an negative binomial test in
 # DESeq coupled with the DEGES/DESeq normalization factors.
