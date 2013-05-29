@@ -455,7 +455,7 @@ TCC$methods(plotMA = function (FDR = NULL,
   #  }
   }
   
-  count.normed <- getNormalizedCount()  
+  count.normed <- .self$getNormalizedCount()  
   mean.i <- rowMeans(as.matrix(count.normed[, gro == groups[1]]))
   mean.j <- rowMeans(as.matrix(count.normed[, gro == groups[2]]))
   norm.i <- mean(norm.factors[gro == groups[1]])
@@ -539,12 +539,12 @@ TCC$methods(plotMA = function (FDR = NULL,
           points(a[col.tag == k], m[col.tag == k], col = col[k], pch = pch, cex = cex)
         }
         if (median.lines == TRUE) {
-          for (k in unique(col.tag.v)) {
+          for (k in unique(col.tag)) {
             if (length(setdiff(gru, groups)) != 0 && k == setdiff(gru, groups))
               next
             med <- median(m[(col.tag == k & filter)])
-            lines(c(min(a) + 1, max(a)), c(med, med), col = col[k + 1])
-            text(xlim[2], med + 0.5, sprintf("%.3f", med), col = col[k + 1],
+            lines(c(min(a) + 1, max(a)), c(med, med), col = col[k])
+            text(xlim[2], med + 0.5, sprintf("%.3f", med), col = col[k],
                  pos = 2, offset = 0)
           }
         }
