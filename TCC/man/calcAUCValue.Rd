@@ -35,8 +35,9 @@ tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.foldchange = c(4, 4), 
                          replicates = c(3, 3))
-tcc <- calcNormFactors(tcc)
-tcc <- estimateDE(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
+tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 calcAUCValue(tcc)
 
 
@@ -49,8 +50,9 @@ tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.2,
                          DEG.assign = c(0.9, 0.1),
                          DEG.foldchange = c(3, 7), 
                          replicates = c(1, 1))
-tcc <- calcNormFactors(tcc)
-tcc <- estimateDE(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
+tcc <- estimateDE(tcc, test.method = "deseq", FDR = 0.1)
 calcAUCValue(tcc)
 }
 \keyword{methods}

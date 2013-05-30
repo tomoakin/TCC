@@ -19,7 +19,7 @@ The threshold is configurable with \code{low.count} parameter.
 }
 \examples{
 # Filtering genes with zero counts across samples (default) from
-# a hypothetical count dataset that originally has 10,000 genes
+# a hypothetical count dataset that originally has 1,000 genes
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)

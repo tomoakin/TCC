@@ -29,7 +29,8 @@ group <- c(1, 1, 1, 2, 2, 2)
 # Obtaining normalized count data after performing the 
 # DEGES/edgeR normalization method, i.e., DEGES/edgeR-normalized data
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 normalized.count <- getNormalizedData(tcc)
 summary(normalized.count[nonDEG, ])
 
@@ -37,7 +38,7 @@ summary(normalized.count[nonDEG, ])
 # TMM normalization method (Robinson and Oshlack, 2010), 
 # i.e., TMM-normalized data
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, norm.method = "tmm", iteration = FALSE)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", iteration = 0)
 normalized.count <- getNormalizedData(tcc)
 summary(normalized.count[nonDEG, ])
 }

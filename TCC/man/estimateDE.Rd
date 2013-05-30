@@ -106,11 +106,13 @@ A \code{\link{TCC-class}} object containing following fields:
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 head(tcc$stat$p.value)
 head(tcc$stat$q.value)
 head(tcc$estimatedDEG)
+result <- getResult(tcc)
 
 
 # Analyzing a simulation data for comparing two groups
@@ -120,7 +122,8 @@ head(tcc$estimatedDEG)
 data(hypoData)
 group <- c(1, 2)
 tcc <- new("TCC", hypoData[, c(1, 4)], group)
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc <- estimateDE(tcc, test.method = "deseq", FDR = 0.1)
 }
 \keyword{methods}

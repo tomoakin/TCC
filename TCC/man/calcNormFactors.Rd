@@ -127,18 +127,20 @@ group <- c(1, 1, 1, 2, 2, 2)
 # calculating normalization factors using the DEGES/edgeR method 
 # (the TMM-edgeR-TMM pipeline)
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc$norm.factors
 
 # calculating normalization factors using the iterative DEGES/edgeR method 
 # (iDEGES/edgeR) with n = 3
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc, iteration = 3)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 3, FDR = 0.1, floorPDEG = 0.05)
 tcc$norm.factors
 
-# calculating normalization factors for another simulation data without 
-# replicates
+# calculating normalization factors for simulation data without replicates
 tcc <- simulateReadCounts(replicates = c(1, 1))
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc$norm.factors
 }

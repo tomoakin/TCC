@@ -61,7 +61,8 @@ This class contains the following fields:
 	}
 }
 \examples{
-tcc <- simulateReadCounts()
+tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.2, DEG.assign = c(0.8, 0.2),
+                          DEG.foldchange = c(4, 4), replicates = c(3, 3))
 
 # Check the TCC class object.
 tcc
@@ -71,11 +72,12 @@ names(tcc)
 head(tcc$count)
 
 # Check the normalization factors.
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc$norm.factors
 
 # Check the p-values and q-values.
-tcc <- estimateDE(tcc)
+tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 tcc
 
 # Compare the breakdowns of estimated DEGs with the truth.

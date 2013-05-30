@@ -6,7 +6,7 @@
  (so-called M-A plot)}
 \description{This function generates a scatter plot of log fold-change
  (i.e., \eqn{M = \log_2 G2 - \log_2 G1}{M = log2(G2) - log2(G1)} on 
- the \eqn{y}-axis) between Groups 1 vs. 2) versus log average 
+ the \eqn{y}-axis between Groups 1 vs. 2) versus log average 
  expression (i.e., \eqn{A = (\log_2 G1 + \log_2 G2) / 2}{A = (log2(G1) + 
  log2(G2)) / 2} on the \eqn{x}-axis) using normalized count data.}
 \usage{
@@ -96,7 +96,8 @@ mean(colSums(hypoData))
 # zero. Note that non-DEGs are in black, DEGs up-regulated in 
 # G1 and G2 are in blue and red.
 tcc <- simulateReadCounts()
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 plot(tcc, median.lines = TRUE)
 
 
@@ -106,7 +107,8 @@ plot(tcc, median.lines = TRUE)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
 tcc <- new("TCC", hypoData, group)
-tcc <- calcNormFactors(tcc)
+tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                       iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 plot(tcc)
 
