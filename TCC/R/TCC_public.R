@@ -64,9 +64,13 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
   if ((length(gru) == 2) && (ncol(tcc$group) == 1)) {
     count.normed <- tcc$getNormalizedCount()
     mean.exp <- matrix(0, ncol=length(gru), nrow=nrow(tcc$count))
-    for (g in 1:length(gru))
-      mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == g]))
-    ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
+    #for (g in 1:length(gru))
+    #  mean.exp[, g] <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == g]))
+    gru <- unique(as.vector(tcc$group[, 1]))
+    mean.i <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == gru[1]]))
+    mean.j <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == gru[2]]))
+    #ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
+    ma.axes <- tcc$.getMACoordinates(mean.i, mean.j, floor)
     result.df <- data.frame(
       gene_id = rownames(tcc$count),
       a.value = ma.axes$a.value, m.value = ma.axes$m.value,
