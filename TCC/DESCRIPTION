@@ -1,18 +1,20 @@
 Package: TCC
 Type: Package
 Title: TCC: Differential expression analysis for tag count data with
-        robust normalization strategies
+    robust normalization strategies
 Version: 1.1.99
-Date: 2013-05-20
+Date: 2013-06-03
 Author: Sun Jianqiang, Tomoaki Nishiyama, Kentaro Shimizu, and Koji Kadota
 Maintainer: Tomoaki Nishiyama <tomoakin@staff.kanazawa-u.ac.jp>
-Description: This package provides functions for performing differential expression analysis 
- using differentially expressed gene elimination strategy. A simple unified interface is 
- provided which encapsulates functions to calculate normalization factors and estimate 
- differentially expressed genes defined in edgeR, baySeq, and DESeq packages. 
- The appropriate combination provided by TCC allows a more robust and accurate estimation 
- performed easily than directly using original packages.
- Functions to produce simulation data under various conditions and to plot the data are also provided. 
+Description: This package provides functions for performing differential
+    expression analysis using differentially expressed gene elimination
+    strategy. A simple unified interface is provided which encapsulates
+    functions to calculate normalization factors and estimate differentially
+    expressed genes defined in edgeR, baySeq, and DESeq packages. 
+    The appropriate combination provided by TCC allows a more robust and 
+    accurate estimation performed easily than directly using original packages.
+    Functions to produce simulation data under various conditions and to
+    plot the data are also provided. 
 Depends: R (>= 2.15), methods, DESeq, edgeR, baySeq, ROC
 Enhances: snow
 License: GPL-2

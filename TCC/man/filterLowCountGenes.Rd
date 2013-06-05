@@ -8,14 +8,14 @@ The threshold is configurable with \code{low.count} parameter.
 }
 \usage{filterLowCountGenes(tcc, low.count = 0)}
 \arguments{
-	\item{tcc}{\link{TCC-class} object.}
-	\item{low.count}{numeric value (>= 0) specifying the threshold
-	 for filtering genes. The higher value indicates the more
-	 numbers of genes to be filtered out.}
+    \item{tcc}{\link{TCC-class} object.}
+    \item{low.count}{numeric value (>= 0) specifying the threshold
+                     for filtering genes. The higher value indicates the more
+                     numbers of genes to be filtered out.}
 }
 \value{
 \link{TCC-class} object consisting of genes whose sum of the counts
-	 across samples is equal or higher than the \code{low.count} value.
+across samples is equal or higher than the \code{low.count} value.
 }
 \examples{
 # Filtering genes with zero counts across samples (default) from

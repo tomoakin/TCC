@@ -15,44 +15,57 @@ identifying differentially expressed genes (DEGs) from a
 implemented in other R packages.
 }
 \arguments{
-	\item{tcc}{\link{TCC-class} object.}
-	\item{test.method}{character string specifying method for identifying
-	 DEGs. Possible values are \code{"edger"}, \code{"deseq"}, and
-	 \code{"bayseq"} for the DEG identification methods implemented in
-	 the edgeR, DESeq, and baySeq, respectively. The default is
-	 \code{"edger"} when analyzing the count data with replicates (i.e.,
-	 \code{min(table(tcc$group[, 1])) > 1}) and \code{"deseq"} when analyzing the 
-	 count data without replicates (i.e., \code{min(table(tcc$group[, 1])) == 1)}).}
-	\item{FDR}{numeric value (between 0 and 1) specifying the threshold
-	 for determining DEGs.}
-	\item{dispersion}{numeric vector giving the dispersion of all genes for analyzing
-	 the count data without replicates when the \code{test.method = "edger"} is specified.
-	 See the \code{\link[edgeR]{exactTest}} function in edgeR for details.}
-	\item{design}{numeric matrix giving the design matrix for the linear model.
-	 See the \code{\link[edgeR]{glmFit}} function in edgeR for details.}
-	\item{contrast}{numeric vector specifying a contrast of the linear
-	model coefficients to be tested equal to zero. See the 
-	\code{\link[edgeR]{glmLRT}} function in edgeR for details.}
-	\item{coef}{integer or character vector indicating which coefficients
-	of the linear model are to be tested equal to zero. See the
-	\code{\link[edgeR]{glmLRT}} function in edgeR for details.}
-	\item{fit0}{a formula for creating reduced model described in DESeq. 
-	The left hand side must be 'count', the right hand side can involve 
-	any column of \code{tcc$group} is used as the model frame. 
-	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
-	\item{fit1}{a formula for creating full model described in DESeq.
-	The left hand side must be 'count', the right hand side can involve 
-	any column of \code{tcc$group} is used as the model frame. 
-	See the \code{\link[DESeq]{fitNbinomGLMs}} function for details.}
-	\item{comparison}{numeric or character string identifying the columns 
-	in the \code{tcc$group[, 1]} for analysis. See the \code{group} argument in 
-	\code{\link[baySeq]{topCounts}} for details.}
-	\item{samplesize}{numeric value specifying the sample size for
-	 estimating the prior parameters if \code{test.method = "bayseq"}.
-	 See the \code{\link[baySeq]{getPriors.NB}} function for details.}
-	\item{cl}{'snow' object for using multi
-	 processors if \code{test.method = "bayseq"}. See the
-	 \code{\link[baySeq]{getPriors.NB}} function for details.}
+    \item{tcc}{\link{TCC-class} object.}
+    \item{test.method}{character string specifying method for identifying
+                       DEGs. Possible values are \code{"edger"}, 
+                       \code{"deseq"}, and \code{"bayseq"} for the DEG 
+                       identification methods implemented in
+                       the edgeR, DESeq, and baySeq, respectively. 
+                       The default is \code{"edger"} when analyzing the 
+                       count data with replicates (i.e.,
+                       \code{min(table(tcc$group[, 1])) > 1}) and 
+                       \code{"deseq"} when analyzing the 
+                       count data without replicates 
+                       (i.e., \code{min(table(tcc$group[, 1])) == 1)}).}
+    \item{FDR}{numeric value (between 0 and 1) specifying the threshold
+               for determining DEGs.}
+    \item{dispersion}{numeric vector giving the dispersion of all genes 
+                      for analyzing the count data without replicates when 
+                      the \code{test.method = "edger"} is specified.
+                      See the \code{\link[edgeR]{exactTest}} function in 
+                      edgeR for details.}
+    \item{design}{numeric matrix giving the design matrix for the linear 
+                  model. See the \code{\link[edgeR]{glmFit}} function in
+                  edgeR for details.}
+    \item{contrast}{numeric vector specifying a contrast of the linear
+                    model coefficients to be tested equal to zero. See the 
+                    \code{\link[edgeR]{glmLRT}} function in edgeR for 
+                    details.}
+    \item{coef}{integer or character vector indicating which coefficients
+                of the linear model are to be tested equal to zero. See the
+                \code{\link[edgeR]{glmLRT}} function in edgeR for details.}
+    \item{fit0}{a formula for creating reduced model described in DESeq. 
+                The left hand side must be 'count', the right hand side 
+                can involve any column of \code{tcc$group} is used as the 
+                model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
+                function for details.}
+    \item{fit1}{a formula for creating full model described in DESeq.
+                The left hand side must be 'count', the right hand side 
+                can involve any column of \code{tcc$group} is used as the 
+                model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
+                function for details.}
+    \item{comparison}{numeric or character string identifying the columns 
+                      in the \code{tcc$group[, 1]} for analysis. 
+                      See the \code{group} argument in 
+                      \code{\link[baySeq]{topCounts}} for details.}
+    \item{samplesize}{numeric value specifying the sample size for
+                       estimating the prior parameters if 
+                      \code{test.method = "bayseq"}.
+                      See the \code{\link[baySeq]{getPriors.NB}} function 
+                      for details.}
+    \item{cl}{'snow' object for using multi processors if 
+              \code{test.method = "bayseq"}. See the 
+              \code{\link[baySeq]{getPriors.NB}} function for details.}
 }
 \details{
 \code{estimateDE} function is generally used after the 
@@ -71,8 +84,8 @@ in edgeR are internally called and \eqn{p}-values (and the derivative such
  as the \eqn{q}-values and the ranks) are calculated. 
 
 The \code{test.method = "deseq"} internally use several functions 
-(\code{\link[DESeq]{estimateDispersions}}, \code{\link[DESeq]{nbinomTest}}, etc.)
- in DESeq. 
+(\code{\link[DESeq]{estimateDispersions}}, \code{\link[DESeq]{nbinomTest}},
+etc.) in DESeq. 
 
 The \code{test.method = "bayseq"} internally use two 
 functions (\code{\link[baySeq]{getPriors.NB}} and
@@ -86,15 +99,17 @@ Therefore, the \eqn{(1 - likelihood)} values are stored in the corresponding
 }
 \value{
 A \code{\link{TCC-class}} object containing following fields:
-	\item{stat$p.value}{numeric vector of \eqn{p}-values.}
-	\item{stat$q.value}{numeric vector of \eqn{q}-values calculated
-	 based on the \eqn{p}-values using the \code{p.adjust} function
-	 with default parameter settings.}
-	\item{stat$rank}{gene rank in order of the \eqn{p}-values.}
-	\item{estimatedDEG}{numeric vector consisting of 0 or 1
-	 depending on whether each gene is classified as non-DEG or DEG.
-	 The threshold for classifying DEGs or non-DEGs is preliminarily
-	 given as the \code{FDR} argument.}
+    \item{stat$p.value}{numeric vector of \eqn{p}-values.}
+    \item{stat$q.value}{numeric vector of \eqn{q}-values calculated
+                        based on the \eqn{p}-values using the 
+                        \code{p.adjust} function
+                        with default parameter settings.}
+     \item{stat$rank}{gene rank in order of the \eqn{p}-values.}
+     \item{estimatedDEG}{numeric vector consisting of 0 or 1
+                         depending on whether each gene is classified 
+                         as non-DEG or DEG. The threshold for classifying
+                         DEGs or non-DEGs is preliminarily given as the 
+                         \code{FDR} argument.}
 }
 \examples{
 # Analyzing a simulation data for comparing two groups

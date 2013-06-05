@@ -7,7 +7,7 @@ data and calculated normalization factors.
 }
 \usage{getNormalizedData(tcc)}
 \arguments{
-	\item{tcc}{\link{TCC-class} object.}
+    \item{tcc}{\link{TCC-class} object.}
 }
 \details{
 This function is generally used after the \code{\link{calcNormFactors}}

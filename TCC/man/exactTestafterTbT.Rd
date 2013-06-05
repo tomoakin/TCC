@@ -2,12 +2,12 @@
 \alias{exactTestafterTbT}
 \title{exactTest after TMM-baySeq-TMM procedure}
 \description{
-  This function perform exact test with edgeR after TMM-baySeq-TMM procedure
-  via \code{\link{do_TbT}}.
-  This function will be obsoleted. Use \link{TCC-class} based methods instead.
+This function perform exact test with edgeR after TMM-baySeq-TMM 
+procedure via \code{\link{do_TbT}}. This function will be obsoleted. 
+Use \link{TCC-class} based methods instead.
 }
 \usage{
-   exactTestafterTbT(names, counts, group, sample_num=10000)
+   exactTestafterTbT(names, counts, group, sample_num = 10000)
 }
 \arguments{
 \item{names}{A vector containing the name of each element eg gene}

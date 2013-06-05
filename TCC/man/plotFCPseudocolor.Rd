@@ -10,10 +10,10 @@ and the breakdowns for individual groups from a \link{TCC-class} object.
 plotFCPseudocolor(tcc, main, xlab, ylab)
 }
 \arguments{
-	\item{tcc}{\link{TCC-class} object.}
-	\item{main}{character string indicating the plotting title.}
-	\item{xlab}{character string indicating the \emph{x}-label title.}
-	\item{ylab}{character string indicating the \emph{y}-label title.}
+    \item{tcc}{\link{TCC-class} object.}
+    \item{main}{character string indicating the plotting title.}
+    \item{xlab}{character string indicating the \emph{x}-label title.}
+    \item{ylab}{character string indicating the \emph{y}-label title.}
 }
 \details{
 This function should be used after the 

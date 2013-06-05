@@ -2,14 +2,15 @@
 \alias{MAplot}
 \title{plot a MA plot}
 \description{
-   This method plots a MA plot based on the exactTestafterTbT. This function will be obsoleted.
+This method plots a MA plot based on the exactTestafterTbT.
+This function will be obsoleted.
 }
 \usage{
-   MAplot(datalist, FDR_threshold = 0.01)
+MAplot(datalist, FDR_threshold = 0.01)
 }
 \arguments{
-  \item{datalist}{The output from exacTestafterTbT}
-  \item{FDR_threshold}{Points below the threshold will be plotted in red.}
+    \item{datalist}{The output from exacTestafterTbT}
+    \item{FDR_threshold}{Points below the threshold will be plotted in red.}
 }
 \examples{
 \dontrun{

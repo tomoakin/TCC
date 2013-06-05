@@ -22,7 +22,7 @@ and generating simulation data.
 
 To utilize this package, 
 the count matrix coupled with label information should be stored to a
- \link{TCC-class} object using the \code{new} method.
+\link{TCC-class} object using the \code{new} method.
 All functions (except for some legacy functions) used in this package
 require this \link{TCC-class} object.
 Using this object, the \code{\link{calcNormFactors}} function calculates
@@ -36,6 +36,12 @@ Both two functions internally call functions from other packages
 \code{\link{simulateReadCounts}} for generating simulation data 
 with various conditions.
 Convenient plotting functions are also included.
+}
+\examples{
+data(hypoData)
+group <- c(1, 1, 1, 2, 2, 2)
+tcc <- new("TCC", hypoData, group)
+show(tcc)
 }
 \seealso{
 \link{TCC-class}

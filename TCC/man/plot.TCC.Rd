@@ -18,39 +18,45 @@
      col = NULL, col.tag = NULL, ...)
 }
 \arguments{
-	\item{x}{\link{TCC-class} object.}
-	\item{FDR}{numeric scalar specifying a false discovery rate (FDR)
-	 threshold for determining differentially expressed genes (DEGs)}
-	\item{median.lines}{logical. If \code{TRUE}, horizontal lines
-	 specifying the median M values for non-DEGs (black), DEGs
-	 up-regulated in Group 1 (G1; blue), and G2 (red) are drawn.}
-	\item{floor}{numeric scalar specifying a threshold for adjusting low count data.}
-	\item{groups}{numeric vector consists two elements for 
-	 specifying what two groups should be drawn when data contains more than three groups.}
-	\item{main}{character string indicating the plotting title.}
-	\item{xlab}{character string indicating the \eqn{x}-label title.}
-	\item{ylab}{character string indicating the \eqn{y}-label title.}
-	\item{xlim}{numeric vector (consisting of two elements) specifying
-	 the range of the \eqn{x} coordinates.}
-	\item{ylim}{numeric vector (consisting of two elements) specifying
-	 the range of the \eqn{y} coordinates.}
-	\item{cex}{numeric scalar specifying the multiplying factor of the
-	 size of the plotting points relative to the default (= 0.3).}
-	\item{pch}{numeric scalar specifying a symbol or a single character
-	 to be used as the default in plotting points.}
-	\item{col}{vector specifying plotting color. The default is col 
-	 = c(1, 4, 2, 5, 6, 7, ...) of color index.}
-	\item{col.tag}{numeric vector spacifying the index of \code{col} 
-	 for coloring the points of the genes.}
-	\item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}
+    \item{x}{\link{TCC-class} object.}
+    \item{FDR}{numeric scalar specifying a false discovery rate (FDR)
+               threshold for determining differentially expressed genes 
+               (DEGs)}
+    \item{median.lines}{logical. If \code{TRUE}, horizontal lines
+                        specifying the median M values for non-DEGs (black), 
+                        DEGs up-regulated in Group 1 (G1; blue), 
+                        and G2 (red) are drawn.}
+    \item{floor}{numeric scalar specifying a threshold for adjusting 
+                 low count data.}
+    \item{groups}{numeric vector consists two elements for specifying what 
+                  two groups should be drawn when data contains more than 
+                  three groups.}
+    \item{main}{character string indicating the plotting title.}
+    \item{xlab}{character string indicating the \eqn{x}-label title.}
+    \item{ylab}{character string indicating the \eqn{y}-label title.}
+    \item{xlim}{numeric vector (consisting of two elements) specifying
+                the range of the \eqn{x} coordinates.}
+    \item{ylim}{numeric vector (consisting of two elements) specifying
+                the range of the \eqn{y} coordinates.}
+    \item{cex}{numeric scalar specifying the multiplying factor of the
+               size of the plotting points relative to the default (= 0.3).}
+    \item{pch}{numeric scalar specifying a symbol or a single character
+               to be used as the default in plotting points.}
+    \item{col}{vector specifying plotting color. The default is col 
+               = c(1, 4, 2, 5, 6, 7, ...) of color index.}
+    \item{col.tag}{numeric vector spacifying the index of \code{col} 
+                   for coloring the points of the genes.}
+    \item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}
 }
 \details{
 This function generates roughly three different M-A plots 
 depending on the conditions for \link{TCC-class} objects. 
 When the function is performed just after the \code{new} method, 
-all the genes (points) are treated as non-DEGs (the default is black; see Example 1). 
+all the genes (points) are treated as non-DEGs 
+(the default is black; see Example 1). 
 The \code{\link{simulateReadCounts}} function followed 
-by the \code{\link{plot}} function can classify the genes as \emph{true} non-DEGs (black), 
+by the \code{\link{plot}} function can classify the genes 
+as \emph{true} non-DEGs (black), 
 \emph{true} DEGs up-regulated in Group 1 (G1; blue), 
 and \emph{true} DEGs up-regulated in G2 (red) (see Example 2). 
 The \code{\link{estimateDE}} function followed 
@@ -64,8 +70,8 @@ Similar to the \code{\link[edgeR]{plotSmear}} function in edgeR package,
 \code{\link{plot}} function plots those points at the left side 
 of the minimum A (i.e., log average expression) value. 
 The \eqn{x} coordinate of those points is the minimum A value minus 1.
-The \eqn{y} coordinate is calculated as if the 0 count was the minimum observed 
-non-0 count in each group.
+The \eqn{y} coordinate is calculated as if the 0 count was 
+the minimum observed non-0 count in each group.
 }
 \value{
 A scatter plot to the current graphic device. 

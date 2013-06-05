@@ -2,26 +2,30 @@
 \alias{calcAUCValue}
 \title{Calculate AUC value from a TCC-class object}
 \description{
-This function calculates AUC (Area under the ROC curve) value from a \link{TCC-class} object for simulation study.
+This function calculates AUC (Area under the ROC curve) value from 
+a \link{TCC-class} object for simulation study.
 }
 \usage{calcAUCValue(tcc)}
 \arguments{
-	\item{tcc}{\link{TCC-class} object having values in both \code{stat$rank} and \code{simulation$trueDEG} fields.}
+    \item{tcc}{\link{TCC-class} object having values in both \code{stat$rank}
+               and \code{simulation$trueDEG} fields.}
 }
 \details{
 This function is generally used after the \code{\link{estimateDE}} function 
 that estimates \eqn{p}-values (and the derivatives such as the \eqn{q}-values 
 and the ranks) for individual genes based on the
 statistical model for differential expression (DE) analysis. 
-In case of the simulation analysis,
-we know which genes are DEGs or non-DEGs in advance and the information is stored in the
-\code{simulation$trueDEG} field of the \code{\link{TCC-class}} object \code{tcc} 
-(i.e., \code{tcc$simulation$trueDEG}).
+In case of the simulation analysis, we know which genes are 
+DEGs or non-DEGs in advance and the information is stored in 
+the \code{simulation$trueDEG} field of the \code{\link{TCC-class}} 
+object \code{tcc}  (i.e., \code{tcc$simulation$trueDEG}).
 The \code{\link{calcAUCValue}} function calculates the AUC value 
 between the ranked gene list obtained by
 the \code{\link{estimateDE}} function and the truth 
 obtained by the \code{\link{simulateReadCounts}} function. 
-A well-ranked gene list should have a high AUC value (i.e., high sensitivity and specificity).}
+A well-ranked gene list should have a high AUC value 
+(i.e., high sensitivity and specificity).
+}
 \value{
 numeric scalar.
 }
