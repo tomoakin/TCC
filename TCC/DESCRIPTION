@@ -3,7 +3,6 @@ Type: Package
 Title: TCC: Differential expression analysis for tag count data with
     robust normalization strategies
 Version: 1.1.99
-Date: 2013-06-03
 Author: Sun Jianqiang, Tomoaki Nishiyama, Kentaro Shimizu, and Koji Kadota
 Maintainer: Tomoaki Nishiyama <tomoakin@staff.kanazawa-u.ac.jp>
 Description: This package provides functions for performing differential
@@ -16,7 +15,9 @@ Description: This package provides functions for performing differential
     Functions to produce simulation data under various conditions and to
     plot the data are also provided. 
 Depends: R (>= 2.15), methods, DESeq, edgeR, baySeq, ROC
+Suggests: RUnit, BiocGenerics
 Enhances: snow
+biocViews: HighThroughputSequencing, DifferentialExpression, RNAseq
 License: GPL-2
 Copyright: Authors listed above
 URL: http://www.iu.a.u-tokyo.ac.jp/~kadota/TCC

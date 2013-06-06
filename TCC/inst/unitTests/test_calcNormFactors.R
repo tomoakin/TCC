@@ -1,0 +1,124 @@
+test_calcNormFactors_DEGESedgeR_classic <- function() {
+    data(hypoData)
+    FDR <- 0.1
+    floorPDEG <- 0.05
+    count <- hypoData
+    group <- c(1, 1, 1, 2, 2, 2)
+    tcc <- new("TCC", count, group)
+
+    tcc_edgeR <- calcNormFactors(tcc, norm.method = "tmm", iteration = 0)
+    tcc_DEGES_edgeR <- calcNormFactors(tcc, norm.method = "tmm", 
+                                       test.method = "edger", iteration = 1)
+    d <- DGEList(counts = hypoData, group = group)
+    d <- calcNormFactors(d)
+    nf.1 <- d$samples$norm.factors
+    nf.1 <- nf.1 / mean(nf.1)
+    d <- estimateCommonDisp(d)
+    d <- estimateTagwiseDisp(d)
+    r <- exactTest(d)
+    q <- p.adjust(r$table$PValue, method = "BH")
+    if (sum(q < FDR) > (floorPDEG * nrow(hypoData))) {
+        is.DEG <- as.logical(q < FDR)
+    } else {
+        is.DEG <- as.logical(rank(result$table$PValue, 
+                             ties.method = "min") <=
+                             nrow(hypoData) * floorPDEG)
+    }
+    d <- DGEList(counts = hypoData[!is.DEG, ], group = group)
+    d <- calcNormFactors(d)
+    nf.2 <- d$samples$norm.factors * colSums(hypoData[!is.DEG, ]) / 
+                                           colSums(hypoData)
+    nf.2 <- nf.2 / mean(nf.2)
+    checkEqualsNumeric(nf.1, tcc_edgeR$norm.factors)
+    checkEqualsNumeric(nf.2, tcc_DEGES_edgeR$norm.factors)
+}
+
+
+test_calcNormFactors_DEGESDESeq_classic <- function() {
+    data(hypoData)
+    FDR <- 0.1
+    floorPDEG <- 0.05
+    count <- hypoData
+    group <- c(1, 1, 1, 2, 2, 2)
+    tcc <- new("TCC", count, group)
+
+    tcc_DESeq <- calcNormFactors(tcc, norm.method = "deseq", iteration = 0)
+    tcc_DEGES_DESeq <- calcNormFactors(tcc, norm.method = "deseq", 
+                                       test.method = "deseq", iteration = 1,
+                                       FDR = FDR, floorPDEG = floorPDEG)
+    cds <- newCountDataSet(hypoData, group)
+    cds <- estimateSizeFactors(cds)
+    cds <- estimateDispersions(cds)
+    nf.1 <- sizeFactors(cds) / colSums(hypoData)
+    nf.1 <- nf.1 / mean(nf.1)
+    r <- nbinomTest(cds, 1, 2)
+    r$pval[is.na(r$pval)] <- 1
+    r$padj[is.na(r$padj)] <- 1
+    if (sum(r$padj < FDR) > (floorPDEG * nrow(hypoData))) {
+        is.DEG <- as.logical(r$padj < FDR)
+    } else {
+        is.DEG <- as.logical(rank(result$table$PValue, 
+                             ties.method = "min") <=
+                             nrow(hypoData) * floorPDEG)
+    }
+    cds <- newCountDataSet(hypoData[!is.DEG, ], group)
+    cds <- estimateSizeFactors(cds)
+    nf.2 <- sizeFactors(cds) / colSums(hypoData)
+    nf.2 <- nf.2 / mean(nf.2)
+    checkEqualsNumeric(nf.1, tcc_DESeq$norm.factors)
+    checkEqualsNumeric(nf.2, tcc_DEGES_DESeq$norm.factors)
+}
+
+
+test_calcNormFactors_DEGESTbT <- function() {
+    data(hypoData)
+    count <- hypoData
+    group <- c(1, 1, 1, 2, 2, 2)
+    tcc <- new("TCC", count, group)
+
+    tcc_DEGES_baySeq <- calcNormFactors(tcc, norm.method = "tmm", 
+                                        test.method = "bayseq",
+                                        iteration = 1, samplesize = 10)
+}
+
+test_calcNormFactors_DEGESDESeq_classic_single <- function() {
+    data(hypoData)
+    floorPDEG <- 0.05
+    count <- hypoData[, c(1, 4)]
+    group <- c(1, 2)
+    tcc <- new("TCC", count, group)
+
+    tcc <- calcNormFactors(tcc, norm.method = "tmm", iteration = 0)
+    tcc <- calcNormFactors(tcc, norm.method = "deseq", iteration = 0)
+    tcc <- calcNormFactors(tcc, norm.method = "deseq", 
+                           test.method = "deseq", iteration = 1)
+    tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
+                           iteration = 1, samplesize = 10)
+}
+
+
+test_calcNormFactors_DEGESedgeR_glm <- function() {
+    data(hypoData_mg)
+    count <- hypoData_mg
+    group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
+    tcc <- new("TCC", count, group)
+    
+    desgin <- model.matrix(~ 0 + factor(group))
+    coef <- 2:3
+    tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
+                           design = desgin, iteration = 1)
+}
+
+
+test_calcNormFactors_DEGESDESeq_glm <- function() {
+    data(hypoData_mg)
+    count <- hypoData_mg
+    group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
+    tcc <- new("TCC", count, group)
+    
+    fit1 <- count ~ condition
+    fit0 <- count ~ 1
+    tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
+                           fit1 = fit1, fit0 = fit0, iteration = 1)
+}
+
