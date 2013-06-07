@@ -1,25 +1,41 @@
-2013-xx-xx
-  TCC v1.0.1
-  Bug fix.
+CHANGES IN VERSION 1.2.0
+------------------------
 
-2013-01-10
-  TCC v1.0.0
-  Implement DEGES (Differentially Expressed Gene Elimnation 
-  Strategy) for normalizing tag count data.
-  TCC-class was implemented as a R5 reference class.And wrapper 
-  functions with functional programming semantics are provided.
+NEW FEATURES
 
-2012-10-04
-  TCC v0.4
+    o This package was released as a Bioconductor package (previously CRAN).
 
-2012-07-26
-  TCC v0.3
-  Return value of the NBsample() method changed to a list
-  MAplot() method added
 
-2012-10-05 
-  TCC v0.2
-  Support of edgeR_2.7
-  The paper describing TbT (TMM-baySeq-TMM) pipeline is published in
-  Algorithms for Molecular Biology 2012 Apr 5;7(1):5. PMID: 22475125.
-  You can read the paper at http://www.almob.org/content/7/1/5
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o 'replicates' field of TCC class was deleted.
+
+
+
+
+CHANGES IN VERSION 1.1.3
+------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o 'generateSimulationData' function was renamed to 'simulateReadCount'.
+
+    o 'names' field of TCC class was changed to 'gene_id'.
+
+    o 'hypoData' was reduced to a smaller data set.
+
+    o 'hypoData_mg' was created. This is the simulation dataset which consists
+    of 1,000 genes and 9 samples.
+
+
+
+
+CHANGES IN VERSION 1.0.0
+------------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o 'TCC' class was implemented as a R5 reference class. Wrapper functions
+    with functional programming semantics were proviede.
+
