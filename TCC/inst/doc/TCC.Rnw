@@ -160,7 +160,7 @@ method implemented in the \Rpackage{baySeq} package
 Therefore, please cite the appropriate references 
 when you publish your results.
 
-<<>>=
+<<citation>>=
 citation("TCC")
 @
 
@@ -197,7 +197,7 @@ TMM (Robinson and Oshlack, 2010 \cite{robinson2}),
 and \Rpackage{edgeR} (Robinson et al., 2010 \cite{robinson}). 
 For details, see section \ref{section-3-1-1}.
 
-<<>>=
+<<quickCase1>>=
 library(TCC)
 data(hypoData)
 samplesize <- 100
@@ -226,7 +226,7 @@ the exact test (Robinson and Smyth, 2008 \cite{robinson3}),
 and \Rpackage{edgeR} (Robinson et al., 2010 \cite{robinson}). 
 For details, see section \ref{section-3-1-3}.
 
-<<>>=
+<<quickCase2>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -249,7 +249,7 @@ citations are as follows: \Rpackage{TCC} (Sun et al., submitted \cite{sun})
 and \Rpackage{DESeq} (Anders and Huber, 2010 \cite{anders}). For details, 
 see section \ref{section-3-2}.
 
-<<>>=
+<<quickCase3>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 2)
@@ -281,7 +281,7 @@ hypothetical data (\Robject{hypoData}) from \Rpackage{TCC} and giving
 a numeric vector (\Robject{group}) indicating 
 which group each sample belongs to.
 
-<<>>=
+<<loadHypoData>>=
 library(TCC)
 data(hypoData)
 head(hypoData)
@@ -294,7 +294,7 @@ If you want to analyze another count matrix consisting of nine columns
 of G1, and the remaining five columns are from G2), the \Robject{group} 
 vector should be indicated as follows.
 
-<<>>=
+<<groupArgument>>=
 group <- c(1, 1, 1, 1, 2, 2, 2, 2, 2)
 @
 
@@ -309,7 +309,7 @@ and subsequent analyses are performed on this class object. The object
 is constructed from i) a count matrix (\Robject{hypoData}) and ii) the 
 corresponding numeric vector (\Robject{group}) as follows.
 
-<<>>=
+<<newTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -321,7 +321,7 @@ The count matrix and group vector information can be retrieved from
 the stored class object by using \Robject{tcc\$count} 
 and \Robject{tcc\$group}, respectively.
 
-<<>>=
+<<headTCC>>=
 head(tcc$count)
 tcc$group
 @
@@ -330,7 +330,7 @@ The subset of \Rpackage{TCC} class object can be taken by the
 \Rfunction{subset} or \Rfunction{"["} functions.
 
 
-<<>>=
+<<subsetTCC>>=
 dim(tcc$count)
 tcc.sub1 <- subset(tcc, c(rep(TRUE, 20), rep(FALSE, 980)))
 dim(tcc.sub1$count)
@@ -347,7 +347,7 @@ on the user's philosophy. Although we recommend removing tags with zero
 counts across samples as a minimum filtering, this effort is optional. 
 The \Rfunction{filterLowCountGenes} function performs this filtering.
 
-<<>>=
+<<filterLowCountTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -363,7 +363,7 @@ The same procedure can be performed without
 the \Rfunction{filterLowCountGenes} function, in which case the 
 filtering is performed before the \Rpackage{TCC} class object is constructed.
 
-<<>>=
+<<filterLowCount>>=
 filter <- as.logical(rowSums(hypoData) > 0)
 dim(hypoData[filter, ])
 tcc <- new("TCC", hypoData[filter, ], group)
@@ -405,7 +405,7 @@ in the next section (\ref{section-4} \textbf{Differential expression}).
 The DEGES/TbT (Kadota et al., 2012 \cite{kadota}) with default parameter 
 settings can be performed as follows.
 
-<<>>=
+<<TbTTCC>>=
 set.seed(1000)
 library(TCC)
 data(hypoData)
@@ -433,7 +433,7 @@ function for obtaining reproducible results
 using any random function. The calculated normalization factors 
 and the computation time can be retrieved with the following commands.
 
-<<>>=
+<<TbTNfTime>>=
 tcc$norm.factors
 tcc$DEGES$execution.time
 @
@@ -445,7 +445,7 @@ function in \Rpackage{TCC}. The \Rfunction{calcNormFators} function
 together with the above parameter settings can be regarded as a wrapper 
 function for the following commands.
 
-<<>>=
+<<TbT>>=
 set.seed(1000)
 library(TCC)
 data(hypoData)
@@ -492,7 +492,7 @@ genes satisfying FDR $< 0.1$ is over $5\%$. The DEGES/\Rpackage{edgeR}
 pipeline has an apparent advantage over TbT in computation time. 
 It can be performed as follows:
 
-<<>>=
+<<DEGESedgeRTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -512,7 +512,7 @@ The \Rfunction{calcNormFators} function together
 with the above parameter settings 
 can be regarded as a wrapper function for the following commands.
 
-<<>>=
+<<DEGESedgeR>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -556,7 +556,7 @@ DEGES/\Rpackage{edgeR} and the DEGES/TbT. A suggested
 iDEGES/\Rpackage{edgeR} implementation ($n = 3$) 
 consists of seven steps, as follows:
 
-<<>>=
+<<iDEGESedgeRTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -576,7 +576,7 @@ case above, this \Rpackage{DESeq}-\Rpackage{DESeq}-\Rpackage{DESeq}
 pipeline (DEGES/\Rpackage{DESeq}) changes the corresponding arguments 
 of the \Robject{norm.method} and \Robject{test.method} as follows:
 
-<<>>=
+<<DEGESDESeqTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -593,7 +593,7 @@ pipeline without \Rpackage{TCC}. The \Rfunction{calcNormFators} function
 together with the above arguments can be regarded as a wrapper function for 
 the following commands.
 
-<<>>=
+<<DEGESDESeq>>=
 library(TCC)
 data(hypoData)  
 group <- c(1, 1, 1, 2, 2, 2)
@@ -651,7 +651,7 @@ pipeline. That is, the \Rfunction{calcNormFators} function with the
 Let us explain the procedure by retrieving the data of the first and the 
 fourth columns of \Robject{hypoData}, i.e., 
 
-<<>>=
+<<hypoDataSingleRep>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 2)
@@ -663,7 +663,7 @@ tcc$group
 A DEGES pipeline (DEGES/\Rpackage{DESeq}) for obtaining normalization 
 factors is as follows.
 
-<<>>=
+<<DEGESDESeqSingleTCC>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
                        iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc$norm.factors
@@ -674,7 +674,7 @@ normalization strategy only needs the methods in the \Rpackage{DESeq} package.
 These factors should be the same as those produced by the following procedure 
 consisting of functions implemented in \Rpackage{DESeq}.
 
-<<>>=
+<<DEGESDESeqSingle>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 2)
@@ -715,7 +715,7 @@ the \Robject{hypoData\_mg} object, provided in \Rpackage{TCC}.
 It consists of $1,000$ genes and a total of nine columns for 
 testing any difference among three groups that each have triplicates.
 
-<<>>=
+<<hypoDataMultiG>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -741,7 +741,7 @@ the computation time, but a larger sampling size of around $10,000$ (i.e.,
 \Robject{samplesize = 10000}) is recommended 
 (Hardcastle and Kelly, 2010 \cite{hardcastle}).
 
-<<>>=
+<<DEGESTbTMultiGTCC>>=
 set.seed(1000)
 library(TCC)
 data(hypoData_mg)
@@ -764,7 +764,7 @@ corresponds to a design matrix to describe sample groups. The null model
 corresponds to the model coefficients. 
 The two models can be defined as follows:
 
-<<>>=
+<<DEGESedgeRMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -781,7 +781,7 @@ except for the intercept term. The GLM-based DEGES/\Rpackage{edgeR} pipeline
 can be performed by adding the two arguments 
 (\Robject{design} and \Robject{coef}) as follows:
 
-<<>>=
+<<DEGESedgeRMultiGTCCNf>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger",
                         iteration = 1, design = design, coef = coef)
 tcc$norm.factors
@@ -793,7 +793,7 @@ For \Rpackage{edgeR} users, we provide commands, consisting of functions in
 above parameter settings can be regarded as a wrapper function for the 
 following commands.
 
-<<>>=
+<<DEGESedgeRMultiG>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -837,7 +837,7 @@ model and reduced model). The full model (\Robject{fit1})
 and reduced model (\Robject{fit0}) 
 can be created as follows:
 
-<<>>=
+<<DEGESDESeqMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -849,7 +849,7 @@ fit0 <- count ~ 1
 The GLM-based DEGES/\Rpackage{DESeq} pipeline can be performed by 
 adding the two arguments (\Robject{fit1} and \Robject{fit0}) as follows:
 
-<<>>=
+<<DEGESDESeqMultiGTCCNf>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
                         iteration = 1, fit0 = fit0, fit1 = fit1)
 tcc$norm.factors
@@ -861,7 +861,7 @@ in \Rpackage{DESeq}, to perform the DEGES/ \Rpackage{DESeq} pipeline without
 above parameter settings can be regarded as a wrapper function for the 
 following commands.
 
-<<>>=
+<<DEGESDESeqMultiGNf>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -933,7 +933,7 @@ of the similarity of their summary statistics for {\it normalized} data
 labeled as non-DEGs in one group (e.g., G1) to those of the other group 
 (e.g., G2). The basic statistics for the non-DEGs are as follows.
 
-<<>>=
+<<NormHypoData>>=
 library(TCC)
 data(hypoData)
 nonDEG <- 201:1000
@@ -942,17 +942,17 @@ summary(hypoData[nonDEG, ])
 
 From now on, we will display only the median values for simplicity, i.e.,
 
-<<>>=
+<<NormApply>>=
 apply(hypoData[nonDEG, ], 2, median)
 @
-<<echo = FALSE>>=
+<<NormMedian, echo = FALSE>>=
 hypoData.median <- apply(hypoData[nonDEG, ], 2, median)
 @
 
 In what follows, we show detailed examples using \Robject{hypoData}. 
 Note, however, that the basic usage is simple.
 
-<<>>=
+<<NormGet>>=
 normalized.count <- getNormalizedData(tcc)
 @
 
@@ -963,7 +963,7 @@ The \Rfunction{getNormalizedData} function can be applied to the
 \Rpackage{TCC} class object after the normalization factors have been 
 calculated.
 
-<<>>=
+<<NormDEGESedgeRTCC>>=
 library(TCC)
 data(hypoData)  
 nonDEG <- 201:1000
@@ -977,7 +977,7 @@ apply(normalized.count[nonDEG, ], 2, median)
 
 The same procedure consisting of functions in \Rpackage{edgeR} is 
 
-<<>>=
+<<NormDEGESedgeR>>=
 library(TCC)
 data(hypoData)
 nonDEG <- 201:1000
@@ -1020,7 +1020,7 @@ the summary statistics for
 TMM-normalized data produced using the original normalization method 
 (i.e., TMM) in \Rpackage{edgeR} are obtained as follows. 
 
-<<>>=
+<<NormEdgeR>>=
 library(TCC)
 data(hypoData)
 nonDEG <- 201:1000
@@ -1037,7 +1037,7 @@ apply(normalized.count[nonDEG, ], 2, median)
 
 This is the same as 
 
-<<>>=
+<<NormEdgeRTCC>>=
 library(TCC)
 data(hypoData)
 nonDEG <- 201:1000
@@ -1060,7 +1060,7 @@ are not as good as those of DEGES/\Rpackage{edgeR}.
 Similar to the DEGES/\Rpackage{edgeR} case, 
 DEGES/\Rpackage{DESeq}-normalized data can be retrieved as follows.
 
-<<>>=
+<<NormDEGESDESeqTCC>>=
 library(TCC)
 data(hypoData)  
 group <- c(1, 1, 1, 2, 2, 2)
@@ -1074,7 +1074,7 @@ apply(normalized.count[nonDEG, ], 2, median)
 
 The same procedure consisting of functions in \Rpackage{DESeq} is 
 
-<<>>=
+<<NormDEGESDESeq>>=
 library(TCC)
 data(hypoData)  
 nonDEG <- 201:1000
@@ -1114,7 +1114,7 @@ Similar to the case of count data with replicates,
 the DEGES/\Rpackage{DESeq}-normalized data without 
 replicates can be retrieved as follows.
 
-<<>>=
+<<NormDEGESDESeqSingleRepTCC>>=
 library(TCC)
 data(hypoData)  
 nonDEG <- 201:1000
@@ -1128,7 +1128,7 @@ apply(normalized.count[nonDEG, ], 2, median)
 
 The same procedure consisting of functions in \Rpackage{DESeq} is 
 
-<<>>=
+<<NormDEGESDESeqSingleRep>>=
 library(TCC)
 data(hypoData) 
 nonDEG <- 201:1000
@@ -1168,7 +1168,7 @@ and $\Sexpr{sprintf("%.1f",hypoData.median[4])}$ for G2\_rep1)
 than are the following summary statistics from data normalized using the 
 original normalization method implemented in \Rpackage{DESeq}.
 
-<<>>=
+<<NormDESeqSingleRep>>=
 library(TCC)
 data(hypoData)
 nonDEG <- 201:1000
@@ -1190,7 +1190,7 @@ Similar to the \Robject{hypoData} object, the first $200$ genes
 are DEGs and the remaining $800$ genes are non-DEGs. 
 The basic statistics for the non-DEGs are as follows.
 
-<<>>=
+<<NormHypoDataMultiG>>=
 library(TCC)
 data(hypoData_mg)
 nonDEG <- 201:1000
@@ -1199,16 +1199,16 @@ summary(hypoData_mg[nonDEG, ])
 
 From now on, we will display only the median values for simplicity, i.e.,
 
-<<>>=
+<<NormMedianHypoDataMultiG>>=
 apply(hypoData_mg[nonDEG, ], 2, median)
 @
-<<echo = FALSE>>=
+<<NormHypoDataMultiGGet, echo = FALSE>>=
 hypoData_mg.median <- apply(hypoData_mg[nonDEG, ], 2, median)
 @
 
 The iDEGES/\Rpackage{edgeR}-normalized data can be retrieved as follows.
 
-<<>>=
+<<NormDEGESedgeRMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 nonDEG <- 201:1000
@@ -1222,7 +1222,7 @@ normalized.count <- getNormalizedData(tcc)
 apply(normalized.count[nonDEG, ], 2, median)
 range(apply(normalized.count[nonDEG, ], 2, median))
 @
-<<echo = FALSE>>=
+<<NormDEGESedgeRMultiGTCCRank, echo = FALSE>>=
 normByiDEGES <- range(apply(normalized.count[nonDEG, ], 2, median))
 @
 
@@ -1230,7 +1230,7 @@ For comparison, the summary statistics for TMM-normalized data
 produced using the original normalization method (i.e., TMM) 
 in \Rpackage{edgeR} are obtained as follows.
 
-<<>>=
+<<NormEdgeRMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 nonDEG <- 201:1000
@@ -1241,7 +1241,7 @@ normalized.count <- getNormalizedData(tcc)
 apply(normalized.count[nonDEG, ], 2, median)
 range(apply(normalized.count[nonDEG, ], 2, median))
 @
-<<echo = FALSE>>=
+<<NormEdgeRMultiGRank, echo = FALSE>>=
 normByTMM <- range(apply(normalized.count[nonDEG, ], 2, median))
 @
 
@@ -1292,7 +1292,7 @@ for the hypothetical two-group count data with replicates (i.e.,
 the \Robject{hypoData} object). If the user wants to determine the 
 genes having an FDR threshold of $< 10\%$ as DEGs, one can do as follows.
 
-<<>>=
+<<DEDEGESedgeRTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 1, 1, 2, 2, 2)
@@ -1306,14 +1306,14 @@ The results of the DE analysis are stored in the \Rpackage{TCC}
 class object. The summary statistics for top-ranked genes can 
 be retrieved by using the \Rfunction{getResult} function.
 
-<<>>=
+<<DEGetResult>>=
 result <- getResult(tcc, sort = TRUE)
 head(result)
 @
 
 The DE results can be broken down as follows.
 
-<<>>=
+<<DETable>>=
 table(tcc$estimatedDEG) 
 @
 
@@ -1327,7 +1327,7 @@ indicates average read count
 from the normalized count data. 
 The magenta points indicate the identified DEGs at FDR $< 0.1$.
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<DEFigDef, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc)
 @
 
@@ -1343,7 +1343,7 @@ factors (i.e., the iDEGES/\Rpackage{edgeR}-\Rpackage{baySeq} combination),
 one can do as follows.
 
 
-<<>>=
+<<DEDEGESEdgeRTCC>>=
 set.seed(1000)
 library(TCC)
 data(hypoData)
@@ -1373,7 +1373,7 @@ procedure for \Rpackage{baySeq} users that corresponds to the
 \Rfunction{estimateDE} function. The $likelihood$ values and 
 $p$-values (calculated as $1 - likelihood$) are retrieved as follows.
 
-<<>>=
+<<DEDEGESTbT>>=
 set.seed(1000)
 library(TCC)
 data(hypoData)
@@ -1415,7 +1415,7 @@ the \Robject{hypoData[, c(1, 4)]} object). If the user wants to determine
 the genes having an FDR threshold of $< 10\%$ as DEGs, 
 one can do as follows.
 
-<<>>=
+<<DEDEGESDESeqSingleRepTCC>>=
 library(TCC)
 data(hypoData)
 group <- c(1, 2)
@@ -1452,7 +1452,7 @@ after executing the DEGES/\Rpackage{edgeR} normalization
 (i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{baySeq} combination) 
 can be performed as follows.
 
-<<>>=
+<<DEDEGESedgeRMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1477,7 +1477,7 @@ $\Sexpr{sum(tcc$estimatedDEG == TRUE)}$ DEGs
 having FDR $< 0.1$. One can obtain the number of DEGs with another 
 threshold (e.g., FDR $< 0.2$) from the result object as follows.
 
-<<>>=
+<<DESumResult>>=
 sum(result$q.value < 0.2)
 @
 
@@ -1488,7 +1488,7 @@ function with \Robject{test.method = "bayseq"} can be regarded as a
 wrapper function for the following commands after the 
 DEGES/\Rpackage{edgeR} normalization.
 
-<<>>=
+<<DEDEGESTbTMultiG>>=
 set.seed(1000)
 samplesize <- 100
 effective.libsizes <- colSums(tcc$count) * tcc$norm.factors
@@ -1516,7 +1516,7 @@ the DEGES/\Rpackage{edgeR} normalization
 (i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{edgeR} combination)
 can be performed as follows.
 
-<<>>=
+<<DEDEGESedgeRMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1539,7 +1539,7 @@ because the two arguments indicated here
 (\Robject{design} and \Robject{coef}) correspond 
 to an AVOVA-like test for any differences provided in \Rpackage{edgeR}, i.e., 
 
-<<>>=
+<<DEGESedgeRMultiG>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1578,7 +1578,7 @@ one can do any two-group comparison of interest from multi-group data with
 replicates. For example, the DE analysis for G3 vs. G1 together with 
 DEGES/\Rpackage{edgeR} normalization can be performed as follows.
 
-<<>>=
+<<DEDEGESedgeRMultiGTCC2>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1605,7 +1605,7 @@ DEGES/\Rpackage{edgeR} normalization
 (i.e., the DEGES/\Rpackage{edgeR}-\Rpackage{DESeq} combination) 
 can be performed as follows.
 
-<<>>=
+<<DEDEGESDESeqMultiGTCC>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1632,7 +1632,7 @@ function with \Robject{test.method = "deseq"} can be regarded
 as a wrapper function for the following commands after the 
 DEGES/\Rpackage{edgeR} normalization.
 
-<<>>=
+<<DEDEGESDESeqMultiG>>=
 library(TCC)
 data(hypoData_mg)
 group <- c(1, 1, 1, 2, 2, 2, 3, 3, 3)
@@ -1693,7 +1693,7 @@ function in order to obtain reproducible results
 (i.e., the \Robject{tcc\$count}) with the 
 \Rfunction{simulateReadCounts} function. 
 
-<<>>=
+<<simRCDef>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.2, 
@@ -1728,7 +1728,7 @@ The \Robject{tcc\$count} object is essentially the same as
 the \Robject{hypoData} object of \Rpackage{TCC}. 
 The information about the simulation conditions can be viewed as follows.
 
-<<>>=
+<<simRCStr>>=
 str(tcc$simulation)
 @
 
@@ -1739,7 +1739,7 @@ respectively. The breakdowns for individual entries are the same as
 stated above: $800$ entries are non-DEGs, $180$ DEGs are up-regulated in G1, 
 and $20$ DEGs are up-regulated in G2.
 
-<<>>=
+<<simRCTable>>=
 table(tcc$simulation$trueDEG)
 @
 
@@ -1755,7 +1755,7 @@ The ranked gene list after performing
 the DEGES/\Rpackage{edgeR}-\Rpackage{edgeR} 
 combination can be obtained as follows.
 
-<<>>=
+<<simRCNorm>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger", 
                        iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
@@ -1771,16 +1771,16 @@ a high AUC value (i.e., high sensitivity and specificity).
 The \Rfunction{calcAUCValue} function calculates the AUC value 
 based on the information stored in the \Rpackage{TCC} class object.
 
-<<>>=
+<<simRCAUC>>=
 calcAUCValue(tcc)
 @
-<<echo = FALSE>>=
+<<simRCNormFig, echo = FALSE>>=
 auc.degesedger <- calcAUCValue(tcc)
 @
 
 This is essentially the same as
 
-<<>>=
+<<simRCAUCROC>>=
 AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDEG != 0),
                 data = -tcc$stat$rank))
 @
@@ -1791,7 +1791,7 @@ make it clear that  the DEGES-based normalization method (i.e.,
 the DEGES/\Rpackage{edgeR} pipeline) outperforms the default 
 normalization method (i.e., TMM) implemented in \Rpackage{edgeR}.
 
-<<>>=
+<<simRCedgeRAUCTCC>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", iteration = 0)
 tcc <- estimateDE(tcc, test.method = "edger", FDR = 0.1)
 calcAUCValue(tcc)
@@ -1799,7 +1799,7 @@ calcAUCValue(tcc)
 
 The following is an alternative procedure for \Rpackage{edgeR} users.
 
-<<>>=
+<<simRCedgeRAUC>>=
 d <- DGEList(counts = tcc$count, group = tcc$group$group)
 d <- calcNormFactors(d)
 d$samples$norm.factors <- d$samples$norm.factors / 
@@ -1811,7 +1811,7 @@ result$table$PValue[is.na(result$table$PValue)] <- 1
 AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDEG != 0),
                 data = -rank(result$table$PValue)))
 @
-<<echo = FALSE>>=
+<<simRCDEGESedgeRAUC, echo = FALSE>>=
 set.seed(1000)
 samplesize <- 100
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
@@ -1823,11 +1823,12 @@ auc.degestbt <- calcAUCValue(tcc)
 As can be expected from the similarity of the normalization 
 factors of DEGES/TbT (\ref{section-3-1-1}) and DEGES/\Rpackage{edgeR} 
 (\ref{section-3-1-2}), 
-the AUC value ($\Sexpr{sprintf("%.7f", auc.degesedger)}$) of DEGES/\Rpackage{edgeR} is quite similar 
+the AUC value ($\Sexpr{sprintf("%.7f", auc.degesedger)}$) of 
+DEGES/\Rpackage{edgeR} is quite similar 
 to the AUC value ($\Sexpr{sprintf("%.7f", auc.degestbt)}$) of the 
 original TbT method (i.e., DEGES/TbT):
 
-<<>>=
+<<simRCDEGESTbTTCC>>=
 set.seed(1000)
 samplesize <- 100
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "bayseq",
@@ -1857,7 +1858,7 @@ and (v) there are a total
 of two samples (one from G1 and the other from G2) 
 (\Robject{replicates = c(1, 1)}).
 
-<<>>=
+<<simRCSingleRep>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.2, 
@@ -1875,7 +1876,7 @@ performs. First, we calculate the AUC value for the ranked
 gene list obtained from the DEGES/\Rpackage{DESeq}-\Rpackage{DESeq} 
 combination.
 
-<<>>=
+<<simRCSingleRepDEGESDESeqTCC>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", test.method = "deseq",
                        iteration = 1, FDR = 0.1, floorPDEG = 0.05)
 tcc <- estimateDE(tcc, test.method = "deseq")
@@ -1886,7 +1887,7 @@ Next, we calculate the corresponding value
 using the original \Rpackage{DESeq} procedure 
 (i.e., the \Rpackage{DESeq}-\Rpackage{DESeq} combination).
 
-<<>>=
+<<simRCSingleRepDESeqTCC>>=
 tcc <- calcNormFactors(tcc, norm.method = "deseq", iteration = 0)
 tcc <- estimateDE(tcc, test.method = "deseq")
 calcAUCValue(tcc)
@@ -1897,7 +1898,7 @@ outperforms the original procedure
 under the given simulation conditions. The following is an alternative 
 approach for \Rpackage{DESeq} users.
 
-<<>>=
+<<simRCSingleRepDEGESDESeq>>=
 cds <- newCountDataSet(tcc$count, tcc$group$group)
 cds <- estimateSizeFactors(cds)
 norm.factors <- sizeFactors(cds) / colSums(tcc$count)
@@ -1916,7 +1917,7 @@ for different packages. However, the following commands from the
 \Rpackage{DESeq} manual are of practical value because they give 
 approximately the same AUC value as above.
 
-<<>>=
+<<simRCSingleRepDESeq>>=
 cds <- newCountDataSet(tcc$count, tcc$group$group)
 cds <- estimateSizeFactors(cds)
 cds <- estimateDispersions(cds, method="blind", sharingMode="fit-only")
@@ -1944,7 +1945,7 @@ groups (\Robject{DEG.foldchange = c(3, 10, 6)}),
 and (v) there are a total of nine libraries (2, 4, and 3 
 replicates for Groups 1-3) (\Robject{replicates = c(2, 4, 3)}).
 
-<<>>=
+<<simRCMultiG>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.3,
@@ -1963,7 +1964,7 @@ fold-change (FC). As expected, it can be seen that the first
 $210$, $60$, and $30$ genes are up-regulated in G1, G2, and G3, 
 respectively.
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<simRCplotFCFig, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plotFCPseudocolor(tcc)
 @
 
@@ -1982,7 +1983,7 @@ and (v) there are a total of nine libraries (except for G3,
 none of the groups have replicates) 
 (\Robject{replicates = c(1, 1, 2, 1, 1, 1, 1, 1)}).
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<simRCplotFCFig2, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.34,
@@ -2016,7 +2017,7 @@ G2 (\Robject{DEG.foldchange = c(8, 16)}), and (v) there are a total of
 four samples (two biological replicates for G1 and two biological 
 replicates for G2) (\Robject{replicates = c(2, 2)}).
 
-<<>>=
+<<simRCFC816>>=
 set.seed(1000)
 library(TCC)
 tcc <- simulateReadCounts(Ngene = 20000, PDEG = 0.30, 
@@ -2030,7 +2031,7 @@ An M-A plot for the simulation data can be viewed as follows;
 the points for up-regulated DEGs in G1 and G2 are colored 
 blue and red, respectively. The non-DEGs are in black:
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<simRCFC816Fig, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc)
 @
 
@@ -2038,14 +2039,14 @@ This plot is generated from simulation data that has been scaled
 in such a way that the library sizes of each sample are the same 
 as the mean library size of the original data. That is,
 
-<<>>=
+<<simRCFC816Norm>>=
 normalized.count <- getNormalizedData(tcc)
 colSums(normalized.count)
 colSums(tcc$count)
 mean(colSums(tcc$count))
 @
 
-<<echo = FALSE, fig = FALSE>>=
+<<simRCMedian, echo = FALSE, fig = FALSE>>=
 xy <- plot(tcc)
 isnot.na <- as.logical(xy[, 1] != min(xy[, 1]))
 median.G1 <- median(xy[(tcc$simulation$trueDEG == 1) & isnot.na, 2])
@@ -2062,11 +2063,11 @@ $\Sexpr{sprintf("%.3f", median.G1)}$,
 and $\Sexpr{sprintf("%.3f", median.G2)}$ for non-DEGs 
 and up-regulated DEGs in G1 and G2.
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<simRCMedianFig, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 plot(tcc, median.lines = TRUE) 
 @
 
-<<echo = FALSE, fig = FALSE>>=
+<<simRCMedianTCC, echo = FALSE, fig = FALSE>>=
 tcc <- calcNormFactors(tcc, "tmm", "edger", iteration = 3, 
                        FDR = 0.1, floorPDEG = 0.05)
 xy <- plot(tcc)
@@ -2080,7 +2081,7 @@ iDEGES/\Rpackage{edgeR} normalization, e.g., the median M value
 for non-DEGs based on the iDEGES/\Rpackage{edgeR}-normalized 
 data is nearly zero. 
 
-<<fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
+<<simRCNormedPlot, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 tcc <- calcNormFactors(tcc, norm.method = "tmm", test.method = "edger", 
                        iteration = 3, FDR = 0.1, floorPDEG = 0.05)
 plot(tcc, median.line = TRUE)
@@ -2093,7 +2094,7 @@ methods might be another evaluation metric.
 
 \section{Session info}
 
-<<>>=
+<<sessionInfo>>=
 sessionInfo()
 @
 
