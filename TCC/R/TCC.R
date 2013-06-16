@@ -308,6 +308,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         norm.factors <<- switch(norm.method,
                                 "tmm" = .self$.normByTmm(count),
                                 "deseq" = .self$.normByDeseq(count),
+                                "twad" = .self$.normByTwad(count, floorPDEG),
                                 stop(paste("\nTCC::ERROR: The normalization method of ", 
                                 norm.method, " doesn't supported.\n")))
     }
@@ -367,7 +368,8 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             ## DEGES strategy STEP 3. (Second normalization)
             norm.factors <<- switch(norm.method,
                                     "tmm" = .self$.normByTmm(count.ndeg),
-                                    "deseq" = .self$.normByDeseq(count.ndeg)
+                                    "deseq" = .self$.normByDeseq(count.ndeg),
+                                    "twad" = .self$.normByTwad(count, floorPDEG)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)
@@ -622,3 +624,77 @@ TCC$methods(plotMA = function (FDR = NULL,
     invisible(data.frame(a.value = a, m.value = m))
     ##}
 })
+
+
+
+TCC$methods(.wad = function(x, cl) {
+    mean1 <- rowMeans(as.matrix(x[, cl == unique(cl)[1]]))
+    mean2 <- rowMeans(as.matrix(x[, cl == unique(cl)[2]]))
+    x_ave <- (mean1 + mean2) / 2
+    weight <- (x_ave - min(x_ave)) / (max(x_ave) - min(x_ave))
+    statistic <- (mean2 - mean1) * weight
+    return(statistic)
+})
+
+
+TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) {
+    if (all(obs == ref))
+        return (1)
+    # libsize
+    obs <- as.numeric(obs)
+    ref <- as.numeric(ref)
+    if (is.null(obs.libsize))
+      obs.libsize <- sum(obs)
+    if (is.null(ref.libsize))
+      ref.libsize <- sum(ref)
+    nonzero <- as.logical(obs != 0 & ref != 0)
+    obs <- obs[nonzero]
+    ref <- ref[nonzero]
+
+    # calculate wad
+    wad <- .self$.wad(cbind(obs, ref), cl = c(1, 2))
+    rnk <- rank(abs(wad))
+    rnk.sort <- rnk[rev(order(rnk))]
+    min.idx <- min(rnk.sort[1:round(length(obs) * floorPDEG)])
+
+    # calculate normfactors
+    v <- (obs.libsize - obs) / (obs.libsize * obs) +
+         (ref.libsize - ref) / (ref.libsize * ref)
+    v <- v[rnk <= min.idx]
+    obs <- obs[rnk <= min.idx]
+    ref <- ref[rnk <= min.idx]
+    nf <- 2^(sum(log2((obs / obs.libsize) / (ref / ref.libsize)) / v,
+             na.rm = TRUE) / (sum(1 / v, na.rm = TRUE)))
+    return (nf)
+})
+
+
+TCC$methods(.normByTwad = function(count, floorPDEG = 0.6, refColumn = NULL) {
+    x <- count
+    libsize <- colSums(x)
+
+    allzero <- as.logical(rowSums(x) == 0)
+    if (any(allzero))
+      x <- x[!allzero, , drop = FALSE]
+
+    # set reference column
+    y <- sweep(x, 2, 1 / libsize, "*")
+    f75 <- apply(y, 2, function(x) quantile(x, p = 0.75))
+    if (is.null(refColumn)) {
+       refColumn <- which.min(abs(f75 - mean(f75)))
+    }
+    # norm factors
+    nf <- rep(1, length = ncol(x))
+    for (i in 1:length(nf)) {
+        nf[i] <- .self$.twadcore(obs = x[, i], ref = x[, refColumn],
+                           obs.libsize = libsize[i],
+                           ref.libsize = libsize[refColumn],
+                           floorPDEG = floorPDEG)
+    }
+    nf <- nf / exp(mean(log(nf)))
+    return (nf)
+})
+
+
+
+
