@@ -323,7 +323,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         norm.factors <<- switch(norm.method,
                                 "tmm" = .self$.normByTmm(count),
                                 "deseq" = .self$.normByDeseq(count),
-                                "twad" = .self$.normByTwad(count, floorPDEG),
+                                "twad" = .self$.normByTwad(count),
                                 stop(paste("\nTCC::ERROR: The normalization method of ", 
                                 norm.method, " doesn't supported.\n")))
     }
@@ -394,7 +394,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             norm.factors <<- switch(norm.method,
                                     "tmm" = .self$.normByTmm(count.ndeg),
                                     "deseq" = .self$.normByDeseq(count.ndeg),
-                                    "twad" = .self$.normByTwad(count, floorPDEG)
+                                    "twad" = .self$.normByTwad(count)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)
@@ -669,7 +669,7 @@ TCC$methods(.wad = function(x, cl) {
 TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) {
     if (all(obs == ref))
         return (1)
-    # libsize
+    ## libsize
     obs <- as.numeric(obs)
     ref <- as.numeric(ref)
     if (is.null(obs.libsize))
@@ -680,13 +680,13 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) 
     obs <- obs[nonzero]
     ref <- ref[nonzero]
 
-    # calculate wad
+    ## calculate wad
     wad <- .self$.wad(cbind(obs, ref), cl = c(1, 2))
     rnk <- rank(abs(wad))
     rnk.sort <- rnk[rev(order(rnk))]
     min.idx <- min(rnk.sort[1:round(length(obs) * floorPDEG)])
 
-    # calculate normfactors
+    ## calculate normfactors
     v <- (obs.libsize - obs) / (obs.libsize * obs) +
          (ref.libsize - ref) / (ref.libsize * ref)
     v <- v[rnk <= min.idx]
@@ -698,7 +698,8 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) 
 })
 
 
-TCC$methods(.normByTwad = function(count, floorPDEG = 0.6, refColumn = NULL) {
+TCC$methods(.normByTwad = function(count, refColumn = NULL) {
+    floorPDEG <- 0.6
     x <- count
     libsize <- colSums(x)
 
@@ -706,13 +707,15 @@ TCC$methods(.normByTwad = function(count, floorPDEG = 0.6, refColumn = NULL) {
     if (any(allzero))
       x <- x[!allzero, , drop = FALSE]
 
-    # set reference column
+    ## set reference column
     y <- sweep(x, 2, 1 / libsize, "*")
     f75 <- apply(y, 2, function(x) quantile(x, p = 0.75))
     if (is.null(refColumn)) {
        refColumn <- which.min(abs(f75 - mean(f75)))
+       if (length(refColumn) == 0 | refColumn < 1 | refColumn > ncol(x))
+           refColumn <- 1
     }
-    # norm factors
+    ## norm factors
     nf <- rep(1, length = ncol(x))
     for (i in 1:length(nf)) {
         nf[i] <- .self$.twadcore(obs = x[, i], ref = x[, refColumn],
