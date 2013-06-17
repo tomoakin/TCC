@@ -103,15 +103,26 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
             )
         }
     } else {
-        result.df <- data.frame(
-            gene_id = rownames(tcc$count),
-            a.value = rep(NA, length = nrow(tcc$count)), 
-            m.value = rep(NA, length = nrow(tcc$count)),
-            p.value = tcc$stat$p.value, 
-            q.value = tcc$stat$q.value,
-            rank = tcc$stat$rank, 
-            estimatedDEG = tcc$estimatedDEG
-        )
+        if (is.null(tcc$stat$wad)) {
+            result.df <- data.frame(
+                gene_id = rownames(tcc$count),
+                a.value = rep(NA, length = nrow(tcc$count)), 
+                m.value = rep(NA, length = nrow(tcc$count)),
+                p.value = tcc$stat$p.value, 
+                q.value = tcc$stat$q.value,
+                rank = tcc$stat$rank, 
+                estimatedDEG = tcc$estimatedDEG
+            )
+        } else {
+            result.df <- data.frame(
+                gene_id = rownames(tcc$count),
+                a.value = rep(NA, length = nrow(tcc$count)), 
+                m.value = rep(NA, length = nrow(tcc$count)),
+                wad = tcc$stat$wad,
+                rank = tcc$stat$rank, 
+                estimatedDEG = tcc$estimatedDEG
+            )
+        }
     }
     if (sort)
         result.df <- result.df[order(result.df$rank), ]

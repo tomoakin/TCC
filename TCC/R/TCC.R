@@ -255,7 +255,9 @@ TCC$methods(.testByWad = function() {
     x <- sweep(count, 2, 1 / norm.factors, "*")
     g <- unique(.self$group[, 1])
     wad.stat <- combn(length(g), 2, function(ij, x, g) {
-      return (.self$.wad(cbind(x[, g[ij[1]]], x[, g[ij[2]]]), c(g[ij[1]], g[ij[2]])))
+        g1 <- (.self$group[, 1] == g[ij[1]])
+        g2 <- (.self$group[, 1] == g[ij[2]])
+        return (.self$.wad(x[, (g1 | g2)], .self$group[(g1 | g2), 1]))
     }, TRUE, x, g)
     wad.stat <- apply(wad.stat, 1, max)
     private$stat$rank <<- rank(- abs(wad.stat))
@@ -407,12 +409,15 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
     private$normalized <<- TRUE
 })
 
-TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL) {
+TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL,
+                                   PDEG = NULL) {
     deg.flg <- rep(0, length = nrow(count))
     if (!is.null(significance.level)) {
         deg.flg <- as.numeric(private$stat$p.value < significance.level)
     } else if (!is.null(FDR)) {
         deg.flg <- as.numeric(private$stat$q.value < FDR)
+    } else if (!is.null(PDEG)) {
+        deg.flg <- as.numeric(private$stat$rank <= nrow(count) * PDEG)
     } else {
         deg.flg <- private$estimatedDEG #TbT
     }
@@ -434,7 +439,7 @@ TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL) {
 
 # exact test.
 TCC$methods(estimateDE = function (test.method = NULL,
-                                   FDR = NULL,
+                                   FDR = NULL, PDEG = NULL,
                                    significance.level = NULL,
                                    dispersion = NULL,
                                    fit0 = NULL, fit1 = NULL,
@@ -449,8 +454,12 @@ TCC$methods(estimateDE = function (test.method = NULL,
         else 
             test.method = "edger"
     }
-    if (test.method != "bayseq" && is.null(FDR) && is.null(significance.level)) 
+    if (test.method == "wad") {
+        PDEG <- 0.1
+    } else if (test.method != "bayseq" && is.null(FDR) && 
+               is.null(significance.level)) {
         FDR <- 0.1
+    }
     message(paste("TCC::INFO: Identifying DE genes using", test.method, "..."))
     ## calculate statistics values related DE gene.
     private$stat <<- list()
@@ -472,13 +481,16 @@ TCC$methods(estimateDE = function (test.method = NULL,
     )
     ## identify DE genes with the results of exact test.
     estimatedDEG <<- .self$.exactTest(FDR = FDR, 
-                                      significance.level = significance.level)
+                                      significance.level = significance.level,
+                                      PDEG = PDEG)
     if (!is.null(private$stat$likelihood))
         stat$likelihood <<- private$stat$likelihood
     if (!is.null(private$stat$p.value))
         stat$p.value <<- private$stat$p.value
     if (!is.null(private$stat$q.value))
         stat$q.value <<- private$stat$q.value
+    if (!is.null(private$stat$wad)) 
+        stat$wad <<- private$stat$wad
     if (!is.null(private$stat$rank)) 
         stat$rank <<- private$stat$rank
     private$estimated <<- TRUE
