@@ -82,15 +82,26 @@ getResult <- function(tcc, sort = FALSE, floor = 0) {
         mean.j <- rowMeans(as.matrix(count.normed[, tcc$group[, 1] == gru[2]]))
         ##ma.axes <- tcc$.getMACoordinates(mean.exp[, 1], mean.exp[, 2], floor)
         ma.axes <- tcc$.getMACoordinates(mean.i, mean.j, floor)
-        result.df <- data.frame(
-            gene_id = rownames(tcc$count),
-            a.value = ma.axes$a.value, 
-            m.value = ma.axes$m.value,
-            p.value = tcc$stat$p.value, 
-            q.value = tcc$stat$q.value,
-            rank = tcc$stat$rank, 
-            estimatedDEG = tcc$estimatedDEG
-        )
+        if (is.null(tcc$stat$wad)) {
+            result.df <- data.frame(
+                gene_id = rownames(tcc$count),
+                a.value = ma.axes$a.value, 
+                m.value = ma.axes$m.value,
+                p.value = tcc$stat$p.value, 
+                q.value = tcc$stat$q.value,
+                rank = tcc$stat$rank, 
+                estimatedDEG = tcc$estimatedDEG
+            )
+        } else {
+            result.df <- data.frame(
+                gene_id = rownames(tcc$count),
+                a.value = ma.axes$a.value,
+                m.value = ma.axes$m.value,
+                wad = tcc$stat$wad,
+                rank = tcc$stat$rank,
+                estimatedDEG = tcc$estimatedDEG
+            )
+        }
     } else {
         result.df <- data.frame(
             gene_id = rownames(tcc$count),

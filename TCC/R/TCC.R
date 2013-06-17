@@ -250,6 +250,21 @@ TCC$methods(.testByBayseq = function(samplesize = NULL,
 })
 
 
+## test by WAD
+TCC$methods(.testByWad = function() {
+    x <- sweep(count, 2, 1 / norm.factors, "*")
+    g <- unique(.self$group[, 1])
+    wad.stat <- combn(length(g), 2, function(ij, x, g) {
+      return (.self$.wad(cbind(x[, g[ij[1]]], x[, g[ij[2]]]), c(g[ij[1]], g[ij[2]])))
+    }, TRUE, x, g)
+    wad.stat <- apply(wad.stat, 1, max)
+    private$stat$rank <<- rank(- abs(wad.stat))
+    private$stat$wad <<- wad.stat
+    private$estimatedDEG <<- rep(0, length = nrow(count))
+})
+
+
+
 ##  calculate normalization factors.
 TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        test.method = NULL,
@@ -331,27 +346,37 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                    "bayseq" = .self$.testByBayseq(samplesize = samplesize,
                                                   cl = cl,
                                                   comparison = comparison),
-                    stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
+                   "wad" = .self$.testByWad(),
+                   stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
             )
             ## Remove the DEG from original count data.
             deg.flg <- rep(0, length = nrow(count))
             deg.flg.FDR <- .self$.exactTest(FDR = FDR)
-            deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, 
+            deg.flg.floorPDEG <- rep(0, length = nrow(count))
+
+            if (test.method != "wad") {
+                deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, 
                                  ties.method = "min") <= nrow(count) * floorPDEG)
-            if (is.null(FDR)) {
-                ## use TbT
-                deg.flg <- deg.flg.FDR
-                DEGES$threshold$type <<- "TbT"
-                DEGES$threshold$input <<- private$tbt$estProps
-                DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-                private$DEGES.PrePDEG <<- private$tbt$estProps
+                if (is.null(FDR)) {
+                    ## use TbT
+                    deg.flg <- deg.flg.FDR
+                    DEGES$threshold$type <<- "TbT"
+                    DEGES$threshold$input <<- private$tbt$estProps
+                    DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+                    private$DEGES.PrePDEG <<- private$tbt$estProps
+                } else {
+                    ## use FDR
+                    deg.flg <- deg.flg.FDR
+                    DEGES$threshold$type <<- "FDR"
+                    DEGES$threshold$input <<- FDR
+                    DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
+                    private$DEGES.PrePDEG <<- sum(deg.flg) / length(deg.flg)
+                }
             } else {
-                ## use FDR
-                deg.flg <- deg.flg.FDR
-                DEGES$threshold$type <<- "FDR"
-                DEGES$threshold$input <<- FDR
-                DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-                private$DEGES.PrePDEG <<- sum(deg.flg) / length(deg.flg)
+                ## use WAD
+                deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$wad), 
+                                 ties.method = "min") <= nrow(count) * floorPDEG)
+                private$DEGES.PrePDEG <<- 0
             }
             if ((sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
                 ## use floorPDEG
@@ -429,6 +454,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
     message(paste("TCC::INFO: Identifying DE genes using", test.method, "..."))
     ## calculate statistics values related DE gene.
     private$stat <<- list()
+    stat <<- list()
     switch(test.method,
            "edger" = .self$.testByEdger(design = design, 
                                         coef = coef, 
@@ -440,8 +466,9 @@ TCC$methods(estimateDE = function (test.method = NULL,
            "bayseq" = .self$.testByBayseq(samplesize = samplesize, 
                                           cl = cl, 
                                           comparison = comparison),
-            stop(paste("\nTCC::ERROR: The identifying method of ", 
-                       test.method, " doesn't supported.\n"))
+           "wad" = .self$.testByWad(),
+           stop(paste("\nTCC::ERROR: The identifying method of ", 
+                      test.method, " doesn't supported.\n"))
     )
     ## identify DE genes with the results of exact test.
     estimatedDEG <<- .self$.exactTest(FDR = FDR, 
@@ -628,6 +655,8 @@ TCC$methods(plotMA = function (FDR = NULL,
 
 
 TCC$methods(.wad = function(x, cl) {
+    x[x < 1] <- 1
+    x <- log2(x)
     mean1 <- rowMeans(as.matrix(x[, cl == unique(cl)[1]]))
     mean2 <- rowMeans(as.matrix(x[, cl == unique(cl)[2]]))
     x_ave <- (mean1 + mean2) / 2
