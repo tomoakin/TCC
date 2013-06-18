@@ -396,7 +396,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             norm.factors <<- switch(norm.method,
                                     "tmm" = .self$.normByTmm(count.ndeg),
                                     "deseq" = .self$.normByDeseq(count.ndeg),
-                                    "twad" = .self$.normByTwad(count)
+                                    "twad" = .self$.normByTwad(count.ndeg)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)
