@@ -23,8 +23,7 @@ setMethod(
                           dispersion = NULL, design = NULL, contrast = NULL,
                           coef = NULL, fit0 = NULL, fit1 = NULL, 
                           comparison = NULL, samplesize = 10000, cl = NULL,
-                          trimWAD = 0.50, q = 0.25) {
-                          ##samplesize=10000, cl=NULL, increment=FALSE) {
+                          trimWAD = 0.50, q = 0.25, increment = FALSE) {
         obj <- tcc$copy()
         obj$calcNormFactors(norm.method = norm.method, 
                             test.method = test.method, 
@@ -33,7 +32,8 @@ setMethod(
                             fit0 = fit0, fit1 = fit1, design = design, 
                             contrast = contrast, coef = coef,
                             comparison = comparison, samplesize = samplesize, 
-                            cl = cl, trimWAD = trimWAD, q = q)
+                            cl = cl, trimWAD = trimWAD, q = q, 
+                            increment = increment)
         return(obj)
     }
 )

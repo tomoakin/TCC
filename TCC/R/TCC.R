@@ -280,9 +280,8 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        comparison = NULL,
                                        samplesize = 10000,
                                        cl = NULL,
-                                       trimWAD = 0.50, q = 0.25){
-                                       ##cl = NULL, increment = FALSE){
-    increment <- FALSE
+                                       trimWAD = 0.50, q = 0.25,
+                                      increment = FALSE) {
     if ((increment == FALSE) || 
         (increment == TRUE && private$normalized == FALSE)) {
         DEGES$iteration <<- 0
