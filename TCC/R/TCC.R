@@ -279,7 +279,8 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        fit0 = NULL, fit1 = NULL,
                                        comparison = NULL,
                                        samplesize = 10000,
-                                       cl = NULL){
+                                       cl = NULL,
+                                       trimWAD = 0.50, q = 0.25){
                                        ##cl = NULL, increment = FALSE){
     increment <- FALSE
     if ((increment == FALSE) || 
@@ -325,7 +326,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         norm.factors <<- switch(norm.method,
                                 "tmm" = .self$.normByTmm(count),
                                 "deseq" = .self$.normByDeseq(count),
-                                "twad" = .self$.normByTwad(count),
+                                "twad" = .self$.normByTwad(count, 
+                                                           trimWAD = trimWAD, 
+                                                           q = q),
                                 stop(paste("\nTCC::ERROR: The normalization method of ", 
                                 norm.method, " doesn't supported.\n")))
     }
@@ -365,14 +368,14 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                     DEGES$threshold$type <<- "TbT"
                     DEGES$threshold$input <<- private$tbt$estProps
                     DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-                    private$DEGES.PrePDEG <<- private$tbt$estProps
+                    private$DEGES.PrePDEG <<- deg.flg
                 } else {
                     ## use FDR
                     deg.flg <- deg.flg.FDR
                     DEGES$threshold$type <<- "FDR"
                     DEGES$threshold$input <<- FDR
                     DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
-                    private$DEGES.PrePDEG <<- sum(deg.flg) / length(deg.flg)
+                    private$DEGES.PrePDEG <<- deg.flg
                 }
             } else {
                 ## use WAD
@@ -380,7 +383,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                  ties.method = "min") <= nrow(count) * floorPDEG)
                 private$DEGES.PrePDEG <<- 0
             }
-            if ((sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0))) {
+            if (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0)) {
                 ## use floorPDEG
                 deg.flg <- deg.flg.floorPDEG
                 DEGES$threshold$type <<- "floorPDEG"
@@ -396,7 +399,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             norm.factors <<- switch(norm.method,
                                     "tmm" = .self$.normByTmm(count.ndeg),
                                     "deseq" = .self$.normByDeseq(count.ndeg),
-                                    "twad" = .self$.normByTwad(count.ndeg)
+                                    "twad" = .self$.normByTwad(count.ndeg, 
+                                                               trimWAD = trimWAD,
+                                                               q = q)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)
@@ -678,7 +683,8 @@ TCC$methods(.wad = function(x, cl) {
 })
 
 
-TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) {
+TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, 
+                                 trimWAD, q) {
     if (all(obs == ref))
         return (1)
     ## libsize
@@ -688,15 +694,16 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) 
       obs.libsize <- sum(obs)
     if (is.null(ref.libsize))
       ref.libsize <- sum(ref)
-    nonzero <- as.logical(obs != 0 & ref != 0)
-    obs <- obs[nonzero]
-    ref <- ref[nonzero]
+    lowcount <- as.logical(obs <= quantile(obs, q) |
+                           ref <= quantile(ref, q))
+    obs <- obs[!lowcount]
+    ref <- ref[!lowcount]
 
     ## calculate wad
     wad <- .self$.wad(cbind(obs, ref), cl = c(1, 2))
     rnk <- rank(abs(wad))
     rnk.sort <- rnk[rev(order(rnk))]
-    min.idx <- min(rnk.sort[1:round(length(obs) * floorPDEG)])
+    min.idx <- min(rnk.sort[1:round(length(obs) * trimWAD)])
 
     ## calculate normfactors
     v <- (obs.libsize - obs) / (obs.libsize * obs) +
@@ -710,8 +717,7 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, floorPDEG) 
 })
 
 
-TCC$methods(.normByTwad = function(count, refColumn = NULL) {
-    floorPDEG <- 0.6
+TCC$methods(.normByTwad = function(count, refColumn = NULL, trimWAD, q) {
     x <- count
     libsize <- colSums(x)
 
@@ -733,7 +739,8 @@ TCC$methods(.normByTwad = function(count, refColumn = NULL) {
         nf[i] <- .self$.twadcore(obs = x[, i], ref = x[, refColumn],
                            obs.libsize = libsize[i],
                            ref.libsize = libsize[refColumn],
-                           floorPDEG = floorPDEG)
+                           trimWAD = trimWAD,
+                           q = q)
     }
     nf <- nf / exp(mean(log(nf)))
     return (nf)
