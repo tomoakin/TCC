@@ -17,7 +17,8 @@ The procedure can generally be described as the
                 dispersion = NULL, 
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
-                samplesize = 10000, cl = NULL)
+                samplesize = 10000, cl = NULL, 
+                trimWAD = 0.50, q = 0.25)
 }
 \arguments{
     \item{tcc}{\link{TCC-class} object.}
@@ -95,6 +96,13 @@ The procedure can generally be described as the
     \item{cl}{'snow' object for using multi processors if 
               \code{test.method = "bayseq"}. See the 
               \code{\link[baySeq]{getPriors.NB}} function for details.}
+    \item{q}{numeric value (between 0 and 1) specifying the 
+             \eqn{q \times 100}{q X 100}th percentile of the count data
+             as a threshold. The counts less than the threshold are trimmed
+             before perform TWAD normalization.}
+    \item{trimWAD}{numeric value (between 0 and 1) specifying the rate of
+                   genes to be trimmed by WAD statistic before perform 
+                   TWAD normalization.}
 %    \item{increment}{logical value. if \code{increment = TRUE}, the DEGES
 %                     pipeline will perform again from current iteration DEGES. 
 %                     For example, assume that the iDEGES (iteration = n) was performed, 
