@@ -89,9 +89,11 @@ citEntry(
     entry = "article",
     title = "TCC: an R package for comparing tag count data with robust normalization strategies",
     author = "Sun J, Nishiyama T, Shimizu K and Kadota K",
-    journal = "Submitted",
+    journal = "BMC Bioinformatics",
+    volume = 14,
+    pages = 219,
     year = 2013,
-    textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. submitted"
+    textVersion = "Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package for comparing tag count data with robust normalization strategies. BMC Bioinformatics 14: 219, 2013"
 )
 
 
