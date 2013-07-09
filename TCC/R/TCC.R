@@ -280,7 +280,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        comparison = NULL,
                                        samplesize = 10000,
                                        cl = NULL,
-                                       trimWAD = 0.50, q = 0.25,
+                                       trimWAD = 0.50, q = 0.25, AD = FALSE,
                                       increment = FALSE) {
     if ((increment == FALSE) || 
         (increment == TRUE && private$normalized == FALSE)) {
@@ -327,7 +327,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                 "deseq" = .self$.normByDeseq(count),
                                 "twad" = .self$.normByTwad(count, 
                                                            trimWAD = trimWAD, 
-                                                           q = q),
+                                                           q = q, AD = AD), 
                                 stop(paste("\nTCC::ERROR: The normalization method of ", 
                                 norm.method, " doesn't supported.\n")))
     }
@@ -400,7 +400,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                     "deseq" = .self$.normByDeseq(count.ndeg),
                                     "twad" = .self$.normByTwad(count.ndeg, 
                                                                trimWAD = trimWAD,
-                                                               q = q)
+                                                               q = q, AD = AD)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)
@@ -670,20 +670,24 @@ TCC$methods(plotMA = function (FDR = NULL,
 
 
 
-TCC$methods(.wad = function(x, cl) {
+TCC$methods(.wad = function(x, cl, AD) {
     x[x < 1] <- 1
     x <- log2(x)
     mean1 <- rowMeans(as.matrix(x[, cl == unique(cl)[1]]))
     mean2 <- rowMeans(as.matrix(x[, cl == unique(cl)[2]]))
-    x_ave <- (mean1 + mean2) / 2
+    if (AD == TRUE) {
+      x_ave <- abs(mean1 - mean2) / 2
+    } else {
+      x_ave <- (mean1 + mean2) / 2
+    }
     weight <- (x_ave - min(x_ave)) / (max(x_ave) - min(x_ave))
-    statistic <- (mean2 - mean1) * weight
+    statistic <- abs((mean2 - mean1) * weight)
     return(statistic)
 })
 
 
 TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, 
-                                 trimWAD, q) {
+                                 trimWAD, q, AD) {
     if (all(obs == ref))
         return (1)
     ## libsize
@@ -697,9 +701,10 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize,
                            ref <= quantile(ref, q))
     obs <- obs[!lowcount]
     ref <- ref[!lowcount]
+    private$nx <<- private$nm[!lowcount]
 
     ## calculate wad
-    wad <- .self$.wad(cbind(obs, ref), cl = c(1, 2))
+    wad <- .self$.wad(cbind(obs, ref), cl = c(1, 2), AD)
     rnk <- rank(abs(wad))
     rnk.sort <- rnk[rev(order(rnk))]
     min.idx <- min(rnk.sort[1:round(length(obs) * trimWAD)])
@@ -710,19 +715,21 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize,
     v <- v[rnk <= min.idx]
     obs <- obs[rnk <= min.idx]
     ref <- ref[rnk <= min.idx]
+    private$nx <<- private$nx[rnk <= min.idx]
     nf <- 2^(sum(log2((obs / obs.libsize) / (ref / ref.libsize)) / v,
              na.rm = TRUE) / (sum(1 / v, na.rm = TRUE)))
     return (nf)
 })
 
 
-TCC$methods(.normByTwad = function(count, refColumn = NULL, trimWAD, q) {
+TCC$methods(.normByTwad = function(count, refColumn = NULL, trimWAD, q, AD) {
     x <- count
     libsize <- colSums(x)
 
     allzero <- as.logical(rowSums(x) == 0)
     if (any(allzero))
       x <- x[!allzero, , drop = FALSE]
+    private$nm <<- gene_id[!allzero]
 
     ## set reference column
     y <- sweep(x, 2, 1 / libsize, "*")
@@ -739,12 +746,11 @@ TCC$methods(.normByTwad = function(count, refColumn = NULL, trimWAD, q) {
                            obs.libsize = libsize[i],
                            ref.libsize = libsize[refColumn],
                            trimWAD = trimWAD,
-                           q = q)
+                           q = q, AD = AD)
     }
     nf <- nf / exp(mean(log(nf)))
     return (nf)
 })
-
 
 
 
