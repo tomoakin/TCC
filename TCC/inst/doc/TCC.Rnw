@@ -65,7 +65,7 @@ conditions and to plot the data are also provided.
 Differential expression analysis based on tag count data has become a 
 fundamental task for identifying differentially expressed genes or 
 transcripts (DEGs). The \Rpackage{TCC} package (Tag Count Comparison; 
-Sun et al., submitted \cite{sun}) provides users with a robust and accurate 
+Sun et al., 2013 \cite{sun}) provides users with a robust and accurate 
 framework to perform differential expression analysis of tag count data. 
 \Rpackage{TCC} provides integrated analysis pipelines with improved 
 data normalization steps, compared with other packages such as 
@@ -150,7 +150,7 @@ combinations of existing normalization methods and differential expression
 For example, the TbT normalization method 
 (Kadota et al., 2012 \cite{kadota}), which is 
 a particular functionality of the \Rpackage{TCC} package 
-(Sun et al., submitted \cite{sun}), 
+(Sun et al., 2013 \cite{sun}), 
 consists of the TMM normalization method 
 (Robinson and Oshlack, 2010 \cite{robinson2}) implemented 
 in the \Rpackage{edgeR} package 
@@ -191,7 +191,7 @@ is used here to reduce the computation time, but a larger sampling size of
 around $10,000$ (i.e., \Robject{samplesize = 10000}) 
 is recommended (Hardcastle and Kelly, 2010 \cite{hardcastle}). 
 Suggested citations are as follows: \Rpackage{TCC} (Sun et al., 
-submitted \cite{sun}), TbT (Kadota et al., 2012 \cite{kadota}), 
+2013 \cite{sun}), TbT (Kadota et al., 2012 \cite{kadota}), 
 TMM (Robinson and Oshlack, 2010 \cite{robinson2}), 
 \Rpackage{baySeq} (Hardcastle and Kelly, 2010 \cite{hardcastle}), 
 and \Rpackage{edgeR} (Robinson et al., 2010 \cite{robinson}). 
@@ -220,7 +220,7 @@ a default when analyzing tag count data with replicates.
 A notable advantage of this pipeline is that the multi-step 
 normalization strategy only needs the methods 
 implemented in the \Rpackage{edgeR} package. The suggested citations are as 
-follows: \Rpackage{TCC} (Sun et al., submitted \cite{sun}), 
+follows: \Rpackage{TCC} (Sun et al., 2013 \cite{sun}), 
 TMM (Robinson and Oshlack, 2010 \cite{robinson2}), 
 the exact test (Robinson and Smyth, 2008 \cite{robinson3}), 
 and \Rpackage{edgeR} (Robinson et al., 2010 \cite{robinson}). 
@@ -245,7 +245,7 @@ iDEGES/\Rpackage{DESeq} normalization
 A procedure using the data of the first and fourth columns of 
 \Robject{hypoData} is shown here. Similar to Case 2, this pipeline entirely 
 consists of methods implemented in the \Rpackage{DESeq} package. Suggested 
-citations are as follows: \Rpackage{TCC} (Sun et al., submitted \cite{sun}) 
+citations are as follows: \Rpackage{TCC} (Sun et al., 2013 \cite{sun}) 
 and \Rpackage{DESeq} (Anders and Huber, 2010 \cite{anders}). For details, 
 see section \ref{section-3-2}.
 
@@ -2140,7 +2140,7 @@ sessionInfo()
                     data. Biostatistics 9: 321-332, 2008
 \bibitem{sun} Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package
               for comparing tag count data with robust normalization 
-              strategies. submitted
+              strategies. BMC Bioinformatics 14: 219, 2013
 \bibitem{mccarthy} McCarthy DJ, Chen Y, Smyth GK. Differential expression 
                    analysis of multifactor RNA-Seq experiments with respect
                    to biological variation. Nucleic Acids Res. 40(10): 
