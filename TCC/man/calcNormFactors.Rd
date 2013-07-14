@@ -18,7 +18,8 @@ The procedure can generally be described as the
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
                 samplesize = 10000, cl = NULL, 
-                trimWAD = 0.50, q = 0.25, increment = FALSE)
+                trimWAD = 0.50, q = 0.25, AD = FALSE,
+                increment = FALSE)
 }
 \arguments{
     \item{tcc}{\link{TCC-class} object.}
@@ -103,6 +104,8 @@ The procedure can generally be described as the
     \item{trimWAD}{numeric value (between 0 and 1) specifying the rate of
                    genes to be trimmed by WAD statistic before perform 
                    TWAD normalization.}
+    \item{AD}{logical value specifying the algorithm for calculating WAD
+              statistics.}
     \item{increment}{logical value. if \code{increment = TRUE}, the DEGES
                      pipeline will perform again from the current iterated
                      result. For example, assume that the iDEGES pipeline
