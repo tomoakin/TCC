@@ -5,7 +5,7 @@
 estimateDE(tcc, test.method = NULL, FDR = NULL, 
            dispersion = NULL, fit0 = NULL, fit1 = NULL, design = NULL,
            contrast = NULL, coef = NULL, comparison = NULL,
-           samplesize = 10000, cl = NULL)
+           samplesize = 10000, k = 1, cl = NULL)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -63,6 +63,7 @@ implemented in other R packages.
                       \code{test.method = "bayseq"}.
                       See the \code{\link[baySeq]{getPriors.NB}} function 
                       for details.}
+    \item{k}{data equal to zero are placed by k.}
     \item{cl}{'snow' object for using multi processors if 
               \code{test.method = "bayseq"}. See the 
               \code{\link[baySeq]{getPriors.NB}} function for details.}

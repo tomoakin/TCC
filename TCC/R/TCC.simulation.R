@@ -210,3 +210,12 @@ plotFCPseudocolor <- function(tcc, main = "",
     layout(1)
 }
 
+calcAUCValue <- function(tcc) {
+    if (is.null(tcc$simulation$trueDE) || length(tcc$simulation$trueDE) == 0)
+        stop("\nTCC::ERROR: No true positive annotations about differential expression genes.\n ")
+    if (is.null(tcc$stat$rank) || length(tcc$stat$rank) == 0)
+        stop("\nTCC::ERROR: There are no rank informations in TCC tcc. It need run TCC.estimateDE().\n")
+      return(AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDE != 0), 
+                             data = - tcc$stat$rank)))
+}
+
