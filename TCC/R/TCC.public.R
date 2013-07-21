@@ -6,8 +6,8 @@ setMethod(
                           dispersion = NULL, design = NULL, contrast = NULL,
                           coef = NULL, fit0 = NULL, fit1 = NULL, 
                           comparison = NULL, samplesize = 10000, cl = NULL,
-                          trimWAD = 0.50, q = 0.25, AD = FALSE, k = 1,
-                          increment = FALSE) {
+                          trimWAD = 0.50, q = 0.25, AD = FALSE, 
+                          floor.value = 1, increment = FALSE) {
         obj <- tcc$copy()
         obj$calcNormFactors(norm.method = norm.method, 
                             test.method = test.method, 
@@ -16,8 +16,8 @@ setMethod(
                             fit0 = fit0, fit1 = fit1, design = design, 
                             contrast = contrast, coef = coef,
                             comparison = comparison, samplesize = samplesize, 
-                            cl = cl, trimWAD = trimWAD, q = q, AD = AD, k = k,
-                            increment = increment)
+                            cl = cl, trimWAD = trimWAD, q = q, AD = AD, 
+                            floor.value = floor.value, increment = increment)
         return(obj)
     }
 )
@@ -25,12 +25,13 @@ setMethod(
 estimateDE <- function(tcc, test.method = NULL, FDR = NULL, dispersion = NULL,
                        fit0 = NULL, fit1 = NULL, design = NULL, contrast=NULL,
                        coef = NULL, comparison = NULL, samplesize = 10000,
-                       k = 1, cl = NULL) {
+                       floor.value = 1, cl = NULL) {
     obj <- tcc$copy()
     obj$estimateDE(test.method=test.method, FDR=FDR, dispersion=dispersion,
                    fit0=fit0, fit1=fit1,
                    design=design, contrast=contrast, coef=coef,
-                   comparison=comparison, samplesize=samplesize, k = k, cl=cl)
+                   comparison=comparison, samplesize=samplesize,
+                   floor.value = floor.value, cl=cl)
     return(obj)
 }
 

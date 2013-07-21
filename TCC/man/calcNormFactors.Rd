@@ -18,7 +18,8 @@ The procedure can generally be described as the
                 design = NULL, contrast = NULL, coef = NULL,
                 fit0 = NULL, fit1 = NULL, comparison = NULL,
                 samplesize = 10000, cl = NULL, 
-                trimWAD = 0.50, q = 0.25, AD = FALSE, k = 1,
+                trimWAD = 0.50, q = 0.25, AD = FALSE, 
+                floor.value = 1,
                 increment = FALSE)
 }
 \arguments{
@@ -94,7 +95,8 @@ The procedure can generally be described as the
                       the prior parameters if \code{test.method = "bayseq"}. 
                       See the \code{\link[baySeq]{getPriors.NB}} function 
                       for details.}
-    \item{k}{data equal to zero are placed by k.}
+    \item{floor.value}{data less than \code{floor.value} are placed by 
+                       \code{floor.value}. The default is 1.}
     \item{cl}{'snow' object for using multi processors if 
               \code{test.method = "bayseq"}. See the 
               \code{\link[baySeq]{getPriors.NB}} function for details.}

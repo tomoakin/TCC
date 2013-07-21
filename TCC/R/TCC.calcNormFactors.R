@@ -25,7 +25,7 @@ TCC$methods(.normByTwad = function(x, refColumn = NULL, trimWAD, q, AD) {
     allzero <- as.logical(rowSums(x) == 0)
     if (any(allzero))
       x <- x[!allzero, , drop = FALSE]
-    private$nm <<- gene_id[!allzero]
+    private$twad.trim <<- gene_id[!allzero]
 
     ## set reference column
     y <- sweep(x, 2, 1 / libsize, "*")
@@ -59,10 +59,10 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize,
                            ref <= quantile(ref, q))
     obs <- obs[!lowcount]
     ref <- ref[!lowcount]
-    private$nx <<- private$nm[!lowcount]
+    private$twad.trim <<- private$twad.trim[!lowcount]
 
     ## calculate wad
-    wad <- .self$.wad(x = cbind(obs, ref), g = c(1, 2), AD = AD)
+    wad <- .wad(x = cbind(obs, ref), g = c(1, 2), AD = AD)
     rnk <- rank(abs(wad))
     rnk.sort <- rnk[rev(order(rnk))]
     min.idx <- min(rnk.sort[1:round(length(obs) * trimWAD)])
@@ -73,7 +73,10 @@ TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize,
     v <- v[rnk <= min.idx]
     obs <- obs[rnk <= min.idx]
     ref <- ref[rnk <= min.idx]
-    private$nx <<- private$nx[rnk <= min.idx]
+    trimmed.geneid <- private$twad.trim[rnk <= min.idx]
+    private$twad.trim <<- rep(0, length = nrow(.self$count))
+    names(private$twad.trim) <<- rownames(.self$count)
+    private$twad.trim[trimmed.geneid] <<- 1
     nf <- 2^(sum(log2((obs / obs.libsize) / (ref / ref.libsize)) / v,
              na.rm = TRUE) / (sum(1 / v, na.rm = TRUE)))
     return (nf)
@@ -92,7 +95,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        samplesize = 10000,
                                        cl = NULL,
                                        trimWAD = 0.50, q = 0.25,
-                                       AD = FALSE, k = 1,
+                                       AD = FALSE, floor.value = 1,
                                        increment = FALSE) {
     if ((increment == FALSE) || 
         (increment == TRUE && private$normalized == FALSE)) {
@@ -162,7 +165,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                    "bayseq" = .self$.testByBayseq(samplesize = samplesize,
                                                   cl = cl,
                                                   comparison = comparison),
-                   "wad" = .self$.testByWad(k = k),
+                   "wad" = .self$.testByWad(floor.value = floor.value),
                    stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
             )
             ## Remove the DEG from original count data.

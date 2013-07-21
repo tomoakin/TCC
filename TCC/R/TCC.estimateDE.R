@@ -143,10 +143,12 @@ TCC$methods(.testByBayseq = function(samplesize = NULL,
     private$tbt$estProps <<- d@estProps[2]
 })
 
-TCC$methods(.testByWad = function(k) {
+TCC$methods(.testByWad = function(floor.value) {
     ef <- colSums(count) * norm.factors
     x <- sweep(count, 2, mean(ef) / ef, "*")
-    s <- .self$.wad(x = x, g = .self$group[, 1], k = k)
+    s <- .wad(x = x, group = .self$group[, 1],
+              log.scale = TRUE,
+              floor.value = floor.value)
     private$stat$rank <<- rank(- abs(s))
     private$stat$wad <<- s
     private$estimatedDEG <<- rep(0, length = nrow(count))
@@ -177,7 +179,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
                                    contrast = NULL, coef = NULL,
                                    comparison = NULL,
                                    samplesize = 10000,
-                                   k = 1,
+                                   floor.value = 1,
                                    cl = NULL) {
     if (is.null(test.method)) {
         if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
@@ -206,7 +208,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
            "bayseq" = .self$.testByBayseq(samplesize = samplesize, 
                                           cl = cl, 
                                           comparison = comparison),
-           "wad" = .self$.testByWad(k = k),
+           "wad" = .self$.testByWad(floor.value = floor.value),
            stop(paste("\nTCC::ERROR: The identifying method of ", 
                       test.method, " doesn't supported.\n"))
     )
