@@ -15,6 +15,7 @@ Description: This package provides functions for performing differential
     Functions to produce simulation data under various conditions and to
     plot the data are also provided. 
 Depends: R (>= 2.15), methods, DESeq, edgeR, baySeq, ROC
+Imports: affy, som
 Suggests: RUnit, BiocGenerics
 Enhances: snow
 biocViews: HighThroughputSequencing, DifferentialExpression, RNAseq

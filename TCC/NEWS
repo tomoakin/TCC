@@ -4,7 +4,9 @@ CHANGES IN VERSION 1.2.0
 NEW FEATURES
 
     o This package was released as a Bioconductor package (previously CRAN).
-
+    o WAD method for identifying DEGs was added.
+    o ROKU method for identifying tissue-specific genes was added.
+    o 'increment' argument of 'calcNormFactor' function was added.
 
 
 SIGNIFICANT USER-VISIBLE CHANGES
