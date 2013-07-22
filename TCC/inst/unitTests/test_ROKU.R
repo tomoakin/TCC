@@ -8,7 +8,14 @@ kadota_2006_bmc_bioinformatics <- function(x){
     } else if(sd(x) == 0) {
         return(log(x_length, base = 2))
     } else {
-        x_prime <- abs(x - affy::tukey.biweight(x))
+        y <- x
+        y.m <- median(y)
+        y.u <- (y - y.m) / (5 * median(abs(y - y.m)) + 1e-04)
+        y.w <- rep(0, length(y))
+        y.i <- abs(y.u) <= 1
+        y.w[y.i] <- ((1 - y.u^2)^2)[y.i]
+        y.b <- sum(y.w * y) / sum(y.w)
+        x_prime <- abs(y - y.b)
         p <- x_prime / sum(x_prime) 
         e <- sum(p * log(p, base = 2)) 
         return(-e)
@@ -64,7 +71,7 @@ kadota_2003_physiol_genomics_0.25 <- function(x){
 
 test_ROKU <- function() {
     x <- matrix(rnorm(100), ncol = 10)
-    y <- som::normalize(x)
+    y <- t(apply(x, 1, scale))
 
     roku.tcc <- ROKU(x)
     roku.kdt <- t(apply(y, 1, kadota_2003_physiol_genomics_0.25))

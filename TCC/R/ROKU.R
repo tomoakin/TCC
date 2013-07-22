@@ -38,17 +38,23 @@
     if (sum(y) <= 0 || sd(y) == 0) {
         return (log2(l))
     } else {
-        p <- abs(y - affy::tukey.biweight(y))
+        y.m <- median(y)
+        y.u <- (y - y.m) / (5 * median(abs(y - y.m)) + 1e-04)
+        y.w <- rep(0, length(y))
+        y.i <- abs(y.u) <= 1
+        y.w[y.i] <- ((1 - y.u^2)^2)[y.i]
+        y.b <- sum(y.w * y) / sum(y.w)
+        p <- abs(y - y.b)
         p <- p / sum(p)
         return( - sum(p * log2(p)))
     }
 }
 
 ROKU <- function(data, upper.limit = 0.25, sort = FALSE) {
-   outliers <- t(apply(som::normalize(data, byrow = TRUE), 1,
+   outliers <- t(apply(t(apply(data, 1, scale)), 1,
                           function (y, upper.limit = upper.limit) {
                           .outval(y, upper.limit = upper.limit)
-                       }, upper.limit))
+                     }, upper.limit))
    entropy.score <- apply(data, 1, .entval)
    rank <- rank(entropy.score)
    if (!is.null(colnames(data))) {

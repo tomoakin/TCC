@@ -2,8 +2,8 @@
 \alias{ROKU}
 \title{detect tissue-specific genes in microarray data}
 \description{
-This function detect tissue-specific genes from
-a matrix or data.frame object.
+This function detects tissue-specific genes from
+a matrix or data frame object.
 }
 \usage{
 ROKU(data, upper.limit = 0.25, sort = FALSE)
@@ -39,15 +39,15 @@ the entropy scores and it's ranks.
 The columns from the first to the third-to-last indicate
 the outlier matrix consisting of 1, -1, and 0.
 1 for over-expressed outliers,
--1 for over-expressed outliers,
-and 0 for under-expressed outliers.
+-1 for under-expressed outliers,
+and 0 for non-expressed outliers.
 }
 \references{
 Kadota K, Ye J, Nakai Y, Terada T, Shimizu K: ROKU: a novel method for identification of tissue-specific genes. BMC Bioinformatics 2006, 7: 294.
 
 Kadota K, Nishimura SI, Bono H, Nakamura S, Hayashizaki Y, Okazaki Y, Takahashi K: Detection of genes with tissue-specific expression patterns using Akaike's Information Criterion (AIC) procedure. Physiol Genomics 2003, 12:251-259.
 
-Ueda T. Simple method for the detection of outliers. Japanese J Appl Stat 25: 17-26, 1996.
+Ueda T. Simple method for the detection of outliers. Japanese J Appl Stat 1996, 25: 17-26.
 }
 \examples{
 # create sample data.
