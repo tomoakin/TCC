@@ -143,6 +143,76 @@ TCC$methods(.testByBayseq = function(samplesize = NULL,
     private$tbt$estProps <<- d@estProps[2]
 })
 
+TCC$methods(.testByEbseq = function() {
+    g <- .self$group[, 1]
+    ug <- unique(g)
+    if (length(ug) == 2) {
+        suppressMessages(EBout <- EBSeq::EBTest(Data = .self$count,
+                     Conditions = as.factor(g),
+                     sizeFactors = .self$norm.factors * colSums(.self$count),
+                     maxround = 10))
+        PP <- EBSeq::GetPPMat(EBout)
+        df <- matrix(1, ncol = 2, nrow = nrow(.self$count))
+        rownames(df) <- rownames(.self$count)
+        df[rownames(PP), 1] <- PP[, 1]
+        df[rownames(PP), 2] <- PP[, 2]
+
+        private$stat$p.values <<- df[, 1]
+        private$stat$q.values <<- 1 - df[, 2]
+        private$stat$rank <<- rank(private$stat$p.values)
+    } else {
+        gp <- matrix(c(rep(1, length = length(ug)), 1:length(ug)),
+                     nrow = 2, byrow = TRUE)
+        colnames(gp) <- ug
+        rownames(gp) <- c("Pattern1", "Pattern2")
+        suppressMessages(MultiOut <- EBSeq::EBMultiTest(.self$count,
+                     NgVector = NULL,
+                     Conditions = g,
+                     AllParti = gp,
+                     sizeFactors = .self$norm.factors * colSums(.self$count),
+                     maxround = 10))
+        PP <- EBSeq::GetMultiPP(MultiOut)
+        df <- matrix(1, ncol = 2, nrow = nrow(.self$count))
+        rownames(df) <- rownames(.self$count)
+        df[rownames(PP$PP), 1] <- PP$PP[, 1]
+        df[rownames(PP$PP), 2] <- PP$PP[, 2]
+
+        private$stat$p.values <<- df[, 1]
+        private$stat$q.values <<- rep(1, length = nrow(.self$count))
+        private$stat$rank <<- rank(private$stat$p.values)
+    }
+})
+
+TCC$methods(.testByNoiseq = function() {
+    g <- .self$group[, 1]
+    ug <- unique(g)
+    if (length(ug) == 2) {
+        x <- .self$getNormalizedData()
+        gl <- data.frame(group = g)
+        nd <- NOISeq::readData(x, gl)
+        suppressMessages(nr <- NOISeq::noiseq(nd, k = 0.5,
+                         norm = "n", replicates = "biological",
+                         factor = "group", conditions = ug))
+        private$stat$p.values <<- nr@results[[1]]$prob
+        private$stat$q.values <<- rep(1, length = nrow(.self$count))
+        private$stat$rank <<- rank(- private$stat$p.values)
+    }
+})
+
+TCC$methods(.testByNbpseq = function() {
+    g <- .self$group[, 1]
+    ug <- unique(g)
+    if (length(ug) == 2) {
+        nbp <- nbp.test(counts = .self$count,
+                        norm.factors = .self$norm.factors,
+                        print.level = 0)
+        private$stat$p.values <<- nbp$p.values
+        private$stat$q.values <<- nbp$q.values
+        private$stat$rank <<- rank(private$stat$p.value)
+    }
+})
+
+
 TCC$methods(.testByWad = function(floor.value) {
     ef <- colSums(count) * norm.factors
     x <- sweep(count, 2, mean(ef) / ef, "*")
@@ -208,6 +278,8 @@ TCC$methods(estimateDE = function (test.method = NULL,
            "bayseq" = .self$.testByBayseq(samplesize = samplesize, 
                                           cl = cl, 
                                           comparison = comparison),
+           "noiseq" = .self$.testByNoiseq(),
+           "ebseq"  = .self$.testByEbseq(),
            "wad" = .self$.testByWad(floor.value = floor.value),
            stop(paste("\nTCC::ERROR: The identifying method of ", 
                       test.method, " doesn't supported.\n"))
