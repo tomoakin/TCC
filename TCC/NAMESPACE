@@ -4,14 +4,12 @@ import(baySeq)
 import(edgeR)
 import(NOISeq)
 import(EBSeq)
+import(samr)
 
-
-# Export TCC class.
 exportClasses(
     "TCC" 
 )
 
-# Export the public methods in TCC package.
 export(
   show,
   names,
@@ -32,6 +30,7 @@ export(
   plotFCPseudocolor,
   plot.TCC,
   WAD,
-  ROKU
+  ROKU,
+  scaling
 )
 
