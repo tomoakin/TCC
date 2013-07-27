@@ -51,7 +51,7 @@
 }
 
 ROKU <- function(data, upper.limit = 0.25, sort = FALSE) {
-   outliers <- t(apply(t(apply(data, 1, scale)), 1,
+   outliers <- t(apply(t(scale(t(data))), 1,
                           function (y, upper.limit = upper.limit) {
                           .outval(y, upper.limit = upper.limit)
                      }, upper.limit))
