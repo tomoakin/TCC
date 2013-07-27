@@ -35,24 +35,8 @@ test_WAD_value <- function() {
     tcc.g <- estimateDE(tcc.g, test.method = "wad")
     tcc.h <- new("TCC", x, h)
     tcc.h <- estimateDE(tcc.h, test.method = "wad")
-    checkEqualsNumeric(kdt, tcc.g$stat$wad)
-    checkEqualsNumeric(kdt, tcc.h$stat$wad)
-}
-
-test_WAD_utils <- function() {
-    g <- c(1, 1, 2, 2)
-    h <- c("A", "A", "B", "B")
-    x <- matrix(rnorm(100, 10, 2), ncol = 4)
-    rownames(x) <- paste("gene", 1:nrow(x), sep = "_")
-    rownames(x) <- paste("gene", 1:nrow(x), sep = "_")
-    
-    tcc <- new("TCC", x, g)
-    tcc <- estimateDE(tcc, test.method = "wad")
-    tcc <- new("TCC", x, h)
-    tcc <- estimateDE(tcc, test.method = "wad")
-
-    wad <- WAD(x, g)
-    wad <- WAD(x, h)
+    checkEqualsNumeric(kdt, tcc.g$stat$testStat)
+    checkEqualsNumeric(kdt, tcc.h$stat$testStat)
 }
 
 

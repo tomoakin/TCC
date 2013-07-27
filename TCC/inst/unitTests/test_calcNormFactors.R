@@ -1,4 +1,4 @@
-test_calcNormFactors_DEGESedgeR_classic <- function() {
+test_calcNormFactors_DEGESedgeR_1 <- function() {
     data(hypoData)
     FDR <- 0.1
     floorPDEG <- 0.05
@@ -33,8 +33,7 @@ test_calcNormFactors_DEGESedgeR_classic <- function() {
     checkEqualsNumeric(nf.2, tcc_DEGES_edgeR$norm.factors)
 }
 
-
-test_calcNormFactors_DEGESDESeq_classic <- function() {
+test_calcNormFactors_DEGESDESeq_1 <- function() {
     data(hypoData)
     FDR <- 0.1
     floorPDEG <- 0.05
@@ -69,16 +68,34 @@ test_calcNormFactors_DEGESDESeq_classic <- function() {
     checkEqualsNumeric(nf.2, tcc_DEGES_DESeq$norm.factors)
 }
 
-
 test_calcNormFactors_DEGESTbT <- function() {
     data(hypoData)
     count <- hypoData
     group <- c(1, 1, 1, 2, 2, 2)
     tcc <- new("TCC", count, group)
-
+    set.seed(1)
     tcc_DEGES_baySeq <- calcNormFactors(tcc, norm.method = "tmm", 
                                         test.method = "bayseq",
                                         iteration = 1, samplesize = 10)
+    d <- DGEList(count = hypoData, group = group)
+    d <- calcNormFactors(d)
+    nf.1 <- d$samples$norm.factors
+    nf.1 <- nf.1 / mean(nf.1)
+    cD <- new("countData", data = hypoData, replicates = group,
+             groups = list(NDE = rep(1, length = length(group)), DE = group),
+             libsizes = colSums(hypoData) * nf.1)
+    set.seed(1)
+    cD <- getPriors.NB(cD, samplesize = 10, estimation = "QL", cl = NULL)
+    cD <- getLikelihoods.NB(cD, pET = "BIC", cl = NULL)
+    is.DEG <- as.logical(rank(-cD@posteriors[, "DE"]) <
+                         (nrow(hypoData) * cD@estProps[2]))
+    d <- DGEList(count = hypoData[!is.DEG, ], group = group)
+    d <- calcNormFactors(d)
+    nf.2 <- d$samples$norm.factors * colSums(hypoData[!is.DEG, ]) /
+                    colSums(hypoData)
+    nf.2 <- nf.2 / mean(nf.2)
+
+    checkEqualsNumeric(nf.2, tcc_DEGES_baySeq$norm.factors)
 }
 
 test_calcNormFactors_DEGESDESeq_classic_single <- function() {
