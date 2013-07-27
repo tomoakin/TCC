@@ -160,7 +160,7 @@ method implemented in the \Rpackage{baySeq} package
 Therefore, please cite the appropriate references 
 when you publish your results.
 
-<<citation>>=
+<<citation, echo = FALSE>>=
 citation("TCC")
 @
 
@@ -1390,6 +1390,7 @@ cD <- getPriors.NB(cD, samplesize = samplesize,
                    estimation = "QL", cl = NULL)
 cD <- getLikelihoods.NB(cD, pET = "BIC", cl = NULL)
 tmp <- topCounts(cD, group = "DE", number = nrow(tcc$count))
+tmp <- tmp[rownames(tcc$count), ]
 p.value <- 1 - tmp$Likelihood
 q.value <- tmp$FDR
 result <- cbind(p.value, q.value)
@@ -1499,6 +1500,7 @@ cD <- getPriors.NB(cD, samplesize = samplesize,
                    estimation = "QL", cl = NULL)
 cD <- getLikelihoods.NB(cD, pET = "BIC", cl = NULL)
 tmp <- topCounts(cD, group = "DE", number = nrow(tcc$count))
+tmp <- tmp[rownames(tcc$count), ]
 p.value <- 1 - tmp$Likelihood
 q.value <- tmp$FDR
 result <- cbind(p.value, q.value)
@@ -2106,10 +2108,10 @@ sessionInfo()
 
 \begin{thebibliography}{99}
 \bibitem{anders} Anders S and Huber W. Differential expression analysis 
-                 for sequence count data. Genome Biol. 11(10): R106, 2010
+                 for sequence count data. Genome Biol. 2010, 11(10): R106
 \bibitem{di} Di Y, Schafer DW, Cumbie JS, and Chang JH. The NBP negative 
              binomial model for assessing differential gene expression from
-             RNA-Seq. Stat Appl Genet Mol Biol. 10: art24, 2011
+             RNA-Seq. Stat Appl Genet Mol Biol. 2011, 10: art24
 \bibitem{dillies} Dillies MA, Rau A, Aubert J, Hennequet-Antier C, 
                   Jeanmougin M, Servant N, Keime C, Marot G, Castel D, 
                   Estelle J, Guernec G, Jagla B, Jouneau L, Lalo\"e D, 
@@ -2120,31 +2122,44 @@ sessionInfo()
                   analysis. Brief Bioinform, in press
 \bibitem{glaus} Glaus P, Honkela A, and Rattray M. Identifying differentially
                 expressed transcripts from RNA-seq data with biological 
-                variation. Bioinformatics 28(13): 1721-1728, 2012
+                variation. Bioinformatics 2012, 28(13): 1721-1728
 \bibitem{hardcastle} Hardcastle TJ and Kelly KA. baySeq: 
                      empirical Bayesian methods for identifying differential
                      expression in sequence count data. BMC Bioinformatics 
-                     11: 422, 2010
+                     2010, 11: 422
 \bibitem{kadota} Kadota K, Nishiyama T, and Shimizu K. A normalization 
                  strategy for comparing tag count data. Algorithms Mol 
-                 Biol. 7:5, 2012
+                 Biol. 2012, 7:5
 \bibitem{robinson} Robinson MD, McCarthy DJ, and Smyth GK. edgeR: 
                    a Bioconductor package for differential expression 
                    analysis of digital gene expression data. Bioinformatics 
-                   26(1): 139-140, 2010
+                   2010, 26(1): 139-140
 \bibitem{robinson2} Robinson MD and Oshlack A. A scaling normalization method
                     for differential expression analysis of RNA-seq data. 
-                    Genome Biol., 11: R25, 2010
+                    Genome Biol. 2010, 11: R25
 \bibitem{robinson3} Robinson MD and Smyth GK. Small-sample estimation of 
                     negative binomial dispersion, with applications to SAGE 
-                    data. Biostatistics 9: 321-332, 2008
+                    data. Biostatistics 2008, 9: 321-332
 \bibitem{sun} Sun J, Nishiyama T, Shimizu K, and Kadota K. TCC: an R package
               for comparing tag count data with robust normalization 
-              strategies. BMC Bioinformatics 14: 219, 2013
+              strategies. BMC Bioinformatics 2013, 14: 219
 \bibitem{mccarthy} McCarthy DJ, Chen Y, Smyth GK. Differential expression 
                    analysis of multifactor RNA-Seq experiments with respect
-                   to biological variation. Nucleic Acids Res. 40(10): 
-                   4288-4297, 2012
+                   to biological variation. Nucleic Acids Res. 2012, 40(10): 
+                   4288-4297
+\bibitem{wad} Kadota K, Nakai Y, Shimizu K: A weighted average difference
+              method for detecting differentially expressed genes from 
+              microarray data. Algorithms Mol Biol. 208, 3: 8
+\bibitem{roku} Kadota K, Ye J, Nakai Y, Terada T, Shimizu K: ROKU: a novel
+               method for identification of tissue-specific genes. 
+               BMC Bioinformatics 2006, 7: 294
+\bibitem{aicentropy} Kadota K, Nishimura SI, Bono H, Nakamura S, 
+                     Hayashizaki Y, Okazaki Y, Takahashi K: 
+                     Detection of genes with tissue-specific expression 
+                     patterns using Akaike's Information Criterion (AIC) 
+                     procedure. Physiol Genomics 2003, 12: 251-259
+\bibitem{ueda} Ueda T. Simple method for the detection of outliers.
+               Japanese J Appl Stat 1996, 25: 17-26
 \end{thebibliography}
 \end{document}
 
