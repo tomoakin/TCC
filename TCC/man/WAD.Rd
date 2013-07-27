@@ -16,10 +16,10 @@ WAD(data, group, log.scale = FALSE, floor.value = 1, sort = FALSE)
     \item{group}{numeric vector indicating the experimental group for each
                  sample (or group).}
     \item{log.scale}{data using in \code{WAD} function should be log scaled.
-                     If \code{TRUE}, data convert to log scale with base of 2.
+                     If \code{TRUE}, the data convert to log scale with base of 2.
                      The default is \code{FALSE}.}
     \item{floor.value}{if log scaled data less than \code{floor.value} are
-                       placed by \code{floor.value}. The default is 1. Ignored
+                       replaced by \code{floor.value}. The default is 1. Ignored
                        if \code{log.scale} is \code{FALSE}.}
     \item{sort}{logical. If \code{TRUE}, the retrieved results are sorted
                 in order of the rank of absolute WAD statistic.
@@ -28,7 +28,7 @@ WAD(data, group, log.scale = FALSE, floor.value = 1, sort = FALSE)
 }
 \details{
 WAD is a method for ranking differentially expressed genes (DEGs)
-for two-group data from a \code{matrix} or \code{data.frame} object.
+for two-group data from a matrix or data frame object.
 The method reports WAD statistic for individual genes.
 The large absolute value of WAD statsitic is a evidence
 of a differential expression.
