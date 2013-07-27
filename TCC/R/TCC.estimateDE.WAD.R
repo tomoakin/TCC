@@ -6,7 +6,9 @@ TCC$methods(.testByWad = function(floor.value) {
               log.scale = TRUE,
               floor.value = floor.value)
     private$stat$rank <<- rank(- abs(s))
-    private$stat$wad <<- s
+    private$stat$testStat <<- s
+    private$stat$p.value <<- rep(NA, length = nrow(.self$count))
+    private$stat$q.value <<- rep(NA, length = nrow(.self$count))
     private$estimatedDEG <<- rep(0, length = nrow(count))
 })
 

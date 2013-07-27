@@ -1,3 +1,21 @@
+TCC$methods(.testStrategy = function () {
+    fc <- .self$group
+    og <- fc[, 1]
+    ug <- unique(og)
+    ts <- -1    
+    if (ncol(fc) > 1) {
+        ##  Multi-factors
+        ts <- 3
+    } else if (ncol(fc) == 1 & length(ug) > 2) {
+        ##  Multi-groups & One-factor
+        ts <- 2
+    } else if (ncol(fc) == 1 & length(ug) == 2) {
+        ##  Two-groups & One-factor
+        ts <- 1
+    }
+    return (ts)
+})
+
 TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL,
                                    PDEG = NULL) {
     deg.flg <- rep(0, length = nrow(count))
@@ -47,13 +65,14 @@ TCC$methods(estimateDE = function (test.method = NULL,
                                         contrast = contrast,  
                                         dispersion = dispersion),
            "deseq" = .self$.testByDeseq(fit1 = fit1, 
-                                        fit0 = fit0, 
-                                        comparison = comparison),
+                                        fit0 = fit0),
            "bayseq" = .self$.testByBayseq(samplesize = samplesize, 
                                           cl = cl, 
                                           comparison = comparison),
            "noiseq" = .self$.testByNoiseq(),
-           "ebseq"  = .self$.testByEbseq(),
+           "ebseq"  = .self$.testByEbseq(samplesize = samplesize),
+           "samseq" = .self$.testBySamseq(samplesize = samplesize),
+           ##"nbpseq"  = .self$.testByNbpseq(),
            "wad" = .self$.testByWad(floor.value = floor.value),
            stop(paste("\nTCC::ERROR: The identifying method of ", 
                       test.method, " doesn't supported.\n"))
@@ -62,14 +81,16 @@ TCC$methods(estimateDE = function (test.method = NULL,
     estimatedDEG <<- .self$.exactTest(FDR = FDR, 
                                       significance.level = significance.level,
                                       PDEG = PDEG)
+    if (!is.null(private$stat$testStat))
+        stat$testStat <<- private$stat$testStat
+    if (!is.null(private$stat$prob))
+        stat$prob <<- private$stat$prob
     if (!is.null(private$stat$likelihood))
         stat$likelihood <<- private$stat$likelihood
     if (!is.null(private$stat$p.value))
         stat$p.value <<- private$stat$p.value
     if (!is.null(private$stat$q.value))
         stat$q.value <<- private$stat$q.value
-    if (!is.null(private$stat$wad)) 
-        stat$wad <<- private$stat$wad
     if (!is.null(private$stat$rank)) 
         stat$rank <<- private$stat$rank
     private$estimated <<- TRUE
