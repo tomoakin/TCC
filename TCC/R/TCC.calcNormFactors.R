@@ -19,68 +19,69 @@ TCC$methods(.normByDeseq = function(x){
     return(sizeFactors(d) / colSums(x))
 })
 
-TCC$methods(.normByTwad = function(x, refColumn = NULL, trimWAD, q, AD) {
-    libsize <- colSums(x)
+#TCC$methods(.normByTwad = function(x, refColumn = NULL, trimWAD, q, AD) {
+#    libsize <- colSums(x)
+#
+#    allzero <- as.logical(rowSums(x) == 0)
+#    if (any(allzero))
+#      x <- x[!allzero, , drop = FALSE]
+#    private$twad.trim <<- gene_id[!allzero]
+#
+#    ## set reference column
+#    y <- sweep(x, 2, 1 / libsize, "*")
+#    f75 <- apply(y, 2, function(x) quantile(x, p = 0.75))
+#    if (is.null(refColumn)) {
+#       refColumn <- which.min(abs(f75 - mean(f75)))
+#       if (length(refColumn) == 0 | refColumn < 1 | refColumn > ncol(x))
+#           refColumn <- 1
+#    }
+#    ## norm factors
+#    nf <- rep(1, length = ncol(x))
+#    for (i in 1:length(nf)) {
+#        nf[i] <- .self$.twadcore(obs = x[, i], ref = x[, refColumn],
+#                           obs.libsize = libsize[i],
+#                           ref.libsize = libsize[refColumn],
+#                           trimWAD = trimWAD,
+#                           q = q, AD = AD)
+#    }
+#    nf <- nf / exp(mean(log(nf)))
+#    return (nf)
+#})
 
-    allzero <- as.logical(rowSums(x) == 0)
-    if (any(allzero))
-      x <- x[!allzero, , drop = FALSE]
-    private$twad.trim <<- gene_id[!allzero]
-
-    ## set reference column
-    y <- sweep(x, 2, 1 / libsize, "*")
-    f75 <- apply(y, 2, function(x) quantile(x, p = 0.75))
-    if (is.null(refColumn)) {
-       refColumn <- which.min(abs(f75 - mean(f75)))
-       if (length(refColumn) == 0 | refColumn < 1 | refColumn > ncol(x))
-           refColumn <- 1
-    }
-    ## norm factors
-    nf <- rep(1, length = ncol(x))
-    for (i in 1:length(nf)) {
-        nf[i] <- .self$.twadcore(obs = x[, i], ref = x[, refColumn],
-                           obs.libsize = libsize[i],
-                           ref.libsize = libsize[refColumn],
-                           trimWAD = trimWAD,
-                           q = q, AD = AD)
-    }
-    nf <- nf / exp(mean(log(nf)))
-    return (nf)
-})
-
-TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, 
-                                 trimWAD, q, AD) {
-    if (all(obs == ref))
-        return (1)
-    ## libsize
-    obs <- as.numeric(obs)
-    ref <- as.numeric(ref)
-    lowcount <- as.logical(obs <= quantile(obs, q) |
-                           ref <= quantile(ref, q))
-    obs <- obs[!lowcount]
-    ref <- ref[!lowcount]
-    private$twad.trim <<- private$twad.trim[!lowcount]
-
-    ## calculate wad
-    wad <- .wad(x = cbind(obs, ref), g = c(1, 2), AD = AD)
-    rnk <- rank(abs(wad))
-    rnk.sort <- rnk[rev(order(rnk))]
-    min.idx <- min(rnk.sort[1:round(length(obs) * trimWAD)])
-
-    ## calculate normfactors
-    v <- (obs.libsize - obs) / (obs.libsize * obs) +
-         (ref.libsize - ref) / (ref.libsize * ref)
-    v <- v[rnk <= min.idx]
-    obs <- obs[rnk <= min.idx]
-    ref <- ref[rnk <= min.idx]
-    trimmed.geneid <- private$twad.trim[rnk <= min.idx]
-    private$twad.trim <<- rep(0, length = nrow(.self$count))
-    names(private$twad.trim) <<- rownames(.self$count)
-    private$twad.trim[trimmed.geneid] <<- 1
-    nf <- 2^(sum(log2((obs / obs.libsize) / (ref / ref.libsize)) / v,
-             na.rm = TRUE) / (sum(1 / v, na.rm = TRUE)))
-    return (nf)
-})
+##TCC$methods(.twadcore = function(obs, ref, obs.libsize, ref.libsize, 
+##                                 trimWAD, q, AD) {
+##    if (all(obs == ref))
+##        return (1)
+##    ## libsize
+##    obs <- as.numeric(obs)
+##    ref <- as.numeric(ref)
+##    lowcount <- as.logical(obs <= quantile(obs, q) |
+##                           ref <= quantile(ref, q))
+##    obs <- obs[!lowcount]
+##    ref <- ref[!lowcount]
+##    private$twad.trim <<- private$twad.trim[!lowcount]
+##
+##    ## calculate wad
+##    wad <- .wad(x = cbind(obs, ref), g = c(1, 2),
+##                log.scale = TRUE, AD = AD)
+##    rnk <- rank(abs(wad))
+##    rnk.sort <- rnk[rev(order(rnk))]
+##    min.idx <- min(rnk.sort[1:round(length(obs) * trimWAD)])
+##
+##    ## calculate normfactors
+##    v <- (obs.libsize - obs) / (obs.libsize * obs) +
+##         (ref.libsize - ref) / (ref.libsize * ref)
+##    v <- v[rnk <= min.idx]
+##    obs <- obs[rnk <= min.idx]
+##    ref <- ref[rnk <= min.idx]
+##    trimmed.geneid <- private$twad.trim[rnk <= min.idx]
+##    private$twad.trim <<- rep(0, length = nrow(.self$count))
+##    names(private$twad.trim) <<- rownames(.self$count)
+##    private$twad.trim[trimmed.geneid] <<- 1
+##    nf <- 2^(sum(log2((obs / obs.libsize) / (ref / ref.libsize)) / v,
+##             na.rm = TRUE) / (sum(1 / v, na.rm = TRUE)))
+##    return (nf)
+##})
 
 TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        test.method = NULL,
@@ -94,8 +95,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        comparison = NULL,
                                        samplesize = 10000,
                                        cl = NULL,
-                                       trimWAD = 0.50, q = 0.25,
-                                       AD = FALSE, floor.value = 1,
+                                       floor.value = 1,
                                        increment = FALSE) {
     if ((increment == FALSE) || 
         (increment == TRUE && private$normalized == FALSE)) {
@@ -140,9 +140,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         norm.factors <<- switch(norm.method,
                                 "tmm" = .self$.normByTmm(count),
                                 "deseq" = .self$.normByDeseq(count),
-                                "twad" = .self$.normByTwad(count, 
-                                                           trimWAD = trimWAD, 
-                                                           q = q, AD = AD), 
+                                ##"twad" = .self$.normByTwad(count, 
+                                ##                           trimWAD = trimWAD, 
+                                ##                           q = q, AD = AD), 
                                 stop(paste("\nTCC::ERROR: The normalization method of ", 
                                 norm.method, " doesn't supported.\n")))
     }
@@ -160,13 +160,13 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                                 contrast = contrast, 
                                                 dispersion = dispersion),
                    "deseq" = .self$.testByDeseq(fit1 = fit1,
-                                                fit0 = fit0, 
-                                                comparison = comparison),
+                                                fit0 = fit0), 
                    "bayseq" = .self$.testByBayseq(samplesize = samplesize,
                                                   cl = cl,
                                                   comparison = comparison),
                    "noiseq" = .self$testByNoiseq(),
-                   "ebseq" = .self$testByEbseq(),
+                   "ebseq" = .self$testByEbseq(samplesize = samplesize),
+                   "samseq" = .self$testBySamseq(samplesize = samplesize),
                    "wad" = .self$.testByWad(floor.value = floor.value),
                    stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
             )
@@ -175,7 +175,8 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             deg.flg.FDR <- .self$.exactTest(FDR = FDR)
             deg.flg.floorPDEG <- rep(0, length = nrow(count))
 
-            if (test.method != "wad") {
+            if (is.null(.self$private$stat$testStat) &&
+                is.null(.self$private$stat$prob)) {
                 deg.flg.floorPDEG <- as.numeric(rank(private$stat$p.value, 
                                  ties.method = "min") <= nrow(count) * floorPDEG)
                 if (is.null(FDR)) {
@@ -193,12 +194,18 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                     DEGES$threshold$PDEG <<- sum(deg.flg) / length(deg.flg)
                     private$DEGES.PrePDEG <<- deg.flg
                 }
+            } else if (is.null(.self$private$stat$testStat) &&
+                       !is.null(.self$private$stat$prob)) {
+                deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$prob), 
+                                 ties.method = "min") <= nrow(count) * floorPDEG)
+                private$DEGES.PrePDEG <<- 0
             } else {
-                ## use WAD
-                deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$wad), 
+                deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$testStat), 
                                  ties.method = "min") <= nrow(count) * floorPDEG)
                 private$DEGES.PrePDEG <<- 0
             }
+
+
             if (sum(deg.flg != 0) < sum(deg.flg.floorPDEG != 0)) {
                 ## use floorPDEG
                 deg.flg <- deg.flg.floorPDEG
@@ -214,10 +221,10 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             ## DEGES strategy STEP 3. (Second normalization)
             norm.factors <<- switch(norm.method,
                                     "tmm" = .self$.normByTmm(count.ndeg),
-                                    "deseq" = .self$.normByDeseq(count.ndeg),
-                                    "twad" = .self$.normByTwad(count.ndeg, 
-                                                               trimWAD = trimWAD,
-                                                               q = q, AD = AD)
+                                    "deseq" = .self$.normByDeseq(count.ndeg)
+                                    ##"twad" = .self$.normByTwad(count.ndeg, 
+                                    ##                           trimWAD = trimWAD,
+                                    ##                           q = q, AD = AD)
             )
             norm.factors <<- norm.factors * colSums(count.ndeg) / colSums(count)
             norm.factors <<- norm.factors / mean(norm.factors)

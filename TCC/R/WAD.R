@@ -1,4 +1,5 @@
-.wad <- function(x, group, log.scale = TRUE, floor.value = 1, AD = FALSE) {
+.wad <- function(x, group, log.scale = TRUE, floor.value = 1) {
+    AD <- FALSE
     if (log.scale) {
         x[x < floor.value] <- floor.value
         x <- log2(x)
