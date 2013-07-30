@@ -40,7 +40,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
                                    design = NULL,
                                    contrast = NULL, coef = NULL,
                                    comparison = NULL,
-                                   samplesize = 10000,
+                                   samplesize = NULL,
                                    floor.value = 1,
                                    cl = NULL) {
     if (is.null(test.method)) {
@@ -49,8 +49,9 @@ TCC$methods(estimateDE = function (test.method = NULL,
         else 
             test.method = "edger"
     }
-    if (test.method == "wad") {
-        PDEG <- 0.1
+    pdeg.method <- c("wad", "noiseq", "samseq")
+    if (length(grep(test.method, pdeg.method)) > 0) {
+        PDEG <- 0.05
     } else if (test.method != "bayseq" && is.null(FDR) && 
                is.null(significance.level)) {
         FDR <- 0.1

@@ -1,4 +1,4 @@
-TCC$methods(.testByEbseq = function(samplesize = NULL) {
+TCC$methods(.testByEbseq = function(...) {
 
 .testByEbseq.1 = function(samplesize = NULL) {
     g <- .self$group[, 1]
@@ -45,7 +45,12 @@ TCC$methods(.testByEbseq = function(samplesize = NULL) {
 }
 
 
-
+al <- list(...)
+if (is.null(al$samplesize)) {
+    samplesize <- 5
+} else {
+    samplesize <- al$samplesize
+}
 ts <- .self$.testStrategy()
 if (ts == 1) {
    .testByEbseq.1(samplesize = samplesize)

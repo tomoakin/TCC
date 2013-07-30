@@ -11,11 +11,7 @@
  log2(G2)) / 2} on the \eqn{x}-axis) using normalized count data.}
 \usage{
 \method{plot}{TCC}(x, FDR = NULL, median.lines = FALSE, floor = 0,
-     groups = NULL, main = NULL,
-     xlab = expression(A == (log[2] * G2 + log[2] * G1) / 2),
-     ylab = expression(M == log[2] * G2 - log[2] * G1),
-     xlim = NULL, ylim = NULL, cex = 0.3, pch = 19, 
-     col = NULL, col.tag = NULL, ...)
+     groups = NULL, col.tag = NULL, ...)
 }
 \arguments{
     \item{x}{\link{TCC-class} object.}
@@ -31,19 +27,6 @@
     \item{groups}{numeric vector consists two elements for specifying what 
                   two groups should be drawn when data contains more than 
                   three groups.}
-    \item{main}{character string indicating the plotting title.}
-    \item{xlab}{character string indicating the \eqn{x}-label title.}
-    \item{ylab}{character string indicating the \eqn{y}-label title.}
-    \item{xlim}{numeric vector (consisting of two elements) specifying
-                the range of the \eqn{x} coordinates.}
-    \item{ylim}{numeric vector (consisting of two elements) specifying
-                the range of the \eqn{y} coordinates.}
-    \item{cex}{numeric scalar specifying the multiplying factor of the
-               size of the plotting points relative to the default (= 0.3).}
-    \item{pch}{numeric scalar specifying a symbol or a single character
-               to be used as the default in plotting points.}
-    \item{col}{vector specifying plotting color. The default is col 
-               = c(1, 4, 2, 5, 6, 7, ...) of color index.}
     \item{col.tag}{numeric vector spacifying the index of \code{col} 
                    for coloring the points of the genes.}
     \item{\dots}{further graphical arguments, see \code{\link{plot.default}}.}

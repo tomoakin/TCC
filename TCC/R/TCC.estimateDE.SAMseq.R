@@ -1,4 +1,4 @@
-TCC$methods(.testBySamseq = function(samplesize = NULL) {
+TCC$methods(.testBySamseq = function(...) {
 
 .testBySAMseq.1 = function(samplesize = NULL) {
     c <- round(.self$getNormalizedData())
@@ -22,6 +22,12 @@ TCC$methods(.testBySamseq = function(samplesize = NULL) {
     private$stat$rank <<- rank(- abs(s$samr.obj$tt))
 }
 
+al <- list(...)
+if (is.null(al$samplesize)) {
+    samplesize <- 10
+} else {
+    samplesize <- al$samplesize
+}
 ts <- .self$.testStrategy()
 if (ts == 1) {
    .testBySAMseq.1(samplesize = samplesize)

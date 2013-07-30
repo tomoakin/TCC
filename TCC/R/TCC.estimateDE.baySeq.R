@@ -1,13 +1,13 @@
-TCC$methods(.testByBayseq = function(samplesize = NULL, cl = NULL,
-                                     comparison = NULL) {
+TCC$methods(.testByBayseq = function(...) {
 
 .testByBayseq.2 = function(samplesize = NULL, cl = NULL) {
-    suppressMessages(d <- new("countData", data = round(.self$count),
+    capture.output(suppressMessages(d <- new("countData",
+             data = round(.self$count),
              replicates = .self$group[, 1],
              groups = list(NDE = rep(1, length = nrow(.self$group)),
                            DE = .self$group[, 1]),
-             libsizes = colSums(.self$count) * .self$norm.factors))
-    suppressMessages(suppressMessages(d <- getPriors.NB(d, 
+             libsizes = colSums(.self$count) * .self$norm.factors)))
+    capture.output(suppressMessages(d <- getPriors.NB(d, 
                                        samplesize = samplesize,
                                        estimation = "QL", cl = cl)))
     capture.output(d <- getLikelihoods.NB(d, pET = "BIC", cl = cl))
@@ -49,6 +49,14 @@ TCC$methods(.testByBayseq = function(samplesize = NULL, cl = NULL,
     private$tbt$estProps <<- d@estProps[2]
 }
 
+al <- list(...)
+if (is.null(al$samplesize)) {
+    samplesize <- 10000
+} else {
+    samplesize <- al$samplesize
+}
+cl <- al$cl
+comparison <- al$comparison
 ts <- .self$.testStrategy()
 if (ts == 1) {
    .testByBayseq.2(samplesize = samplesize, cl = cl)

@@ -11,15 +11,9 @@ The procedure can generally be described as the
 \eqn{STEP1-(STEP2-STEP3)_{n}}{STEP1-(STEP2-STEP3)n} pipeline.
 }
 \usage{
-\S4method{calcNormFactors}{TCC}(tcc, norm.method = NULL, 
-                test.method = NULL, iteration = TRUE, 
-                FDR = NULL, floorPDEG = 0.05, 
-                dispersion = NULL, 
-                design = NULL, contrast = NULL, coef = NULL,
-                fit0 = NULL, fit1 = NULL, comparison = NULL,
-                samplesize = 10000, cl = NULL, 
-                floor.value = 1,
-                increment = FALSE)
+\S4method{calcNormFactors}{TCC}(tcc, norm.method = NULL, test.method = NULL,
+                iteration = TRUE,  FDR = NULL, floorPDEG = 0.05, 
+                increment = FALSE, ...)
 }
 \arguments{
     \item{tcc}{\link{TCC-class} object.}
@@ -37,10 +31,9 @@ The procedure can generally be described as the
                        (i.e., \code{min(table(tcc$group[, 1])) == 1})).}
     \item{test.method}{character specifying method for identifying 
                        differentially expressed genes (DEGs) used in STEP2. 
-                       Possible values are \code{"edger"}, \code{"deseq"}, 
-                       and \code{"bayseq"} for the DEG identification methods
-                       implemented in the edgeR, DESeq, and baySeq, 
-                       respectively. The default is \code{"edger"} when
+                       Possible values are listed on Details section of 
+                       \code{\link{estimateDE}}.
+                       The default is \code{"edger"} when
                        analyzing the count data with multiple replicates
                        (i.e., \code{min(table(tcc$group[, 1])) > 1}) 
                        and \code{"deseq"} when analyzing the count data 
@@ -61,50 +54,14 @@ The procedure can generally be described as the
     \item{floorPDEG}{numeric value (between 0 and 1) specifying the 
                      minimum value to be eliminated as potential DEGs 
                      before performing STEP3.}
-    \item{dispersion}{numeric vector giving the dispersion of all genes for
-                      analyzing the count data without replicates when the 
-                      \code{test.method = "edger"} is specified.
-                      See the \code{\link[edgeR]{exactTest}} function in 
-                      edgeR for details.}
-    \item{design}{numeric matrix giving the design matrix for the linear 
-                  model. See the \code{\link[edgeR]{glmFit}} function in 
-                  edgeR for details.}
-    \item{contrast}{numeric vector specifying a contrast of the linear model
-                    coefficients to be tested equal to zero. See the 
-                    \code{\link[edgeR]{glmLRT}} function in edgeR for 
-                    details.}
-    \item{coef}{integer or character vector indicating which coefficients
-                of the linear model are to be tested equal to zero. See the
-                \code{\link[edgeR]{glmLRT}} function in edgeR for details.}
-    \item{fit0}{a formula for creating reduced model described in DESeq. 
-                The left hand side must be 'count', the right hand side 
-                can involve any column of \code{tcc$group} is used as the 
-                model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
-                function for details.}
-    \item{fit1}{a formula for creating full model described in DESeq.
-                The left hand side must be 'count', the right hand side 
-                can involve any column of \code{tcc$group} is used as the 
-                model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
-                function for details.}
-    \item{comparison}{numeric or character string identifying the columns 
-                      in the \code{tcc$group[, 1]} for analysis. 
-                      See the \code{group} argument in 
-                      \code{\link[baySeq]{topCounts}} for details.}
-    \item{samplesize}{numeric value specifying the sample size for estimating
-                      the prior parameters if \code{test.method = "bayseq"}. 
-                      See the \code{\link[baySeq]{getPriors.NB}} function 
-                      for details.}
     \item{floor.value}{data less than \code{floor.value} are placed by 
                        \code{floor.value}. The default is 1.}
-    \item{cl}{'snow' object for using multi processors if 
-              \code{test.method = "bayseq"}. See the 
-              \code{\link[baySeq]{getPriors.NB}} function for details.}
     \item{increment}{logical value. if \code{increment = TRUE}, the DEGES
                      pipeline will perform again from the current iterated
-                     result. For example, assume that the iDEGES pipeline
-                     (\code{iteration = n}) was performed, the pipeline
-                     performs again if \code{increment = TRUE}. The result
-                     is same to (\code{iteration = n + 1}).}
+                     result.}
+    \item{...}{arguments will pass to \code{\link{estimateDE}} for
+               identification at STEP2. See \code{\link{estimateDE}} to 
+               check the possible arguments.}
 }
 \details{
 The \code{\link{calcNormFactors}} function is the main function
@@ -115,31 +72,24 @@ before the second normalization at STEP3.
 To fully utilize the differentially expressed gene elimination 
 strategy (DEGES), we strongly recommend not to use 
 \code{iteration = 0} or \code{iteration = FALSE}. 
-This function internally calls functions implemented in the edgeR, 
-DESeq, and baySeq packages according to the specified parameters. 
+This function internally calls functions implemented in the other R packages
+according to the specified parameters. 
 
-If the \code{norm.method = "tmm"} is specified, 
-the \code{calcNormFactors} function implemented in edgeR 
-is used for obtaining the TMM normalization factors at both STEP1 and 3. 
-In case of \code{norm.method = "deseq"}, 
-the \code{\link[DESeq]{estimateSizeFactors}} function in DESeq is used. 
-Note that the original \code{\link[DESeq]{estimateSizeFactors}} function 
-returns the size factors (not normalization factors). 
-Our \code{\link{calcNormFactors}} function internally converts 
-the size factors into normalization factors that are comparable 
-to the TMM normalization factors.
+\itemize{
+    \item \code{norm.method = "tmm"} and \code{test.method = "edger"}\cr
+          The \code{\link[edgeR]{calcNormFactors}} function implemented
+          in edgeR is used for obtaining the TMM normalization factors
+          at both STEP1 and 3.
+    \item \code{norm.method = "deseq"}\cr
+          The \code{\link[DESeq]{estimateSizeFactors}} function is used
+          for obetaining the size factors. The size factors internally 
+          convert to normalization factors that are comparable to the 
+          TMM normalization factors.
+}
 
-If the \code{test.method = "edger"} is specified, 
-a series of functions for differential expression 
-analysis (\code{\link[edgeR]{estimateCommonDisp}}, 
-\code{\link[edgeR]{estimateTagwiseDisp}}, 
-\code{\link[edgeR]{exactTest}}, etc.) in edgeR are internally used. 
-Similarly, the \code{test.method = "deseq"} internally use several functions 
-(\code{\link[DESeq]{estimateDispersions}}, 
-\code{\link[DESeq]{nbinomTest}}, etc.)
-in DESeq and the \code{test.method = "bayseq"}
- internally use two functions (\code{\link[baySeq]{getPriors.NB}} 
-and \code{\link[baySeq]{getLikelihoods.NB}}) in baySeq.
+The \code{test.method} can be specified \code{"edger"}, \code{"deseq"}, etc.
+See DEtails section in \code{\link{estimateDE}}
+to check the possible paramaters are used in \code{test.method}.
 }
 \value{
 \link{TCC-class} object containing the normalization factors in the 

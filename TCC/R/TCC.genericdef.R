@@ -47,15 +47,9 @@ setMethod(
 )
 
 plot.TCC <- function(x, FDR = NULL, median.lines = FALSE, floor = 0, 
-                     groups = NULL, main = NULL, 
-                     xlab = expression(A == (log[2] * G2 + log[2] * G1 ) / 2),
-                     ylab = expression(M == log[2] * G2 - log[2] * G1),
-                     xlim = NULL, ylim = NULL, 
-                     cex = 0.3, pch = 19, col = NULL, col.tag = NULL, ...) {
+                     groups = NULL, col.tag = NULL, ...) {
     invisible(x$plotMA(FDR = FDR, median.lines = median.lines, floor = floor,
-                       groups = groups, main = main, xlab = xlab, ylab = ylab,
-                       xlim = xlim, ylim = ylim, cex = cex, pch = pch, 
-                       col = col, col.tag = col.tag, ...))
+                       groups = groups, col.tag = col.tag, ...))
 }
 
 subset.TCC <- function(x, subset, ...){
