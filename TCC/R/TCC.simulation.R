@@ -1,58 +1,46 @@
-## simulateReadCounts
-## sample the simulation data under NB model.
-simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20, 
-                               DEG.assign = c(0.9, 0.1),
-                               DEG.foldchange = NULL, replicates = c(3, 3)) {
-##                               DEG.model=NULL, DEG.foldchange=NULL,
-##                               replicates=c(3, 3)) {
-    ## Prepare and adjust default paramaters.
-    ##if (is.null(DEG.model)) {
-    ##  if (class(DEG.foldchange) == "list") {
-    ##    DEG.model <- "gamma"
-    ##  } else {
-    ##    DEG.model <- "uniform"
-    ##  }
-    ##}
-    ##if (class(DEG.foldchange) == "list") {
-    ##  max.len <- max(length(DEG.assign), length(replicates), 
-    ##length(DEG.foldchange[[1]]))
-    ##} else {
-        max.len <- max(length(DEG.assign), length(replicates), 
-                       length(DEG.foldchange))
-    ##}
-    if (length(replicates) != max.len) {
-        g <- rep(replicates, length = max.len)
-    } else {
-        g <- replicates
+simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
+                               DEG.assign = NULL, DEG.foldchange = NULL,
+                               replicates = NULL, group = NULL) {
+    ## one-factor
+    if (is.null(group)) {
+        if (is.null(replicates))
+            replicates <- c(3, 3)
+        cond.num <- length(replicates)
+        if (is.null(DEG.assign))
+            DEG.assign <- c(0.9, rep(0.1 / (cond.num - 1),
+                                     length = cond.num - 1))
+        if (is.null(DEG.foldchange))
+            DEG.foldchange <- rep(4, length = cond.num)
+        group <- as.data.frame(matrix(1, nrow = sum(replicates), 
+                                         ncol = cond.num))
+        DEG.fc <- as.data.frame(matrix(1, nrow = sum(replicates),
+                                          ncol = cond.num))
+        reps <- rep(1:cond.num, times = replicates)
+        for (i in 1:cond.num) {
+            group[(reps == i), i] <- 2
+            DEG.fc[(reps == i), i] <- DEG.foldchange[i]
+        }
+        DEG.foldchange <- DEG.fc
     }
-    if (length(DEG.assign) != max.len) {
-        def.num <- max.len - length(DEG.assign)
-        DEG.assign <- c(DEG.assign[1:(length(DEG.assign) - 1)], 
-        rep(DEG.assign[length(DEG.assign)] / (def.num + 1), 
-            times = def.num + 1))
-    }
-    if (is.null(DEG.foldchange)) {
-        ##if (DEG.model == "uniform")
-        DEG.foldchange <- rep(4, length = max.len)
-        ##if (DEG.model == "gamma")
-        ##  DEG.foldchange <- lapply(list(1.2, 2.0, 0.5), 
-        ##                                function(l){rep(l, length = max.len)})
-    }
-    ##if (DEG.model == "gamma" && (length(DEG.foldchange) != 3 || 
-    ##class(DEG.foldchange) != "list"))
-    ##  stop ("\nTCC::ERROR: It need a list object contained three vectors when the DEG.mode is specified to gamma.\n")
-
+    ## required arguments
+    if (is.null(group))
+        stop("TCC::ERROR: The 'group' argument is required.")
+    if (is.null(DEG.assign))
+        stop("TCC::ERROR: The 'DEG.assign' argument is required.")
+    if (is.null(DEG.foldchange))
+        stop("TCC::ERROR: The 'DEG.foldchange' argument is required.")
+    ## check correctly
+    if (!is.data.frame(group))
+        stop("TCC::ERROR: The 'group' argument should be data.frame.")
+    if (!is.data.frame(DEG.foldchange))
+        stop("TCC::ERROR: The 'DEG.foldchange' argument should be data.frame.")
+    if ((ncol(group) != ncol(DEG.foldchange)) || (nrow(group) != nrow(DEG.foldchange)))
+        stop("TCC::ERROR: The size of 'group' and 'DEG.foldchange' must equal.")
     if (sum(DEG.assign) > 1)
-        stop("TCC::ERROR: The total value of DEG.assign must less than one.\n") 
-    message("TCC::INFO: Generating simulation data under NB distribution ...")
-    message(paste("TCC::INFO: (genesizes   : ", paste(Ngene, collapse=", "), ")"))
-    message(paste("TCC::INFO: (replicates  : ", paste(g, collapse=", "), ")"))
-    #message(paste("TCC::INFO: (foldhcange distribution : ", DEG.model, ")"))
-    message(paste("TCC::INFO: (PDEG        : ", paste(PDEG * DEG.assign, 
-                  collapse=", "), ")"))
-
-    ## 1) Prepare the super population for sampling.
-    group <- rep(1:length(g), times = g)
+        stop("TCC::ERROR: The total value of DEG.assign must less than one.")
+    if (length(DEG.assign) != ncol(group))
+        stop("TCC::ERROR: The length of 'DEG.assign' should equal to the number of columns of 'group'.")
+    ## prepare mean and dispersion vectors
     arab <- NULL
     rm(arab)
     data(arab)
@@ -68,141 +56,89 @@ simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
     population <- data.frame(mean = mean.ab, disp = dispersion)
     population <- population[population$disp > 0, ]
     resampling.vector <- sample(1:nrow(population), Ngene, replace = TRUE)
-    population <- population[resampling.vector, ]  # super dispersion
-
-    ## 2) Make foldchagen-matrix for sampling count data.
-    fc.matrix <- matrix(1, ncol = sum(g), nrow = Ngene)
-    DEG.index <- rep(0, length = nrow(population)) 
-    reps <- rep(1:length(g), times = g)
-    ##if (DEG.model == "uniform") {
-    DEG.index[1:round(Ngene * PDEG)] <- rep(1:length(DEG.assign), 
-                                  times = round(Ngene * PDEG * DEG.assign))
-    for (i in 1:length(reps)) {
-        fc.matrix[, i] <- rep(1, length = Ngene)
-        fc.matrix[(DEG.index == reps[i]), i] <- DEG.foldchange[reps[i]]
+    population <- population[resampling.vector, ]
+    ## make foldchange-matrix for sampling count data.
+    fc.matrix <- matrix(1, nrow = Ngene, ncol = nrow(group))
+    fc.index <- unique(c(0, cumsum(round(Ngene * PDEG * DEG.assign))))
+    trueDEG <- rep(0, length = Ngene)
+    for (i in 2:length(fc.index)) {
+        fc.matrix[(fc.index[i - 1] + 1):(fc.index[i]), ] <- 
+            fc.matrix[(fc.index[i - 1] + 1):(fc.index[i]), ] * 
+            matrix(rep(DEG.foldchange[, i - 1],
+                       times = fc.index[i] - fc.index[i - 1]),
+                   ncol = ncol(fc.matrix), byrow = TRUE)
+        if (is.null(replicates))
+            trueDEG[(fc.index[i - 1] + 1):(fc.index[i])] <- 1
+        else
+            trueDEG[(fc.index[i - 1] + 1):(fc.index[i])] <- i - 1
     }
-    ##}
-
-    ## 3) Sample simulation data from NB dispersion.
-    count <- matrix(0, ncol = sum(g), nrow = nrow(population))
-    for (i in 1:length(reps)) {
-        count[, i] <- rnbinom(n = Ngene, 
-                              mu = fc.matrix[, i] * population$mean, 
-                              size = 1 / population$disp)
+    ## sampling data
+    count <- matrix(0, ncol = ncol(group), nrow = Ngene)
+    count <- apply(fc.matrix, 2, function(x, pp = population) {
+                      rnbinom(n = Ngene,
+                              mu = x * pp$mean,
+                              size = 1 / pp$disp)
+                   }, population)
+    if (!is.null(replicates)) {
+        colnames(count) <- paste("G", rep(1:length(replicates),
+                                          times = replicates),
+                                 "_rep", sequence(replicates), sep = "")
+    } else {
+        colnames(count) <- paste("rep", 1:nrow(group), sep = "_")
     }
-
-    ## 4) Adjust count data with DEG.gamma paramaters only for "gamma" model.
-    ##if (DEG.model == "gamma") {
-    ##  count.means <- matrix(0, ncol=length(g), nrow=Ngene)
-    ##  for (i in 1:length(g)) {
-    ##    if (is.null(ncol(count[, (reps == i)]))) {
-    ##      count.means[, i] <- count[, (reps == i)]
-    ##    } else {
-    ##      count.means[, i] <- rowMeans(count[, (reps == i)])
-    ##    }
-    ##  }
-    ##  col.idx <- 1
-    ##  for (i in 1:length(g)) {
-    ##    deg.num <- round(Ngene * PDEG * DEG.assign[i])
-    ##    #if (is.null(ncol(count.means[, -i]))) {
-    ##    #  deg.candidate <- (count.means[, i] > count.means[, -i])
-    ##    #} else {
-    ##    #  deg.candidate <- (count.means[, i] > 
-    ##                         apply(count.means[, -i], 1, max))
-    ##    #}
-    ##    deg.candidate <- combn(length(g), 1, function(cmb) {
-    ##        if (cmb != i) {
-    ##          browser()
-    ##          return (as.logical(count.means[, i] > count.means[, cmb]))
-    ##        }
-    ##      })
-    ##    deg.candidate <- as.logical(rowSums(deg.candidate) == 
-    ##                                ncol(deg.candidate))
-    ##
-    ##    DEG.index[(deg.candidate & cumsum(deg.candidate) <= deg.num)] <- i
-    ##    for (j in 1:g[i]) {
-    ##      fc.matrix[(DEG.index == i), col.idx] <- 
-    ##        DEG.foldchange[[1]][i] + rgamma(sum(DEG.index == i), 
-    ##                                        shape = DEG.foldchange[[2]][i], 
-    ##                                        scale = DEG.foldchange[[3]][i])
-    ##      count[(DEG.index == i), col.idx] <- 
-    ##        count[(DEG.index == i), col.idx] * 
-    ##          fc.matrix[(DEG.index == i), col.idx]
-    ##      col.idx <- col.idx + 1
-    ##    }
-    ##    count <- round(count)
-    ##  }
-    ##  # sort by DEG.index .
-    ##  DEG.index[(DEG.index == 0)] <- 100
-    ##  count <- count[order(DEG.index), ]
-    ##  fc.matrix <- fc.matrix[order(DEG.index), ]
-    ##  DEG.index <- DEG.index[order(DEG.index)]
-    ##  DEG.index[(DEG.index == 100)] <- 0
-    ##}
-    colnames(count) <- paste("G", rep(1:length(g), times=g), 
-                             "_rep", sequence(g), sep="")
-    rownames(count) <- paste("gene", 1:nrow(count), sep="_") 
-    ## Adjust column index.
-    ##count.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
-    ##fc.matrix.adjust <- matrix(0, ncol = ncol(count), nrow = nrow(count))
-    ##labels.old <- rep(unique(group), times = replicates)
-    ##labels <- table(group)
-    ##for (i in 1:length(labels)) {
-    ##  count.adjust[, (group == names(labels)[[i]])] <- count[, (labels.old == names(labels)[[i]])]
-    ##  fc.matrix.adjust[, (group == names(labels)[[i]])] <- fc.matrix[, (labels.old == names(labels)[[i]])]
-    ##}
-    tcc <- new("TCC", count, group)
-    tcc$simulation$trueDEG <- DEG.index
+    rownames(count) <- paste("gene", 1:nrow(count), sep = "_")
+    ## TCC constructor
+    tcc <- new("TCC", count,
+               if(is.null(replicates)) group
+               else rep(1:length(replicates), times = replicates))
+    tcc$simulation$trueDEG <- trueDEG
     tcc$simulation$DEG.foldchange <- fc.matrix
     tcc$simulation$PDEG <- PDEG * DEG.assign
-    tcc$private$simulation.rep <- g
+    tcc$simulation$params <- population
+    tcc$private$simulation.rep <- 
+               if(is.null(replicates)) group 
+               else rep(1:length(replicates), times = replicates)
     tcc$private$simulation <- TRUE
     tcc$private$estimated <- FALSE
     return(tcc)
 }
 
 
-## plotFCPseudocolor
-## plot heat map with simulation conditions.
-plotFCPseudocolor <- function(tcc, main = "", 
+plotFCPseudocolor <- function(tcc, main = "",
                               xlab = "samples", ylab = "genes") {
     if (is.null(tcc$simulation$trueDEG) || length(tcc$simulation$trueDEG) == 0)
       message("\nTCC::ERROR: There is no annotations about simulation data.\n")
-    ## make matrix data for plot heatmap of foldchange.
     d <- tcc$simulation$DEG.foldchange
-    ## prepare layout.
     layout(matrix(data = c(1, 2), nrow = 1, ncol = 2), 
            widths = c(4, 1), heights=c(1, 1))
-    ## colorRamp <- rgb(seq(0,1,length = 256), 
-    ##                  seq(0,1,length = 256), seq(1,0,length = 256))
     maxlevel <- round(max(tcc$simulation$DEG.foldchange))
     colorRamp <- rgb(seq(1, 1, length = maxlevel), 
                      seq(1, 0, length = maxlevel), 
                      seq(1, 1, length = maxlevel))
     colorLevels <- seq(1, maxlevel, length = length(colorRamp))
-    par(mar = c(5.5, 4.5, 2.5, 2))
+    par(mar = c(3 + ncol(tcc$group) * 0.6, 4.5, 2.5, 2))
     image(1:ncol(d), 1:nrow(d), t(d[rev(1:nrow(d)), ]), col = colorRamp,
           ylab = ylab, xlab = "", main = main, axes = FALSE, 
           zlim = c(1, max(tcc$simulation$DEG.foldchange)))
-    title(xlab = xlab, line = 4)
-    axis(1, at = 1:ncol(d), labels = paste("rep", 
-                                           sequence(tcc$private$simulation.rep),
-                                           sep=""), 
-         cex.axis=0.7, line=0)
-    axis(1, at = cumsum(tcc$private$simulation.rep) - 
-                        tcc$private$simulation.rep + 1,
-         labels = paste("Group", c(1:length(tcc$private$simulation.rep)),  
-                        sep = " "), 
-         cex.axis = 0.7, line = 1, lty = 0)
-    y.axis <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG), 
-                nrow(tcc$count) - 0.5)
-    y.labels <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG), 
-                  nrow(tcc$count))
-    axis(2, at = nrow(tcc$count) - y.axis, labels = y.labels, 
+    title(xlab = xlab, line = 1 + ncol(tcc$group))
+    for (i in 1:ncol(tcc$group)) {
+        axis(1, at = 1:nrow(tcc$group), labels = tcc$group[, i],
+             cex.axis = 0.7,
+             line = i * ifelse(i == 1, 1, 0.6) - ifelse(i == 1, 1, 0.6) ,
+             tick = as.logical(i == 1),
+             lty = as.numeric(i != 0))
+        mtext(colnames(tcc$group)[i], side = 1, at = -0, 
+              cex = 0.7, adj = 1, 
+              line = i * ifelse(i == 1, 1, 0.6) - ifelse(i == 1, 1, 0.6) + 1)
+    }
+    ycoor <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG),
+           nrow(tcc$count) - 0.5)
+    yaxis <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG),
+           nrow(tcc$count))
+    axis(2, at = nrow(tcc$count) - ycoor, labels = yaxis, 
          cex.axis = 0.7, las = 1)
     box()
-    ## colorbar.
-    par(mar = c(5.5, 2.5, 2.5, 2))
+    par(mar = c(2 + ncol(tcc$group) * 0.6, 2.5, 2.5, 2))
     image(1, colorLevels, matrix(colorLevels, 
                                  ncol = length(colorLevels), nrow = 1),
           col = colorRamp, xlab = "", ylab = "", xaxt = "n")
