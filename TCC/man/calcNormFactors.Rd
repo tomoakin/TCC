@@ -17,7 +17,7 @@ The procedure can generally be described as the
 }
 \arguments{
     \item{tcc}{\link{TCC-class} object.}
-    \item{norm.method}{character specifying normalization method that
+    \item{norm.method}{character specifying a normalization method that
                        is used in both the STEP1 and STEP3. Possible 
                        values are \code{"tmm"} for the TMM normalization 
                        method implemented in the edgeR package,
@@ -29,7 +29,7 @@ The procedure can generally be described as the
                        and \code{"deseq"} when analyzing the count data
                        without replicates 
                        (i.e., \code{min(table(tcc$group[, 1])) == 1})).}
-    \item{test.method}{character specifying method for identifying 
+    \item{test.method}{character specifying a method for identifying 
                        differentially expressed genes (DEGs) used in STEP2. 
                        Possible values are listed on Details section of 
                        \code{\link{estimateDE}}.
@@ -54,14 +54,12 @@ The procedure can generally be described as the
     \item{floorPDEG}{numeric value (between 0 and 1) specifying the 
                      minimum value to be eliminated as potential DEGs 
                      before performing STEP3.}
-    \item{floor.value}{data less than \code{floor.value} are placed by 
-                       \code{floor.value}. The default is 1.}
     \item{increment}{logical value. if \code{increment = TRUE}, the DEGES
                      pipeline will perform again from the current iterated
                      result.}
-    \item{...}{arguments will pass to \code{\link{estimateDE}} for
-               identification at STEP2. See \code{\link{estimateDE}} to 
-               check the possible arguments.}
+    \item{...}{arguments to be passed to \code{\link{estimateDE}} function for
+               identifying DEGs at STEP2. The possible arguments are listed on
+               the Arguments section of \code{\link{estimateDE}}.}
 }
 \details{
 The \code{\link{calcNormFactors}} function is the main function
@@ -73,7 +71,7 @@ To fully utilize the differentially expressed gene elimination
 strategy (DEGES), we strongly recommend not to use 
 \code{iteration = 0} or \code{iteration = FALSE}. 
 This function internally calls functions implemented in the other R packages
-according to the specified parameters. 
+according to the specified value. 
 
 \itemize{
     \item \code{norm.method = "tmm"} and \code{test.method = "edger"}\cr
@@ -81,15 +79,15 @@ according to the specified parameters.
           in edgeR is used for obtaining the TMM normalization factors
           at both STEP1 and 3.
     \item \code{norm.method = "deseq"}\cr
-          The \code{\link[DESeq]{estimateSizeFactors}} function is used
-          for obetaining the size factors. The size factors internally 
-          convert to normalization factors that are comparable to the 
-          TMM normalization factors.
+          The \code{\link[DESeq]{estimateSizeFactors}} function 
+          implemented in DESeq is used for obetaining the size factors.
+          The size factors are internally converted to normalization factors
+          that are comparable to the TMM normalization factors.
 }
 
 The \code{test.method} can be specified \code{"edger"}, \code{"deseq"}, etc.
-See DEtails section in \code{\link{estimateDE}}
-to check the possible paramaters are used in \code{test.method}.
+The possible values are listed on the Details section of 
+\code{\link{estimateDE}}.
 }
 \value{
 \link{TCC-class} object containing the normalization factors in the 

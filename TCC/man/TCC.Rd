@@ -46,19 +46,4 @@ show(tcc)
 \seealso{
 \link{TCC-class}
 }
-\references{
-Robinson MD, McCarthy DJ, Smyth GK: edgeR: a Bioconductor package for
- differential expression analysis of digital gene expression data.
- Bioinformatics 2010, 26(1): 139-140
-
-Hardcastle TJ, Kelly KA: baySeq: empirical Bayesian methods for
- identifying differential expression in sequence count data.
- BMC Bioinformatics 2010, 11: 422
-
-Anders S, Huber W: Differential expression analysis for sequence count data.
- Genome Biol. 2010, 11: R106
-
-Kadota K, Nishiyama T, Shimizu K: A normalization strategy for comparing
- tag count data. Algorithms Mol Biol. 2012, 7:5
-}
 \keyword{packages}

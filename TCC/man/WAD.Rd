@@ -2,25 +2,25 @@
 \alias{WAD}
 \title{Calculate WAD statistic for individual genes}
 \description{
-This function caclulates WAD statistic from a matrix or
-data.frame object.
+This function calculates WAD statistic from a matrix or
+data frame object.
 }
 \usage{
 WAD(data, group, log.scale = FALSE, floor.value = 1, sort = FALSE)
 }
 \arguments{
-    \item{data}{numeric matrix containing count data or 
+    \item{data}{numeric matrix or data frame containing count data or 
                 microarray data. Each row indicates the gene or probeset ID,
                 each column indicates the sample or group, and each cell
                 indicates the data of the gene in the sample.}
     \item{group}{numeric vector indicating the experimental group for each
-                 sample (or group).}
+                 sample (or library).}
     \item{log.scale}{data using in \code{WAD} function should be log scaled.
                      If \code{TRUE}, the data convert to log scale with base of 2.
                      The default is \code{FALSE}.}
-    \item{floor.value}{if log scaled data less than \code{floor.value} are
-                       replaced by \code{floor.value}. The default is 1. Ignored
-                       if \code{log.scale} is \code{FALSE}.}
+    \item{floor.value}{if data less than \code{floor.value} are
+                       replaced by \code{floor.value}. The default is 1.
+                       Ignored if \code{log.scale} is \code{FALSE}.}
     \item{sort}{logical. If \code{TRUE}, the retrieved results are sorted
                 in order of the rank of absolute WAD statistic.
                 If \code{FALSE}, the results are retrieved by the original
@@ -45,12 +45,12 @@ A numeric vector of WAD statistic for individual genes
 \references{
 Kadota K, Nakai Y, Shimizu K: A weighted average difference method for
 detecting differentially expressed genes from microarray data.
-Algorithms Mol Biol. 2008, 3:8.
+Algorithms Mol Biol. 2008, 3: 8.
 }
 \examples{
-data(hypoData)
-data <- log2(hypoData)
-group <- c(1, 1, 1, 2, 2, 2)
+data(nakai)
+group <- c(1, 1, 1, 1, 2, 2, 2, 2)
 
-wad <- WAD(data, group, sort = TRUE)
+wad <- WAD(nakai, group,
+           log.scale = TRUE, floor.value = 1, sort = TRUE)
 }

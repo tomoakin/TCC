@@ -19,10 +19,18 @@ simulateReadCounts(Ngene = 10000, PDEG = 0.20, DEG.assign = NULL,
                       of DEGs up-regulated in individual groups to be 
                       compared. The number of element should be the same 
                       as the number of groups compared.}
-    \item{DEG.foldchange}{numeric vector. The \eqn{i}-th element specifying
+    \item{DEG.foldchange}{numeric vector or data frame.
+                          If \code{replicates} is not \code{NULL},
+                          \code{DEG.foldchange} should be a vector,
+                          and the \eqn{i}-th element specifying
                           the degree of FC for Group \eqn{i}. The default 
                           is \code{DEG.foldchange = c(4, 4)}, indicating that
-                          the levels of DE are four-fold in both groups.}
+                          the levels of DE are four-fold in both groups.\cr
+                          If \code{group} is not \code{NULL}, 
+                          the \code{DEG.foldchange} should be given by a
+                          data frame. The values in data frame indicate the
+                          foldchang of the conditions described 
+                          in \code{group}.}
     \item{replicates}{numeric vector indicating the numbers of (biological)
                       replicates for individual groups compared. Ignored if
                       \code{group} is not \code{NULL}.}
@@ -55,7 +63,7 @@ A \link{TCC-class} object containing following fields:
                         will be populated after the execution of the 
                         \code{\link{estimateDE}} function.}
     \item{simulation}{list containing four fields: \code{trueDEG},
-                      \code{DEG.foldchange}, \code{PDEG}, and \code{group}. 
+                      \code{DEG.foldchange}, \code{PDEG}, and \code{params}. 
                       The \code{trueDEG} field (numeric vector) stores 
                       information about DEGs: 0 for non-DEG, 1 for 
                       DEG up-regulated in Group 1, 2 for DEG up-regulated 
@@ -90,5 +98,23 @@ dim(tcc$count)
 head(tcc$count)
 str(tcc$simulation)
 head(tcc$simulation$trueDEG)
+
+
+# Generating a simulation data for two factors (condition and time) 
+# with biological replicates. the first 3000 genes are DEGs, 
+# where the 70% and 30% are influenced by first and second factor.
+# the first factor let DEGs are only up-regulated in condition "B"
+# with 4-foldchang. the second factor let DEGs are down-regulated
+# according to time course of condition "A", but up-regulated in 
+# condition "B".
+group <- data.frame(CONDITION = c("A", "A", "A", "A", "B", "B", "B", "B"),
+                    TIME = c("2h", "2h", "10h", "10h", "2h", "2h", "10h", "10h"))
+DEG.foldchange <- data.frame(CONDITION = c(1, 1, 1, 1, 4, 4, 4, 4),
+                    TIME = c(4, 4, 1, 1, 1, 1, 4, 4))
+tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.3,
+                          DEG.assign = c(0.7, 0.3),
+                          DEG.foldchange = DEG.foldchange,
+                          group = group)
+tcc
 }
 \keyword{methods}

@@ -2,10 +2,8 @@
 \alias{estimateDE}
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \usage{
-estimateDE(tcc, test.method = NULL, FDR = NULL, 
-           dispersion = NULL, fit0 = NULL, fit1 = NULL, design = NULL,
-           contrast = NULL, coef = NULL, comparison = NULL,
-           samplesize = NULL, floor.value = 1, cl = NULL)
+estimateDE(tcc, test.method, FDR,  dispersion, fit0, fit1, design,
+           contrast, coef, comparison, samplesize, floor.value = 1, cl)
 }
 \description{
 This function calculates \eqn{p}-values (or the related statistics) for
@@ -16,8 +14,8 @@ implemented in other R packages.
 }
 \arguments{
     \item{tcc}{\link{TCC-class} object.}
-    \item{test.method}{character string specifying method for identifying
-                       DEGs. Possible values are listed on Details section.
+    \item{test.method}{character string specifying a method for identifying
+                       DEGs. Possible values are listed on the Details section.
                        The default is \code{"edger"} when analyzing the 
                        count data with replicates (i.e.,
                        \code{min(table(tcc$group[, 1])) > 1}) and 
@@ -42,12 +40,12 @@ implemented in other R packages.
                 of the linear model are to be tested equal to zero. See the
                 \code{\link[edgeR]{glmLRT}} function in edgeR for details.}
     \item{fit0}{a formula for creating reduced model described in DESeq. 
-                The left hand side must be 'count', the right hand side 
+                The left hand side must be \code{count}, the right hand side 
                 can involve any column of \code{tcc$group} is used as the 
                 model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
                 function for details.}
     \item{fit1}{a formula for creating full model described in DESeq.
-                The left hand side must be 'count', the right hand side 
+                The left hand side must be \code{count}, the right hand side
                 can involve any column of \code{tcc$group} is used as the 
                 model frame. See the \code{\link[DESeq]{fitNbinomGLMs}} 
                 function for details.}
@@ -62,10 +60,11 @@ implemented in other R packages.
                       specifying the ietration of EM algorithm in EBSeq 
                       (default is 5).
                       If \code{test.method = "samseq"}, the value is used for
-                      specifying the number of permulations in samr 
+                      specifying the number of permutations in samr(SAMseq) 
                       (default is 10).}
     \item{floor.value}{data less than \code{floor.value} are placed by 
-                       \code{floor.value}. The defaul is 1.}
+                       \code{floor.value} when identifying DEGs by
+                       \code{test.method = "wad"}. The defaul is 1.}
     \item{cl}{'snow' object for using multi processors if 
               \code{test.method = "bayseq"}. See the 
               \code{\link[baySeq]{getPriors.NB}} function for details.}
@@ -76,11 +75,11 @@ implemented in other R packages.
 \code{estimateDE} constructs a statistical model for differential 
 expression (DE) analysis with the calculated normalization factors. 
 This function internally calls individual functions implemented in the 
-other R packages according to the specified parameters.
+other R packages according to the specified value.
 
 \itemize{
     \item \code{test.method = "edger"}\cr
-          \code{\link[edgeR]{estimateCommonDsip}},
+          \code{\link[edgeR]{estimateCommonDisp}},
           \code{\link[edgeR]{estimateTagwiseDisp}},
           \code{\link[edgeR]{exactTest}} in edgeR are 
           internally called for two-group comparison. \cr
@@ -107,15 +106,15 @@ other R packages according to the specified parameters.
           stored in the corersponding field
           (i.e., \code{tcc$stat$p.value}).
     \item \code{test.method = "noiseq"}\cr
-          \code{\link[NOISeq]{noiseq}} in NOISeq are called with
+          \code{\link[NOISeq]{noiseq}} in NOISeq is called with
           the paramaters of \code{k = 0.5} and
           \code{repliactes = "biological"}.
-          Since NOISeq outputs probability of DEGs, the probability are
-          stored in \code{tcc$stat$prob} field, 
-          and \code{tcc$stat$p.value} be \code{NULL}.
+          Since NOISeq outputs the probability of differential expression,
+          the probability are stored in \code{tcc$stat$prob} field, 
+          and \code{tcc$stat$p.value} is \code{NULL}.
     \item \code{test.method = "ebseq"}\cr
           \code{\link[EBSeq]{EBTest}} in EBSeq is called 
-          for two-group comparison. \cr
+          for two-group comparison.
           \code{\link[EBSeq]{EBMultiTest}} is called for 
           multi-group comparison.
           Since EBSeq only outputs \eqn{q}-value,
@@ -126,7 +125,7 @@ other R packages according to the specified parameters.
           instead of \eqn{p}-values, 
           the \code{tcc$stat$p.value} be \code{NULL}.
           The test statistics are stored in \code{tcc$stat$testStat} filed.
-    \item \code{test.method = "wad"}
+    \item \code{test.method = "wad"}\cr
           The \code{\link{WAD}} function is used.
           Since \code{\link[samr]{SAMseq}} function outputs test statistics
           instead of \eqn{p}-values, 
@@ -141,12 +140,16 @@ A \code{\link{TCC-class}} object containing following fields:
                         based on the \eqn{p}-values using the 
                         \code{p.adjust} function
                         with default parameter settings.}
-     \item{stat$rank}{gene rank in order of the \eqn{p}-values.}
-     \item{estimatedDEG}{numeric vector consisting of 0 or 1
-                         depending on whether each gene is classified 
-                         as non-DEG or DEG. The threshold for classifying
-                         DEGs or non-DEGs is preliminarily given as the 
-                         \code{FDR} argument.}
+    \item{stat$testStat}{numeric vector of test statistics if exists.}
+    \item{stat$prob}{numeric vector of probability of differential experssion
+                     if exists.}
+    \item{stat$rank}{gene rank in order of the \eqn{p}-values,
+                     test statistics or probability of differential expression.}
+    \item{estimatedDEG}{numeric vector consisting of 0 or 1
+                        depending on whether each gene is classified 
+                        as non-DEG or DEG. The threshold for classifying
+                        DEGs or non-DEGs is preliminarily given as the 
+                        \code{FDR} argument.}
 }
 \examples{
 # Analyzing a simulation data for comparing two groups
