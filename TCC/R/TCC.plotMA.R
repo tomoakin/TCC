@@ -4,7 +4,8 @@ TCC$methods(plotMA = function (FDR = NULL,
                        median.lines = FALSE,
                        floor = 0,
                        groups = NULL,
-                       col.tag = NULL, ...) {
+                       col.tag = NULL,
+                       normalize = TRUE, ...) {
     arglist <- list(...)
     if (is.null(arglist$xlab))
         arglist$xlab <- expression(A == (log[2] * G2 + log[2] * G1 ) / 2)
@@ -13,7 +14,7 @@ TCC$methods(plotMA = function (FDR = NULL,
     if (is.null(arglist$cex))
         arglist$cex <- 0.3
     if (is.null(arglist$pch))
-        arglist$pch <- NULL
+        arglist$pch <- 20
     if (is.null(arglist$main))
         arglist$main <- "MA plot"
 
@@ -32,8 +33,10 @@ TCC$methods(plotMA = function (FDR = NULL,
             arglist$col <- rep(1, length = length(gru))
         }
     }
-  
-    count.normed <- .self$getNormalizedData()  
+    if (normalize)
+      count.normed <- .self$getNormalizedData()  
+    else
+      count.normed <- .self$count
     mean.i <- rowMeans(as.matrix(count.normed[, gro == groups[1]]))
     mean.j <- rowMeans(as.matrix(count.normed[, gro == groups[2]]))
     norm.i <- mean(norm.factors[gro == groups[1]])

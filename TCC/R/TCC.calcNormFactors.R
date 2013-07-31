@@ -200,11 +200,11 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                        !is.null(.self$private$stat$prob)) {
                 deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$prob), 
                                  ties.method = "min") <= nrow(count) * floorPDEG)
-                private$DEGES.PrePDEG <<- 0
+                private$DEGES.PrePDEG <<- rep(0, length = nrow(count))
             } else {
                 deg.flg.floorPDEG <- as.numeric(rank(- abs(private$stat$testStat), 
                                  ties.method = "min") <= nrow(count) * floorPDEG)
-                private$DEGES.PrePDEG <<- 0
+                private$DEGES.PrePDEG <<- rep(0, length = nrow(count))
             }
 
 
@@ -232,7 +232,8 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             norm.factors <<- norm.factors / mean(norm.factors)
             DEGES$iteration <<- DEGES$iteration + 1
         }
-        DEGES$potentialDEG <<- deg.flg
+        DEGES$potDEG <<- deg.flg
+        DEGES$prePotDEG <<- .self$private$DEGES.PrePDEG
     }
     message("TCC::INFO: Done.")
     DEGES$execution.time <<- proc.time() - ex.time

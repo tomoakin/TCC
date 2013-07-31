@@ -26,6 +26,7 @@
 }
 
 WAD <- function(data, group, log.scale = FALSE, floor.value = 1, sort = FALSE) {
+    data <- as.matrix(data)
     wad <- .wad(x = data, group = group,
                 log.scale = log.scale,
                 floor.value = floor.value)
