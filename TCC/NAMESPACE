@@ -30,7 +30,6 @@ export(
   plotFCPseudocolor,
   plot.TCC,
   WAD,
-  ROKU,
-  scaling
+  ROKU
 )
 
