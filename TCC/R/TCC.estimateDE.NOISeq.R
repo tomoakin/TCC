@@ -1,4 +1,4 @@
-TCC$methods(.testByNoiseq = function() {
+TCC$methods(.testByNoiseq = function(...) {
 
 .testByNoiseq.1 = function() {
     x <- .self$getNormalizedData()

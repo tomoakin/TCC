@@ -65,11 +65,20 @@ TCC <- setRefClass(
                     .self$norm.factors <<- norm.factors
                 }
                 names(norm.factors) <<- norm.factors
-                ## Set private argument.
-                private$estimated <<- FALSE
-                private$simulation <<- FALSE
-                private$normalized <<- FALSE
             }
+            ## Set private argument.
+            private$estimated <<- FALSE
+            private$simulation <<- FALSE
+            private$normalized <<- FALSE
+            private$available$norm.method <<- c("tmm", "deseq")
+            private$available$test.method <<- data.frame(
+                    twoGroup = c(T, T, T, T, T, T),
+                    pairedTwoGroup = c(F, F, F, F, F, F),
+                    multiGroup = c(T, T, T, T, T, T),
+                    multiFactor = c(T, T, T, T, T, T),
+                    row.names = c("bayseq", "deseq", "ebseq",
+                                  "edger", "noiseq", "samseq")
+                   )
         }
     )
 )

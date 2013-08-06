@@ -1,5 +1,4 @@
-
-TCC$methods(.testByWad = function(floor.value) {
+TCC$methods(.testByWad = function(floor.value, ...) {
     ef <- colSums(count) * norm.factors
     x <- sweep(count, 2, mean(ef) / ef, "*")
     s <- .wad(x = x, group = .self$group[, 1],

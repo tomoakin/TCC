@@ -1,5 +1,5 @@
 TCC$methods(.testByEdger = function(design = NULL, coef = NULL, 
-                                    contrast = NULL, dispersion = NULL) {
+                                    contrast = NULL, dispersion = NULL, ...) {
 
 .testByEdger.1 = function(dispersion = NULL) {
     suppressMessages(d <- edgeR::DGEList(counts = round(count), 

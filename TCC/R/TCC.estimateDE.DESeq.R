@@ -1,4 +1,4 @@
-TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL) {
+TCC$methods(.testByDeseq = function(fit1 = NULL, fit0 = NULL, ...) {
 
 .testByDeseq.1 = function() {
     suppressMessages(d <- newCountDataSet(countData = round(.self$count), 
