@@ -322,4 +322,28 @@ test_estimateDE_edgeR_3 <- function() {
     checkTrue(auc > 0.80)
 }
 
+test_estimateDE_crossvalidate <- function() {
+    tcc <- new("TCC")
+    av <- tcc$private$available$test.method
+    ty <- colnames(av)
+    pk <- rownames(av)
+    for (i in 1:length(ty)) {
+        for (j in 1:length(pk)) {
+            if (av[j, i]) {
+                if (ty[i] == "UnRepTwoGroup")
+                    x <- simulateReadCounts(Ngene = 1000, replicates = c(1, 1))
+                else if (ty[i] == "TwoGroup" || ty[i] == "PairedTwoGroup")
+                    x <- simulateReadCounts(Ngene = 1000, replicates = c(3, 3))
+                else 
+                    x <- simulateReadCounts(Ngene = 1000, replicates = c(3, 3, 3))
+                x <- calcNormFactors(x, norm.method = "tmm",
+                                     test.method = pk[j], samplesize = 10)
+                x <- estimateDE(x, test.method = pk[j], samplesize = 10)
+            }
+        }
+    }
+}
+
+
+
 
