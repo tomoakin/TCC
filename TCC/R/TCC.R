@@ -72,10 +72,11 @@ TCC <- setRefClass(
             private$normalized <<- FALSE
             private$available$norm.method <<- c("tmm", "deseq")
             private$available$test.method <<- data.frame(
-                    twoGroup = c(T, T, T, T, T, T),
-                    pairedTwoGroup = c(F, F, F, F, F, F),
-                    multiGroup = c(T, T, T, T, T, T),
-                    multiFactor = c(T, T, T, T, T, T),
+                    UnRepTwoGroup  = c(T, T, F, F, T, F),
+                    TwoGroup       = c(T, T, T, T, T, T),
+                    PairedTwoGroup = c(T, F, F, F, F, F),
+                    MultiGroup     = c(T, T, F, T, F, T),
+                    MultiFactor    = c(T, T, F, T, F, F),
                     row.names = c("bayseq", "deseq", "ebseq",
                                   "edger", "noiseq", "samseq")
                    )

@@ -166,9 +166,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                    "bayseq" = .self$.testByBayseq(...),#samplesize = samplesize,
                                                   #cl = cl,
                                                   #comparison = comparison),
-                   "noiseq" = .self$testByNoiseq(...),
-                   "ebseq" = .self$testByEbseq(...),
-                   "samseq" = .self$testBySamseq(...),
+                   "noiseq" = .self$.testByNoiseq(...),
+                   "ebseq" = .self$.testByEbseq(...),
+                   "samseq" = .self$.testBySamseq(...),
                    "wad" = .self$.testByWad(...),
                    stop(paste("\nTCC::ERROR: The identifying method of ", test.method, " doesn't supported.\n"))
             )

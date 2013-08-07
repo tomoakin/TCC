@@ -1,5 +1,30 @@
 TCC$methods(.testByBayseq = function(...) {
 
+.testByBayseq.1p = function(samplesize = NULL, cl = NULL) {
+    ug <- unique(.self$group[, 1])
+    capture.output(suppressMessages(d <- new("pairedData",
+             data = round(.self$count[, (.self$group[, 1] == ug[1])]),
+             pairData = round(.self$count[, (.self$group[, 1] == ug[2])]),
+             replicates = .self$group[, 1],
+             groups = list(NDE = rep(1, length = nrow(.self$group)),
+                           DE = .self$group[, 1]),
+             libsizes = colSums(.self$count) * .self$norm.factors)))
+    capture.output(suppressMessages(d <- getPriors.BB(d, 
+                                       samplesize = samplesize,
+                                       cl = cl)))
+    capture.output(d <- getLikelihoods.BB(d, pET = "BIC", nummProps = 0.5,
+                                          cl = cl))
+    stat.bayseq <- topCounts(d, group = "DE", number = nrow(.self$count))
+    stat.bayseq <- stat.bayseq[rownames(.self$count), ]
+    private$stat$rank <<- rank(- d@posteriors[, "DE"])
+    private$stat$likelihood <<- stat.bayseq$Likelihood
+    private$stat$p.value <<- 1 - stat.bayseq$Likelihood
+    private$stat$q.value <<- stat.bayseq$FDR
+    private$estimatedDEG <<- as.numeric(.self$private$stat$rank < 
+                                  (nrow(.self$count) * d@estProps[2]))
+    private$tbt$estProps <<- d@estProps[2]
+}
+
 .testByBayseq.2 = function(samplesize = NULL, cl = NULL) {
     capture.output(suppressMessages(d <- new("countData",
              data = round(.self$count),
@@ -50,21 +75,23 @@ TCC$methods(.testByBayseq = function(...) {
 }
 
 al <- list(...)
-if (is.null(al$samplesize)) {
-    samplesize <- 10000
-} else {
-    samplesize <- al$samplesize
-}
+if (is.null(al$samplesize)) samplesize <- 10000
+else samplesize <- al$samplesize
+if (is.null(al$paired)) al$paired <- FALSE
+
 cl <- al$cl
 comparison <- al$comparison
 ts <- .self$.testStrategy()
 if (ts == 1) {
-   .testByBayseq.2(samplesize = samplesize, cl = cl)
+    if (al$paired)
+        .testByBayseq.1p(samplesize = samplesize, cl = cl)
+    else
+        .testByBayseq.2(samplesize = samplesize, cl = cl)
 } else if (ts == 2) {
-   .testByBayseq.2(samplesize = samplesize, cl = cl)
+    .testByBayseq.2(samplesize = samplesize, cl = cl)
 } else if (ts == 3) {
-   .testByBayseq.3(samplesize = samplesize, cl = cl,
-                         comparison = comparison)
+    .testByBayseq.3(samplesize = samplesize, cl = cl,
+                    comparison = comparison)
 } else {
    stop()
 }
