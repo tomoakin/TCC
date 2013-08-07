@@ -2,7 +2,8 @@
 \alias{estimateDE}
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \usage{
-estimateDE(tcc, test.method, FDR,  dispersion, fit0, fit1, design,
+estimateDE(tcc, test.method, FDR, paired = FALSE, 
+           dispersion, fit0, fit1, design,
            contrast, coef, comparison, samplesize, floor.value = 1, cl)
 }
 \description{
@@ -24,6 +25,7 @@ implemented in other R packages.
                        (i.e., \code{min(table(tcc$group[, 1])) == 1)}).}
     \item{FDR}{numeric value (between 0 and 1) specifying the threshold
                for determining DEGs.}
+    \item{paired}{logical. If \code{TRUE}, the data is treated as paired data.}
     \item{dispersion}{numeric vector giving the dispersion of all genes 
                       for analyzing the count data without replicates when 
                       the \code{test.method = "edger"} is specified.
@@ -79,28 +81,43 @@ other R packages according to the specified value.
 
 \itemize{
     \item \code{test.method = "edger"}\cr
+          There are two approaches (i.e., exact test and GLM) to identify DEGs
+          in edgeR. The two approches are implmented in TCC. As a default,
+          the exact test approach is used for two-group data, 
+          and GLM approach is used for multi-group or multi-factor data. 
+          However, if \code{design} and the one of \code{coef} or 
+          \code{contrast} are given, the GLM approach will be used whethever 
+          two-group or multi-group data.\cr
+          If the exact test approach is used, 
           \code{\link[edgeR]{estimateCommonDisp}},
-          \code{\link[edgeR]{estimateTagwiseDisp}},
-          \code{\link[edgeR]{exactTest}} in edgeR are 
-          internally called for two-group comparison. \cr
+          \code{\link[edgeR]{estimateTagwiseDisp}}, and
+          \code{\link[edgeR]{exactTest}} are internally called.\cr
+          If the GLM approach is used,
           \code{\link[edgeR]{estimateGLMCommonDisp}},
           \code{\link[edgeR]{estimateGLMTrendedDisp}},
           \code{\link[edgeR]{estimateGLMTagwiseDisp}},
-          \code{\link[edgeR]{glmFit}},
+          \code{\link[edgeR]{glmFit}}, and
           \code{\link[edgeR]{glmLRT}}
-          are for multi-group and multi-factor comparison.
+          are internally called.
     \item \code{test.method = "deseq"}\cr
+          DESeq supports two approach (i.e. exact test and 
+          GLM approach) for identifying DEGs. As a default,
+          the exact test is used for two-group data,
+          and GLM approach is used for multi-group or multi-factor data.
+          However, if \code{fit0} and \code{fit1} are given, the GLM approach
+          will be used whethever two-group or multi-group data.\cr
+          If the exact test is used, 
+          \code{\link[DESeq]{estimateDispersions}} and
+          \code{\link[DESeq]{nbinomTest}} are internally called.\cr
+          If the GLM approach is used, 
           \code{\link[DESeq]{estimateDispersions}},
-          \code{\link[DESeq]{nbinomTest}} in DESeq are
-          internally called for two-group comparison. \cr
-          \code{\link[DESeq]{estimateDispersions}},
-          \code{\link[DESeq]{fitNbinomGLMs}},
+          \code{\link[DESeq]{fitNbinomGLMs}}, and
           \code{\link[DESeq]{nbinomGLMTest}}
-          are for multi-group and multi-factor comparison.
+          are internally called.
     \item \code{test.method = "bayseq"}\cr
           \code{\link[baySeq]{getPriors.NB}},
           \code{\link[baySeq]{getLikelihoods.NB}}) in baySeq
-          are called.
+          are called for identifying DEGs.
           Since baySeq outputs posterior likelihoods instead of
           \eqn{p}-values, the \eqn{(1 - likelihood)} values are
           stored in the corersponding field
@@ -108,29 +125,33 @@ other R packages according to the specified value.
     \item \code{test.method = "noiseq"}\cr
           \code{\link[NOISeq]{noiseq}} in NOISeq is called with
           the paramaters of \code{k = 0.5} and
-          \code{repliactes = "biological"}.
+          \code{repliactes = "biological"} for identifying DEGs.
           Since NOISeq outputs the probability of differential expression,
           the probability are stored in \code{tcc$stat$prob} field, 
-          and \code{tcc$stat$p.value} is \code{NULL}.
+          and \code{tcc$stat$p.value} and \code{tcc$stat$q.value}
+          are  \code{NULL}.
     \item \code{test.method = "ebseq"}\cr
-          \code{\link[EBSeq]{EBTest}} in EBSeq is called 
-          for two-group comparison.
-          \code{\link[EBSeq]{EBMultiTest}} is called for 
-          multi-group comparison.
+          \code{\link[EBSeq]{EBTest}} in EBSeq is called for two-group data.
+          \code{\link[EBSeq]{EBMultiTest}} is called for multi-group data.
           Since EBSeq only outputs \eqn{q}-value,
           the all values in \code{tcc$stat$p.value} are \code{NA}.
     \item \code{test.method = "samseq"}\cr
-          \code{\link[samr]{SAMseq}} in samr is called.
-          Since \code{\link[samr]{SAMseq}} function outputs test statistics
+          \code{\link[samr]{SAMseq}} in samr (CRAN package) is called for
+          identifying DEGs.
+          Since \code{\link[samr]{SAMseq}} outputs test statistics
           instead of \eqn{p}-values, 
-          the \code{tcc$stat$p.value} be \code{NULL}.
-          The test statistics are stored in \code{tcc$stat$testStat} filed.
+          the \code{tcc$stat$p.value} and \code{tcc$stat$q.value}
+          are  \code{NULL}.
+          Alternatively, the test statistics are stored in 
+          \code{tcc$stat$testStat} field.
     \item \code{test.method = "wad"}\cr
-          The \code{\link{WAD}} function is used.
-          Since \code{\link[samr]{SAMseq}} function outputs test statistics
+          The \code{\link{WAD}} implemented in TCC is used for identifying
+          DEGs. Since \code{\link{WAD}} outputs test statistics
           instead of \eqn{p}-values, 
-          the \code{tcc$stat$p.value} be \code{NULL}.
-          The test statistics are stored in \code{tcc$stat$testStat} filed.
+          the \code{tcc$stat$p.value} and \code{tcc$stat$q.value} 
+          are \code{NULL}.
+          Alternatively, the test statistics are stored in
+          \code{tcc$stat$testStat} field.
 }
 }
 \value{

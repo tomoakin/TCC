@@ -18,7 +18,7 @@ WAD(data, group, log.scale = FALSE, floor.value = 1, sort = FALSE)
     \item{log.scale}{data using in \code{WAD} function should be log scaled.
                      If \code{TRUE}, the data convert to log scale with base of 2.
                      The default is \code{FALSE}.}
-    \item{floor.value}{if data less than \code{floor.value} are
+    \item{floor.value}{if values of data less than \code{floor.value} are
                        replaced by \code{floor.value}. The default is 1.
                        Ignored if \code{log.scale} is \code{FALSE}.}
     \item{sort}{logical. If \code{TRUE}, the retrieved results are sorted
@@ -34,10 +34,10 @@ The large absolute value of WAD statsitic is a evidence
 of a differential expression.
 
 \code{WAD} function calculates the WAD statistic from a \code{matrix} 
-or \code{data.frame} obeject. The data used in \code{WAD} function
-need convert to log scale with base of 2.
-The \code{WAD} function provides \code{log.scale} argument for 
-automatically log scaling.
+or \code{data.frame} obeject. 
+As a default, the data passed to \code{WAD} function need convert to 
+log scale with base of 2. However, \code{WAD} function can automatically 
+scale the passed data if \code{log.scale} is specified to \code{TRUE}.
 }
 \value{
 A numeric vector of WAD statistic for individual genes
