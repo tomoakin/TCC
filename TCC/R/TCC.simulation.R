@@ -40,6 +40,17 @@ simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
         stop("TCC::ERROR: The total value of DEG.assign must less than one.")
     if (length(DEG.assign) != ncol(group))
         stop("TCC::ERROR: The length of 'DEG.assign' should equal to the number of columns of 'group'.")
+    ## message
+    message("TCC::INFO: Generating simulation data under NB distribution ...")
+    message(paste("TCC::INFO: (genesizes   : ", Ngene, ")"))
+    if (!is.null(replicates)) {
+        message(paste("TCC::INFO: (replicates  : ", paste(replicates, collapse=", "), ")"))
+        message(paste("TCC::INFO: (PDEG        : ", paste(PDEG * DEG.assign, collapse=", "), ")"))
+    } else {
+        message(paste("TCC::INFO: (samples     : ", nrow(group), ")"))
+        message(paste("TCC::INFO: (factors     : ", ncol(group), ")"))
+        message(paste("TCC::INFO: (PDEG        : ", PDEG, ")"))
+    }
     ## prepare mean and dispersion vectors
     arab <- NULL
     rm(arab)
