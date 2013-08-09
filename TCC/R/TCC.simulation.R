@@ -34,12 +34,12 @@ simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
         stop("TCC::ERROR: The 'group' argument should be data.frame.")
     if (!is.data.frame(DEG.foldchange))
         stop("TCC::ERROR: The 'DEG.foldchange' argument should be data.frame.")
-    if ((ncol(group) != ncol(DEG.foldchange)) || (nrow(group) != nrow(DEG.foldchange)))
-        stop("TCC::ERROR: The size of 'group' and 'DEG.foldchange' must equal.")
+    if (nrow(group) != nrow(DEG.foldchange))
+        stop("TCC::ERROR: The number of rows of 'group' and 'DEG.foldchange' must equal.")
     if (sum(DEG.assign) > 1)
         stop("TCC::ERROR: The total value of DEG.assign must less than one.")
-    if (length(DEG.assign) != ncol(group))
-        stop("TCC::ERROR: The length of 'DEG.assign' should equal to the number of columns of 'group'.")
+    if (length(DEG.assign) != ncol(DEG.foldchange))
+        stop("TCC::ERROR: The length of 'DEG.assign' should equal to the number of columns of 'DEG.foldchange'.")
     ## message
     message("TCC::INFO: Generating simulation data under NB distribution ...")
     message(paste("TCC::INFO: (genesizes   : ", Ngene, ")"))
@@ -123,14 +123,21 @@ plotFCPseudocolor <- function(tcc, main = "",
     layout(matrix(data = c(1, 2), nrow = 1, ncol = 2), 
            widths = c(4, 1), heights=c(1, 1))
     maxlevel <- round(max(tcc$simulation$DEG.foldchange))
-    colorRamp <- rgb(seq(1, 1, length = maxlevel), 
-                     seq(1, 0, length = maxlevel), 
-                     seq(1, 1, length = maxlevel))
+    minlevel <- min(tcc$simulation$DEG.foldchange)
+    d[d >= 1] <- d[d >= 1] + ceiling(1 / minlevel) - 2
+    d[d < 1] <- d[d < 1] * ceiling(1 / minlevel) - 1
+    colorRampMax <- rgb(seq(1, 1, length = maxlevel), 
+                        seq(1, 0, length = maxlevel), 
+                        seq(1, 1, length = maxlevel))
+    colorRampMin <- rev(rgb(seq(1, 0, length = ceiling(1 / minlevel)),
+                            seq(1, 0, length = ceiling(1 / minlevel)),
+                            seq(1, 1, length = ceiling(1 / minlevel)))[-1])
+    colorRamp <- c(colorRampMin, colorRampMax)
     colorLevels <- seq(1, maxlevel, length = length(colorRamp))
     par(mar = c(3 + ncol(tcc$group) * 0.6, 4.5, 2.5, 2))
-    image(1:ncol(d), 1:nrow(d), t(d[rev(1:nrow(d)), ]), col = colorRamp,
-          ylab = ylab, xlab = "", main = main, axes = FALSE, 
-          zlim = c(1, max(tcc$simulation$DEG.foldchange)))
+    image(1:ncol(d), 1:nrow(d), t(d[rev(1:nrow(d)), ]),
+          col = colorRamp, ylab = ylab, xlab = "", main = main, axes = FALSE, 
+          zlim = range(d))
     title(xlab = xlab, line = 1 + ncol(tcc$group))
     for (i in 1:ncol(tcc$group)) {
         axis(1, at = 1:nrow(tcc$group), labels = tcc$group[, i],
@@ -150,9 +157,13 @@ plotFCPseudocolor <- function(tcc, main = "",
          cex.axis = 0.7, las = 1)
     box()
     par(mar = c(2 + ncol(tcc$group) * 0.6, 2.5, 2.5, 2))
-    image(1, colorLevels, matrix(colorLevels, 
-                                 ncol = length(colorLevels), nrow = 1),
-          col = colorRamp, xlab = "", ylab = "", xaxt = "n")
+    image(1, 1:length(colorRamp),
+          matrix(colorLevels, ncol = length(colorRamp), nrow = 1),
+          col = colorRamp, xlab = "", ylab = "",
+          xaxt = "n", yaxt="n")
+    axis(2, at = 1:length(colorRamp), cex.axis = 0.7,
+         labels =  c(rev(paste("1/", 1:ceiling(1/minlevel), sep = "")[-1]),
+                     sprintf("%d", 1:maxlevel)))
     box()
     layout(1)
 }
