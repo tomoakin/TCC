@@ -26,7 +26,7 @@ in addition to the documents included in the software package.
 Development versions
 --------------------
 
-The development version is now on the github repository at https://github.com/tomoakin/TCC
+The development version is now on the github repository at https://github.com/kohijiri/huaying.asagao
 
 Releases
 --------
@@ -53,4 +53,4 @@ A copy of GPL-2 is accompanied in this directory in a file named COPYING.
 Authors
 -------
 
-Sun Jianqiang, Tomoaki Nishiyama, Kentaro Shimizu, and Koji Kadota
+Jianqiang Sun, Tomoaki Nishiyama, Kentaro Shimizu, and Koji Kadota
