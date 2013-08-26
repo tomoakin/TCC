@@ -31,11 +31,11 @@
     return(replace(y, !is.na(y), f))
 }
 
-.entval <- function(y) {
+.entvalmod <- function(y) {
     y <- y[!is.na(y)]
     l <- length(y)
     y <- y[y != 0]
-    if (sum(y) <= 0 || sd(y) == 0) {
+    if (sum(y) <= 0 || is.na(sd(y)) || sd(y) == 0) {
         return (log2(l))
     } else {
         y.m <- median(y)
@@ -46,34 +46,60 @@
         y.b <- sum(y.w * y) / sum(y.w)
         p <- abs(y - y.b)
         p <- p / sum(p)
-        return( - sum(p * log2(p)))
+        e <- - sum(p * log2(p))
+        if (is.na(e))
+            e <- 0
+        return (e)
+    }
+}
+
+.entval <- function(y) {
+    y <- y[!is.na(y)]
+    l <- length(y)
+    y <- y[y != 0]
+    if (sum(y) <= 0 || is.na(sd(y)) || sd(y) == 0) {
+        return (log2(l))
+    } else {
+        p <- y / sum(y)
+        e <- - sum(p * log2(p))
+        if (is.na(e))
+            e <- 0
+        return (e)
     }
 }
 
 ROKU <- function(data, upper.limit = 0.25, sort = FALSE) {
-   data <- as.matrix(data)
-   outliers <- t(apply(t(scale(t(data))), 1,
+    rs <- NULL
+    if (is.vector(data)) {
+        data <- t(matrix(data))
+    } else {
+        data <- as.matrix(data)
+    }
+    rs$outliers <- t(apply(t(scale(t(data))), 1,
                           function (y, upper.limit = upper.limit) {
                           .outval(y, upper.limit = upper.limit)
                      }, upper.limit))
-   entropy.score <- apply(data, 1, .entval)
-   rank <- rank(entropy.score)
-   if (!is.null(colnames(data))) {
-       l <- c(colnames(data), "entropy.score", "rank")
-   } else {
-       l <- c(paste("tissue", 1:ncol(data), sep = "_"), "entropy.score", "rank")
-   }
-   if (!is.null(rownames(data))) {
-       r <- rownames(data)
-   } else {
-       r <- 1:nrow(data)
-   }
-   df <- cbind(outliers, entropy.score, rank)
-   colnames(df) <- l
-   rownames(df) <- r
-   if (sort) {
-       df <- df[order(rank), ]
-   }
-   return (df)
+    rs$H <- apply(data, 1, .entval)
+    rs$modH <- apply(data, 1, .entvalmod)
+    rs$rank <- rank(rs$modH)
+    if (!is.null(colnames(data))) {
+        l <- colnames(data)
+    } else {
+        l <- paste("tissue", 1:ncol(data), sep = "_")
+    }
+    if (!is.null(rownames(data))) {
+        r <- rownames(data)
+    } else {
+        r <- 1:nrow(data)
+    }
+    colnames(rs$outliers) <- l
+    rownames(rs$outliers) <- r
+    if (sort) {
+        rs$outliers <- rs$outliers[order(rs$rank), ]
+        rs$H <- rs$H[order(rs$rank), ]
+        rs$modH <- rs$modH[order(rs$rank), ]
+        rs$rank <- rs$rank[order(rs$rank), ]
+    }
+    return (rs)
 }
 

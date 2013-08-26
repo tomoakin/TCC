@@ -46,7 +46,9 @@ TCC$methods(estimateDE = function (test.method = NULL,
                                    floor.value = 1,
                                    cl = NULL) {
     if (is.null(test.method)) {
-        if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
+        if (paired)
+            test.method = "bayseq"
+        else if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
             test.method = "deseq"
         else 
             test.method = "edger"

@@ -114,6 +114,14 @@ simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
     return(tcc)
 }
 
+calcAUCValue <- function(tcc) {
+    if (is.null(tcc$simulation$trueDE) || length(tcc$simulation$trueDE) == 0)
+        stop("\nTCC::ERROR: No true positive annotations about differential expression genes.\n ")
+    if (is.null(tcc$stat$rank) || length(tcc$stat$rank) == 0)
+        stop("\nTCC::ERROR: There are no rank informations in TCC tcc. It need run TCC.estimateDE().\n")
+      return(AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDE != 0), 
+                             data = - tcc$stat$rank)))
+}
 
 plotFCPseudocolor <- function(tcc, main = "",
                               xlab = "samples", ylab = "genes") {
@@ -122,58 +130,67 @@ plotFCPseudocolor <- function(tcc, main = "",
     d <- tcc$simulation$DEG.foldchange
     layout(matrix(data = c(1, 2), nrow = 1, ncol = 2), 
            widths = c(4, 1), heights=c(1, 1))
-    maxlevel <- round(max(tcc$simulation$DEG.foldchange))
-    minlevel <- min(tcc$simulation$DEG.foldchange)
-    d[d >= 1] <- d[d >= 1] + ceiling(1 / minlevel) - 2
-    d[d < 1] <- d[d < 1] * ceiling(1 / minlevel) - 1
-    colorRampMax <- rgb(seq(1, 1, length = maxlevel), 
-                        seq(1, 0, length = maxlevel), 
-                        seq(1, 1, length = maxlevel))
-    colorRampMin <- rev(rgb(seq(1, 0, length = ceiling(1 / minlevel)),
-                            seq(1, 0, length = ceiling(1 / minlevel)),
-                            seq(1, 1, length = ceiling(1 / minlevel)))[-1])
-    colorRamp <- c(colorRampMin, colorRampMax)
-    colorLevels <- seq(1, maxlevel, length = length(colorRamp))
+    maxlevel <- ceiling(max(tcc$simulation$DEG.foldchange))
+    minlevel <- ceiling(1 / min(tcc$simulation$DEG.foldchange))
+    d[d < 1] <- - 1 / d[d < 1] + 2
+    if (min(d) >= 1) {
+        colorRamp <- c(
+            "#FFFFFFFF",
+            cm.colors((maxlevel - 1) * 32)[((maxlevel - 1) 
+                                       * 16 + 1):((maxlevel - 1) * 32)]
+        )
+    } else if (max(d) <= 1) {
+        colorRamp <- c(
+            cm.colors((minlevel - 1) * 32)[1:((minlevel - 1) * 16 - 1)],
+            "#FFFFFFFF"
+        )
+    } else {
+        colorRamp <- c(
+            cm.colors((minlevel - 1) * 32)[1:((minlevel - 1) * 16 - 1)],
+            "#FFFFFFFF",
+            cm.colors((maxlevel - 1) * 32)[((maxlevel - 1) 
+                                       * 16 + 1):((maxlevel - 1) * 32)]
+        )
+    }
+
+    colorLevels <- seq(2 - minlevel, maxlevel, length = length(colorRamp))
     par(mar = c(3 + ncol(tcc$group) * 0.6, 4.5, 2.5, 2))
     image(1:ncol(d), 1:nrow(d), t(d[rev(1:nrow(d)), ]),
           col = colorRamp, ylab = ylab, xlab = "", main = main, axes = FALSE, 
-          zlim = range(d))
+          zlim = range(2 - minlevel, maxlevel))
     title(xlab = xlab, line = 1 + ncol(tcc$group))
     for (i in 1:ncol(tcc$group)) {
         axis(1, at = 1:nrow(tcc$group), labels = tcc$group[, i],
-             cex.axis = 0.7,
+             cex.axis = 0.8,
              line = i * ifelse(i == 1, 1, 0.6) - ifelse(i == 1, 1, 0.6) ,
              tick = as.logical(i == 1),
              lty = as.numeric(i != 0))
         mtext(colnames(tcc$group)[i], side = 1, at = -0, 
-              cex = 0.7, adj = 1, 
+              cex = 0.8, adj = 1, 
               line = i * ifelse(i == 1, 1, 0.6) - ifelse(i == 1, 1, 0.6) + 1)
     }
     ycoor <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG),
            nrow(tcc$count) - 0.5)
-    yaxis <- c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG),
-           nrow(tcc$count))
+    yaxis <- sprintf("%d", c(1, cumsum(nrow(tcc$count) * tcc$simulation$PDEG),
+           nrow(tcc$count)))
     axis(2, at = nrow(tcc$count) - ycoor, labels = yaxis, 
          cex.axis = 0.7, las = 1)
     box()
-    par(mar = c(2 + ncol(tcc$group) * 0.6, 2.5, 2.5, 2))
-    image(1, 1:length(colorRamp),
+    par(mar = c(3 + ncol(tcc$group) * 0.6, 2.5, 2.5, 2))
+    image(1, 0:length(colorRamp),
           matrix(colorLevels, ncol = length(colorRamp), nrow = 1),
           col = colorRamp, xlab = "", ylab = "",
           xaxt = "n", yaxt="n")
-    axis(2, at = 1:length(colorRamp), cex.axis = 0.7,
-         labels =  c(rev(paste("1/", 1:ceiling(1/minlevel), sep = "")[-1]),
-                     sprintf("%d", 1:maxlevel)))
+    lb <- seq(from = - minlevel + 2, to = maxlevel, by = 1)
+    lc <- lb
+    lc[lc < 1] <- 1 / (2 - lc[lc < 1])
+    axis(2,
+         at = seq(from = 0, to = length(colorRamp),
+                  by = length(colorRamp) / (length(lb) - 1)),
+         labels =  c(rev(paste("1/", 1:minlevel, sep = "")[-1]),
+                     sprintf("%d", 1:maxlevel)),
+         cex.axis = 0.8)
     box()
     layout(1)
-}
-
-calcAUCValue <- function(tcc) {
-    if (is.null(tcc$simulation$trueDE) || length(tcc$simulation$trueDE) == 0)
-        stop("\nTCC::ERROR: No true positive annotations about differential expression genes.\n ")
-    if (is.null(tcc$stat$rank) || length(tcc$stat$rank) == 0)
-        stop("\nTCC::ERROR: There are no rank informations in TCC tcc. It need run TCC.estimateDE().\n")
-      return(AUC(rocdemo.sca(truth = as.numeric(tcc$simulation$trueDE != 0), 
-                             data = - tcc$stat$rank)))
 }
 

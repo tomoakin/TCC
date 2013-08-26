@@ -90,15 +90,7 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
                                        floorPDEG = 0.05,
                                        increment = FALSE,
                                        ...) {
-                                       #dispersion = NULL,
-                                       #design = NULL,
-                                       #contrast = NULL, coef = NULL,
-                                       #fit0 = NULL, fit1 = NULL,
-                                       #comparison = NULL,
-                                       #samplesize = NULL,
-                                       #cl = NULL,
-                                       #floor.value = 1,
-                                       #increment = FALSE) {
+    argus <- list(...)
     if ((increment == FALSE) || 
         (increment == TRUE && private$normalized == FALSE)) {
         DEGES$iteration <<- 0
@@ -111,7 +103,9 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
             norm.method = "edger"
     }
     if (is.null(test.method)) {
-        if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
+        if (!is.null(argus$paired) && argus$paired)
+            test.method = "bayseq"
+        else if ((ncol(group) == 1) && (min(as.numeric(table(group))) == 1)) 
             test.method = "deseq"
         else 
             test.method = "edger"
@@ -129,12 +123,12 @@ TCC$methods(calcNormFactors = function(norm.method = NULL,
         message(paste("TCC::INFO: (iDEGES pipeline :", norm.method, 
                       "- [", test.method, "-", norm.method, "] X", 
                       iteration + DEGES$iteration, ")"))
-        DEGES$protocol <<- paste(norm.method, "- [", test.method, 
+        DEGES$pipeline <<- paste(norm.method, "- [", test.method, 
                                  "-", norm.method, "] X", 
                                  iteration + DEGES$iteration)
     } else {
         message(paste("TCC::INFO: Calculating normalization factors using", norm.method, "..."))
-        DEGES$protocol <<- norm.method
+        DEGES$pipeline <<- norm.method
     }
     ## DEGES strategy STEP 1. (First normalization)
     if ((increment == FALSE) || 

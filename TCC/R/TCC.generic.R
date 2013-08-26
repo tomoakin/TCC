@@ -62,7 +62,7 @@ show.TCC <- function(object) {
     if (object$private$normalized) {
         cat("DEGES:\n")
         cat(paste("   Pipeline       : ", 
-                  object$DEGES$protocol, 
+                  object$DEGES$pipeline, 
                   "\n", sep = ""))
         cat(paste("   Execution time : ", 
                    sprintf("%.1f", object$DEGES$execution.time[3]),
@@ -73,7 +73,8 @@ show.TCC <- function(object) {
                    sprintf("%.2f", object$DEGES$threshold$input),
                    "\n",
                    "   Potential PDEG : ", 
-                   sprintf("%.2f", object$DEGES$threshold$PDEG), 
+                   sprintf("%.2f", sum(object$DEGES$potDEG != 0) /
+                                   length(object$DEGES$potDEG)), 
                    "\n\n", sep = ""))
     }
     ## Esimated results.
@@ -84,4 +85,54 @@ show.TCC <- function(object) {
         cat("\n")
     }
 }
+
+
+
+setGeneric(
+    name = "calcNormFactors",
+    def = function(tcc, ...) tcc)
+setMethod(
+    f = "calcNormFactors",
+    signature(tcc = "DGEList"),
+    definition = function(tcc, ...) {
+        return(edgeR::calcNormFactors(tcc, ...))
+    }
+)
+
+setMethod(
+    f = "names",
+    signature(x = "TCC"),
+    definition = function(x) {
+        return (c("count", "gene_id", "group", "norm.factors", 
+                  "DEGES", "stat", "estimatedDEG", "simulation"))
+    }
+)
+
+setMethod(
+    f = "length",
+    signature(x = "TCC"),
+    definition = function(x) {
+        return (nrow(x$count))
+    }
+)
+
+setMethod(
+    f = "[",
+    signature(x = "TCC"),
+    definition = function(x, i){
+        return(subset(x,i))
+    }
+)
+
+setMethod(
+    f = "subset",
+    signature(x = "TCC"),
+    definition = subset.TCC
+)
+
+setMethod(
+    f = "show",
+    signature(object = "TCC"),
+    definition = show.TCC
+)
 
