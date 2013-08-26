@@ -1,5 +1,5 @@
 ## Kadota original code
-kadota_2006_bmc_bioinformatics <- function(x){ 
+kadota_2006_bmc_bioinformatics <- function(x) {
     x <- x[(!is.na(x))]
     x_length <- length(x)
     x <- x[(x != 0)]
@@ -22,7 +22,7 @@ kadota_2006_bmc_bioinformatics <- function(x){
     }
 }
 ## Kadota original code
-kadota_2003_physiol_genomics_0.25 <- function(x){ 
+kadota_2003_physiol_genomics_0.25 <- function(x) {
     if(length(x) == sum(is.na(x))){
         x <- c(rep(0, length(x)))
     } else if(length(x) == sum(is.nan(x))){
@@ -38,15 +38,16 @@ kadota_2003_physiol_genomics_0.25 <- function(x){
     maice_i <- 0
     maice_j <- 0
     flag <- c(rep(0, length = n_plus_s))
-    if (sd(x) != 0) {
+    if (!is.na(sd(x)) | sd(x) != 0) {
         for (i in 1:(n_plus_s * 0.25 + 1)) {
             for (j in 1:(n_plus_s - i)) {
                 if ((i + j - 2) <= n_plus_s * 0.25) {
                     n <- (n_plus_s + 1 - j) - i + 1
                     s <- n_plus_s - n
-                    set_sd <- sd(x.sort[i:(n_plus_s + 1 - j)]) * sqrt((n - 1) / n)
+                    set_sd <- sd(x.sort[i:(n_plus_s + 1 - j)]) *
+                                  sqrt((n - 1) / n)
                     Ut <- n * log(set_sd) + sqrt(2) * s * lfactorial(n) / n
-                    if(maice_Ut > Ut){
+                    if (maice_Ut > Ut) {
                         maice_Ut <- Ut
                         maice_i <- i
                         maice_j <- j
@@ -70,18 +71,26 @@ kadota_2003_physiol_genomics_0.25 <- function(x){
 
 
 test_ROKU <- function() {
-    x <- matrix(rnorm(100), ncol = 10)
+    x <- abs(matrix(rnorm(100), ncol = 10))
     y <- t(apply(x, 1, scale))
 
     roku.tcc <- ROKU(x)
     roku.kdt <- t(apply(y, 1, kadota_2003_physiol_genomics_0.25))
-    checkEqualsNumeric(roku.kdt, roku.tcc[, 1:ncol(x)])
+    checkEqualsNumeric(roku.kdt, roku.tcc$outlier)
     
     outl.kdt <- apply(x, 1, kadota_2006_bmc_bioinformatics)
-    checkEqualsNumeric(outl.kdt, roku.tcc[, ncol(x) + 1])
+    checkEqualsNumeric(outl.kdt, roku.tcc$modH)
 
     colnames(x) <- paste("t", 1:ncol(x))
     rownames(x) <- paste("g", 1:nrow(x))
     roku.tccnm <- ROKU(x)
-    checkEqualsNumeric(roku.tcc, roku.tccnm)
+    checkEqualsNumeric(roku.tcc$outlier, roku.tccnm$outlier)
+    checkEqualsNumeric(roku.tcc$H, roku.tccnm$H)
+    checkEqualsNumeric(roku.tcc$modH, roku.tccnm$modH)
+}
+
+test_ROKU_vector <- function() {
+    x <- abs(matrix(rnorm(100), ncol = 10))
+    roku.all <- ROKU(x)
+    roku.one <- ROKU(x[1, ])
 }
