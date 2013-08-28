@@ -1,6 +1,12 @@
 TCC$methods(.testByBayseq = function(...) {
 
-.testByBayseq.1p = function(samplesize = NULL, cl = NULL) {
+.testByBayseq.1p = function(samplesize = NULL, cl = NULL, comparison = NULL) {
+    if (is.null(comparison)) {
+        comparison <- 1
+    } else if(!is.numeric(comparison)) {
+        cn <- colnames(.self$group)
+        comparison <- (1:length(cn))[comparison == cn]
+    }
     ug <- unique(.self$group[, 1])
     cd <- nrow(.self$group) / 2
     el <- colSums(.self$count) * .self$norm.factors
@@ -15,13 +21,15 @@ TCC$methods(.testByBayseq = function(...) {
     )))
     capture.output(suppressMessages(d <- getPriors.BB(d, 
              samplesize = samplesize, cl = cl)))
-    capture.output(d <- getLikelihoods.BB(d, pET = "BIC", nullProps = 0.5,
-                                          cl = cl))
-    stat.bayseq <- topCounts(d, group = "DE", number = nrow(.self$count))
+    capture.output(suppressMessages(d <- getLikelihoods.BB(d,
+             pET = "BIC", nullProps = 0.5, cl = cl)))
+    stat.bayseq <- topCounts(d, group = comparison, number = nrow(.self$count))
     stat.bayseq <- stat.bayseq[rownames(.self$count), ]
-    private$stat$rank <<- rank(- d@posteriors[, "DE"])
+    ## private$stat$rank <<- rank(- d@posteriors[, "DE"])
     private$stat$likelihood <<- stat.bayseq$Likelihood
     private$stat$p.value <<- 1 - stat.bayseq$Likelihood
+    private$stat$p.value[is.na(private$stat$p.value)] <<- 1
+    private$stat$rank <<- rank(private$stat$p.value)
     private$stat$q.value <<- stat.bayseq$FDR
     private$estimatedDEG <<- as.numeric(.self$private$stat$rank < 
                                   (nrow(.self$count) * d@estProps[2]))
@@ -36,9 +44,9 @@ TCC$methods(.testByBayseq = function(...) {
                            DE = .self$group[, 1]),
              libsizes = colSums(.self$count) * .self$norm.factors)))
     capture.output(suppressMessages(d <- getPriors.NB(d, 
-                                       samplesize = samplesize,
-                                       estimation = "QL", cl = cl)))
-    capture.output(d <- getLikelihoods.NB(d, pET = "BIC", cl = cl))
+             samplesize = samplesize, estimation = "QL", cl = cl)))
+    capture.output(suppressMessages(d <- getLikelihoods.NB(d,
+             pET = "BIC", cl = cl)))
     stat.bayseq <- topCounts(d, group = "DE", number = nrow(.self$count))
     stat.bayseq <- stat.bayseq[rownames(.self$count), ]
     private$stat$rank <<- rank(- d@posteriors[, "DE"])
@@ -62,10 +70,9 @@ TCC$methods(.testByBayseq = function(...) {
              groups = gs,
              libsizes = colSums(.self$count) * .self$norm.factors))
     capture.output(suppressMessages(d <- getPriors.NB(d,
-                                      samplesize = samplesize,
-                                      estimation = "QL", cl = cl)))
+             samplesize = samplesize, estimation = "QL", cl = cl)))
     capture.output(suppressMessages(d <- getLikelihoods.NB(d,
-                                      pET = "BIC", cl = cl)))
+             pET = "BIC", cl = cl)))
     stat.bayseq <- topCounts(d, group = comparison, number = nrow(.self$count))
     stat.bayseq <- stat.bayseq[rownames(.self$count), ]
     private$stat$rank <<- rank(- d@posteriors[, comparison])
@@ -86,7 +93,8 @@ cl <- al$cl
 comparison <- al$comparison
 ts <- .self$.testStrategy()
 if (al$paired) {
-    .testByBayseq.1p(samplesize = samplesize, cl = cl)
+    .testByBayseq.1p(samplesize = samplesize, cl = cl,
+                     comparison = comparison)
 } else if (ts == 1) {
     .testByBayseq.2(samplesize = samplesize, cl = cl)
 } else if (ts == 2) {

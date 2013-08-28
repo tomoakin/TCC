@@ -137,19 +137,19 @@ plotFCPseudocolor <- function(tcc, main = "",
         colorRamp <- c(
             "#FFFFFFFF",
             cm.colors((maxlevel - 1) * 32)[((maxlevel - 1) 
-                                       * 16 + 1):((maxlevel - 1) * 32)]
+                                       * 16):((maxlevel - 1) * 32 - 1)]
         )
     } else if (max(d) <= 1) {
         colorRamp <- c(
-            cm.colors((minlevel - 1) * 32)[1:((minlevel - 1) * 16 - 1)],
+            cm.colors((minlevel - 1) * 32)[2:((minlevel - 1) * 16)],
             "#FFFFFFFF"
         )
     } else {
         colorRamp <- c(
-            cm.colors((minlevel - 1) * 32)[1:((minlevel - 1) * 16 - 1)],
+            cm.colors((minlevel - 1) * 32)[2:((minlevel - 1) * 16)],
             "#FFFFFFFF",
             cm.colors((maxlevel - 1) * 32)[((maxlevel - 1) 
-                                       * 16 + 1):((maxlevel - 1) * 32)]
+                                       * 16):((maxlevel - 1) * 32 - 1)]
         )
     }
 

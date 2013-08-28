@@ -34,7 +34,7 @@ TCC$methods(.exactTest = function (FDR = NULL, significance.level = NULL,
 
 TCC$methods(estimateDE = function (test.method = NULL,
                                    FDR = NULL, 
-                                   paired = FALSE,
+#                                   paired = FALSE,
                                    PDEG = NULL,
                                    significance.level = NULL,
                                    dispersion = NULL,
@@ -45,6 +45,7 @@ TCC$methods(estimateDE = function (test.method = NULL,
                                    samplesize = NULL,
                                    floor.value = 1,
                                    cl = NULL) {
+    paired <- FALSE
     if (is.null(test.method)) {
         if (paired)
             test.method = "bayseq"
