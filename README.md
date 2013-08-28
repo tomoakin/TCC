@@ -1,10 +1,13 @@
 TCC
 ===
 
-TCC: Differential expression analysis for tag count data with
- robust normalization strategies
 
-Differential expression analysis for tag count data with robust normalization strategies
+Title
+-----
+
+TCC: Differential expression analysis for tag count data with robust normalization strategies
+
+Description
 ----------------------------------------------------------------------------------------
 
 This package provides a series of functions for performing
