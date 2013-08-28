@@ -31,11 +31,24 @@
     return(replace(y, !is.na(y), f))
 }
 
+
+.tbw <- function(y) {
+    y <- y[!is.na(y)]
+    y.m <- median(y)
+    y.u <- (y - y.m) / (5 * median(abs(y - y.m)) + 1e-04)
+    y.w <- rep(0, length(y))
+    y.i <- abs(y.u) <= 1
+    y.w[y.i] <- ((1 - y.u^2)^2)[y.i]
+    y.b <- sum(y.w * y) / sum(y.w)
+}
+
 .entvalmod <- function(y) {
     y <- y[!is.na(y)]
     l <- length(y)
     y <- y[y != 0]
-    if (sum(y) <= 0 || is.na(sd(y)) || sd(y) == 0) {
+    if (is.na(sd(y))) {
+        return (0)
+    } else if (sum(y) <= 0 || sd(y) == 0) {
         return (log2(l))
     } else {
         y.m <- median(y)
@@ -57,7 +70,9 @@
     y <- y[!is.na(y)]
     l <- length(y)
     y <- y[y != 0]
-    if (sum(y) <= 0 || is.na(sd(y)) || sd(y) == 0) {
+    if (is.na(sd(y))) {
+        return (0)
+    } else if (sum(y) <= 0 || sd(y) == 0) {
         return (log2(l))
     } else {
         p <- y / sum(y)
@@ -82,6 +97,7 @@ ROKU <- function(data, upper.limit = 0.25, sort = FALSE) {
     rs$H <- apply(data, 1, .entval)
     rs$modH <- apply(data, 1, .entvalmod)
     rs$rank <- rank(rs$modH)
+    rs$Tbw <- apply(data, 1, .tbw)
     if (!is.null(colnames(data))) {
         l <- colnames(data)
     } else {
@@ -95,10 +111,12 @@ ROKU <- function(data, upper.limit = 0.25, sort = FALSE) {
     colnames(rs$outliers) <- l
     rownames(rs$outliers) <- r
     if (sort) {
-        rs$outliers <- rs$outliers[order(rs$rank), ]
-        rs$H <- rs$H[order(rs$rank), ]
-        rs$modH <- rs$modH[order(rs$rank), ]
-        rs$rank <- rs$rank[order(rs$rank), ]
+        reindex <- order(rs$rank)
+        rs$outliers <- rs$outliers[reindex, ]
+        rs$H <- rs$H[reindex]
+        rs$modH <- rs$modH[reindex]
+        rs$rank <- rs$rank[reindex]
+        rs$Tbw <- rs$Tbw[reindex]
     }
     return (rs)
 }

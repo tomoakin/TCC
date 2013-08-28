@@ -47,7 +47,7 @@ for accurate normalization of tag count data, especially when the up-
 and down-regulated DEGs in one of the groups are extremely biased in
 their number. A major characteristic of \Rpackage{TCC} is to provide
 the DEGES-based normalization methods for several kinds of count data
-(two-group with or without replicates, multi-group/multifactor, and so on)
+(two-group with or without replicates, multi-group, and so on)
 by virtue of the use of combinations of functions in other sophisticated
 packages (especially \Rpackage{edgeR}, \Rpackage{DESeq}, and
 \Rpackage{baySeq}). The appropriate combination provided by \Rpackage{TCC}
@@ -2085,7 +2085,8 @@ tcc <- simulateReadCounts(Ngene = 10000, PDEG = 0.2,
 
 Since the first six rows in the dataset corresponds to the first type
 of DEGs, we can see the 2-fold up-regulation in the first four columns
-(i.e., "WT") compared to the last four columns (i.e., "KO").
+(i.e., WT-related samples) compared to the last four columns
+(i.e., KO-related samples).
 
 <<simRCMsim, fig = TRUE, size = 0.8, png = TRUE, pdf = FALSE, eps = FALSE>>=
 head(tcc$count)

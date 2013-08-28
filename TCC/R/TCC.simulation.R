@@ -95,7 +95,16 @@ simulateReadCounts <- function(Ngene = 10000, PDEG = 0.20,
                                           times = replicates),
                                  "_rep", sequence(replicates), sep = "")
     } else {
-        colnames(count) <- paste("rep", 1:nrow(group), sep = "_")
+        repnm <- apply(group, 1, function(i){paste(i, collapse="")})
+        colnm <- repnm
+        tb <- table(repnm)
+        tbm <- tb + 1
+        for (i in 1:length(repnm)) {
+          colnm[i] <- paste(repnm[i], paste("rep",
+               tbm[repnm[i]] - tb[repnm[i]], sep = ""), sep = "_")
+          tb[repnm[i]] <- tb[repnm[i]] - 1
+        }
+        colnames(count) <- colnm
     }
     rownames(count) <- paste("gene", 1:nrow(count), sep = "_")
     ## TCC constructor

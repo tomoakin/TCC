@@ -94,3 +94,8 @@ test_ROKU_vector <- function() {
     roku.all <- ROKU(x)
     roku.one <- ROKU(x[1, ])
 }
+
+test_ROKU_vector <- function() {
+    data(hypoData_ts)
+    x <- ROKU(hypoData_ts, sort = TRUE)
+}

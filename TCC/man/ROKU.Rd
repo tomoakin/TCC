@@ -96,6 +96,13 @@ A list containing following fields:
           score(s) calculated from an original gene expression vector.}
     \item{rank}{A numeric vector or scalar consisting of the rank(s) of
           \code{modH}.}
+    \item{Tbw}{a numeric vector or scalar consisting of one-step Tukey's
+          biweight as an iteratively reweighted measure of central tendency.
+          This value is in general similar to median value and the same as the
+          output of \code{tukey.biweight} with default parameter settings
+          in \code{affy} package. The data processing is done by
+          subtracting this value for each gene expression vector and by
+          taking the absolute value.}
 }
 \references{
 Kadota K, Konishi T, Shimizu K: Evaluation of two outlier-detection-based
