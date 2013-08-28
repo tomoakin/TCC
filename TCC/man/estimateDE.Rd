@@ -2,7 +2,7 @@
 \alias{estimateDE}
 \title{Estimate degrees of differential expression (DE) for individual genes}
 \usage{
-estimateDE(tcc, test.method, FDR, paired = FALSE, 
+estimateDE(tcc, test.method, FDR, 
            dispersion, fit0, fit1, design,
            contrast, coef, comparison, samplesize, floor.value = 1, cl)
 }
@@ -22,11 +22,11 @@ implemented in other R packages.
           The default is \code{"edger"} when analyzing the count data with
           replicates (i.e., \code{min(table(tcc$group[, 1])) > 1}), 
           \code{"deseq"} when analyzing the count data without replicates 
-          (i.e., \code{min(table(tcc$group[, 1])) == 1)}), and \code{"bayseq"}
-          when the \code{paired = TRUE} is specified.}
+          (i.e., \code{min(table(tcc$group[, 1])) == 1)}).}
+          %, and \code{"bayseq"} when the \code{paired = TRUE} is specified.}
     \item{FDR}{numeric value (between 0 and 1) specifying the threshold
           for determining DEGs.}
-    \item{paired}{logical. If \code{TRUE}, the data is treated as paired data.}
+    %\item{paired}{logical. If \code{TRUE}, the data is treated as paired data.}
     \item{dispersion}{numeric vector giving the dispersion of all genes 
           for analyzing the count data without replicates when  the
           \code{test.method = "edger"} is specified.
@@ -112,10 +112,11 @@ packages are internally called according to the specified
     \item \code{test.method = "bayseq"}\cr
           \code{\link[baySeq]{getPriors.NB}} and
           \code{\link[baySeq]{getLikelihoods.NB}} in baySeq are internally
-          called for identifying DEGs when \code{paired = FALSE}.
-          \code{\link[baySeq]{getPriors.BB}} and
-          \code{\link[baySeq]{getLikelihoods.BB}} in baySeq are called
-          when \code{paired = TRUE}.
+          called for identifying DEGs.
+          %when \code{paired = FALSE}.
+          %\code{\link[baySeq]{getPriors.BB}} and
+          %\code{\link[baySeq]{getLikelihoods.BB}} in baySeq are called
+          %when \code{paired = TRUE}.
           Since baySeq outputs posterior likelihoods instead of
           \eqn{p}-values, the \eqn{(1 - likelihood)} values are
           stored in the corersponding field
