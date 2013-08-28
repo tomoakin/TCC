@@ -74,27 +74,25 @@ test_estimateDE_SAMseq_1 <- function() {
     checkTrue(auc > 0.80)
 }
 
-test_estimateDE_SAMseq_1p <- function() {
-if (FALSE) {
-    library(samr)
-    samplesize <- 10
-    tcc <- simulateReadCounts(Ngene = 1000, replicates = c(3, 3))
-    tcc <- calcNormFactors(tcc, iteration = FALSE)
-    set.seed(1)
-    tcc <- estimateDE(tcc, test.method = "samseq", paired = TRUE,
-                      samplesize = samplesize)
-    auc <- calcAUCValue(tcc)
-
-    x <- round(getNormalizedData(tcc))
-    set.seed(1)
-    d <- SAMseq(x = x, y = tcc$group[, 1],
-                resp.type = "Two class paired",
-                nperms = samplesize)
-
-    checkEqualsNumeric(d$samr.obj$tt, tcc$stat$testStat)
-    checkTrue(auc > 0.80)
-}
-}
+##test_estimateDE_SAMseq_1p <- function() {
+##    library(samr)
+##    samplesize <- 10
+##    tcc <- simulateReadCounts(Ngene = 1000, replicates = c(3, 3))
+##    tcc <- calcNormFactors(tcc, iteration = FALSE)
+##    set.seed(1)
+##    tcc <- estimateDE(tcc, test.method = "samseq", paired = TRUE,
+##                      samplesize = samplesize)
+##    auc <- calcAUCValue(tcc)
+##
+##    x <- round(getNormalizedData(tcc))
+##    set.seed(1)
+##    d <- SAMseq(x = x, y = tcc$group[, 1],
+##                resp.type = "Two class paired",
+##                nperms = samplesize)
+##
+##    checkEqualsNumeric(d$samr.obj$tt, tcc$stat$testStat)
+##    checkTrue(auc > 0.80)
+##}
 
 test_estimateDE_SAMseq_2 <- function() {
     library(samr)
@@ -157,43 +155,52 @@ test_estimateDE_baySeq_1 <- function() {
     checkTrue(auc > 0.70)
 }
 
-test_estimateDE_baySeq_1p <- function() {
-    tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.3,
-               group = data.frame(A = c(1, 1, 1, 1, 2, 2, 2, 2),
-                                  B = c(1, 1, 2, 2, 1, 1, 2, 2)),
-               DEG.foldchange = data.frame(F1 = c(4, 4, 4, 4, 1, 1, 1, 1),
-                                           F2 = c(1, 1, 1, 1, 4, 4, 4, 4),
-                                           F3 = c(1, 1, 1/4, 1/4, 1, 1, 4, 4)),
-               DEG.assign = c(0.2, 0.2, 0.6))
-    tcc <- calcNormFactors(tcc, iteration = FALSE)
-    set.seed(1)
-    tcc <- estimateDE(tcc, test.method = "bayseq", paired = TRUE,
-                      samplesize = 10)
-    auc <- calcAUCValue(tcc)
-
-    group <- c(1, 1, 2, 2)
-    el <- colSums(tcc$count) * tcc$norm.factors
-    groups <- list(NDEG = c(1, 1, 1, 1), DE = c(1, 1, 2, 2))
-    cD <- new("pairedData", 
-               data = tcc$count[, 1:4],
-               pairData = tcc$count[, 5:8],
-               replicates = group,
-               groups = groups,
-               libsizes = el[1:4],
-               pairLibsizes = el[5:8])
-    set.seed(1)
-    cD <- getPriors.BB(cD, samplesize = 10,
-                       estimation = "QL", cl = NULL)
-    cD <- getLikelihoods.BB(cD, pET = "BIC", nullProps = 0.5, cl = NULL)
-
-    ## DE between replicate groups    
-    tmp <- topCounts(cD, group = 2, number = nrow(tcc$count))
-    tmp <- tmp[rownames(tcc$count), ]
-    p <- 1 - tmp$Likelihood
-
-    checkEqualsNumeric(p, tcc$stat$p.value)
-    checkTrue(auc > 0.70)
-}
+##test_estimateDE_baySeq_1p <- function() {
+##    tcc <- simulateReadCounts(Ngene = 1000, PDEG = 0.3,
+##               group = data.frame(A = c(1, 1, 1, 1, 2, 2, 2, 2),
+##                                  B = c(1, 1, 2, 2, 1, 1, 2, 2)),
+##               DEG.foldchange = data.frame(F1 = c(4, 4, 4, 4, 1, 1, 1, 1),
+##                                           F2 = c(1, 1, 1, 1, 4, 4, 4, 4),
+##                                           F3 = c(1, 1, 1/4, 1/4, 1, 1, 4, 4)),
+##               DEG.assign = c(0.2, 0.2, 0.6))
+##    tcc <- calcNormFactors(tcc, iteration = FALSE)
+##    set.seed(1)
+##    tcc <- estimateDE(tcc, test.method = "bayseq", paired = TRUE,
+##                      samplesize = 10)
+##    auc <- calcAUCValue(tcc)
+##
+##    group <- c(1, 1, 2, 2)
+##    el <- colSums(tcc$count) * tcc$norm.factors
+##    groups <- list(NDEG = c(1, 1, 1, 1), DE = c(1, 1, 2, 2))
+##    cD <- new("pairedData", 
+##               data = tcc$count[, 1:4],
+##               pairData = tcc$count[, 5:8],
+##               replicates = group,
+##               groups = groups,
+##               libsizes = el[1:4],
+##               pairLibsizes = el[5:8])
+##    set.seed(1)
+##    cD <- getPriors.BB(cD, samplesize = 300,
+##                       estimation = "QL", cl = NULL)
+##    cD <- getLikelihoods.BB(cD, pET = "BIC", nullProps = 0.5, cl = NULL)
+##
+##    ## DE between replicate groups    
+##    tmp <- topCounts(cD, group = 1, number = nrow(tcc$count))
+##    tmp <- tmp[rownames(tcc$count), ]
+##    p <- 1 - tmp$Likelihood
+##AUC(rocdemo.sca(truth=c(rep(0, 2700),rep(1, 300),rep(0, 7000)), data = -rank(p)))
+##AUC(rocdemo.sca(truth=c(rep(1, 2700),rep(0, 300),rep(0, 7000)), data = -rank(p)))
+##
+##    tmp <- topCounts(cD, group = 2, number = nrow(tcc$count))
+##    tmp <- tmp[rownames(tcc$count), ]
+##    p <- 1 - tmp$Likelihood
+##AUC(rocdemo.sca(truth=c(rep(0, 2700),rep(1, 300),rep(0, 7000)), data = -rank(p)))
+##AUC(rocdemo.sca(truth=c(rep(1, 2700),rep(0, 300),rep(0, 7000)), data = -rank(p)))
+##
+##
+##    checkEqualsNumeric(p, tcc$stat$p.value)
+##    checkTrue(auc > 0.70)
+##}
 
 test_estimateDE_baySeq_2 <- function() {
     tcc <- simulateReadCounts(Ngene = 1000, replicates = c(3, 3, 3))
