@@ -74,7 +74,7 @@ outlier candidates, it decides the number of combinations. The AIC-based
 method output a vector (1 for up-regulated outliers, -1 for down-regulated
 outliers, and 0 for non-outliers) that corresponds to the input vector.
 For example, the method outputs a vector \eqn{(-1, 0, 0, 0, 0, 0, 0, 0, 1, 1)}
-when using \code{upper.limit = 0.5} and  \eqn{(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0)}
+when using \code{upper.limit = 0.5} and \eqn{(-1, 0, 0, 0, 0, 0, 0, 0, 0, 0)}
 when using \code{upper.limit = 0.25} (as default).
 See the Kadota et al., 2007 for detailed discussion about the effect of
 different parameter settings.
