@@ -8,7 +8,7 @@ Title
 TCC: Differential expression analysis for tag count data with robust normalization strategies
 
 Description
-----------------------------------------------------------------------------------------
+-----------
 
 This package provides a series of functions for performing
 differential expression analysis from RNA-seq count data using robust
@@ -40,9 +40,8 @@ at https://github.com/kohijiri/huaying.asagao
 Releases
 --------
 
-Release of this software is made through CRAN
-at http://cran.r-project.org/web/packages/TCC/
-
+Release of this software is made through CRAN at
+http://www.bioconductor.org/packages/release/bioc/html/TCC.html
 
 No warranty
 -----------
